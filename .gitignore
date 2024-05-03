@@ -124,6 +124,7 @@ celerybeat.pid
 .venv
 env/
 venv/
+puerto-aventura/
 ENV/
 env.bak/
 venv.bak/
