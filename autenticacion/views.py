@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import NameForm
+from .forms import RegistrarUsuario
 
 # Create your views here.
 def registro(request):
-    return render(request, 'registro.html',{
-        'form': NameForm
+    return render(request, 'autenticacion/registro.html',{
+        'form': RegistrarUsuario()
     }
     )
