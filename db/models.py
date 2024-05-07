@@ -33,7 +33,6 @@ class Post(models.Model):
         "Bote" : "Bote",
         "Otro" : "Otro",
     }
-    #types_ships = models.TextChoices("Barco Motor", "Velero", "Yate", "Catamaran", "Semirigida", "Gomon", "Pesca paseo", "Lancha", "Goleta", "Bote", "Otros")
     image = models.ImageField()  # height_field=None, width_field=None,
     title = models.CharField("Titulo", max_length=30)
     value = models.DecimalField("Valor", max_digits=12, decimal_places=2) # Lo debe poner
