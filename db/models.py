@@ -7,23 +7,37 @@ class User(models.Model):
     name = models.CharField("Nombre", max_length=30)
     surname = models.CharField("Apellido", max_length=20)
     birthdate = models.DateField("Fecha de nacimiento")
-    type_user = models.IntegerField(default=0) # 0 es usuario normal
+    type_user = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
     phone_number = models.PositiveBigIntegerField("Número de teléfono")
-    creation_date = models.DateField(auto_now_add=False)
-    is_bloqued = models.BooleanField(default=False)
-    request_verification = models.BooleanField(default=False)
-    ID_recuperation = models.IntegerField()
+    creation_date = models.DateField("Fecha de registro", auto_now_add=False)
+    is_bloqued = models.BooleanField("Bloquear", default=False)
+    request_verification = models.BooleanField("Solicita verificacion", default=False)
+    ID_recuperation = models.IntegerField("Id de recuperacion")
 
 class Port(models.Model):
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=40)
     location = models.CharField(max_length=30)
+
 class Post(models.Model):
-    types_ships = models.TextChoices("Barco Motor", "Velero", "Yate", "Catamaran", "Semirigida", "Gomon", "Pesca paseo", "Lancha", "Goleta", "Bote", "Otros")
+    types_ships = {
+        "Barco Motor" : "Barco Motor",
+        "Velero" : "Velero",
+        "Yate" : "Yate",
+        "Catamaran" : "Catamaran",
+        "Semirigida" : "Semirigida",
+        "Gomon" : "Gomon",
+        "Pesca paseo" : "Pesca paseo",
+        "Lancha" : "Lancha",
+        "Goleta" : "Goleta",
+        "Bote" : "Bote",
+        "Otro" : "Otro",
+    }
+    #types_ships = models.TextChoices("Barco Motor", "Velero", "Yate", "Catamaran", "Semirigida", "Gomon", "Pesca paseo", "Lancha", "Goleta", "Bote", "Otros")
     image = models.ImageField()  # height_field=None, width_field=None,
     title = models.CharField("Titulo", max_length=30)
     value = models.DecimalField("Valor", max_digits=12, decimal_places=2) # Lo debe poner
-    type_ship = models.CharField("Tipo de embarcación", choices= types_ships) # quizas va blank = True
+    type_ship = models.CharField("Tipo de embarcación", choices= types_ships, max_length=11) # quizas va blank = True
     model = models.CharField("Modelo", max_length= 20)
     state = models.IntegerField(default = 0) # 0 --> disponible
     post_date = models.DateField(auto_now_add=False)
@@ -48,17 +62,19 @@ class Comment(models.Model):  # Un comentario puede tener otro comentario
 
 class Rating(models.Model):
     score = models.DecimalField(max_digits=2, decimal_places=1) # Porque el puntaje puede ser un numero entero, como por ejemplo 10, o un decimal, tipo 4,5 (No considero más decimales)
-    user = models.OneToOneField(User, null = False, blank= False) # Es de uno a uno, porque un usuario puede calificar una sola vez la página
+    user = models.OneToOneField(User, on_delete= models.CASCADE, null = False, blank= False) # Es de uno a uno, porque un usuario puede calificar una sola vez la página
+
 class Conversation(models.Model): # Analizar y definir bien
-    sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False)
-    recipient = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False)
+    sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_conversations")
+    recipient = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "received_conversations")
     created_at = models.DateTimeField(auto_now_add= False)
     updated_at = models.DateTimeField(auto_now= False)
+
 class Message(models.Model):
     content = models.CharField(max_length=200)
     sent_at = models.DateTimeField(auto_now_add= False)
-    sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False)
-    recipient = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False)
+    sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_messages")
+    recipient = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "received_messages")
     conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False)
 
 class Notification(models.Model):
