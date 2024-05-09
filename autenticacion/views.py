@@ -7,7 +7,7 @@ from .forms import RegistrarUsuario
 # Create your views here.
 
 def user_login(request):
-    if request.methos == "POST":
+    if request.method == "POST":
         form = LoginForm(request.post)
         if form.is_valid():
             cd = form.cleaned_data
