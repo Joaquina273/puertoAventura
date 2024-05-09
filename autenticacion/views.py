@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .forms import RegistrarUsuario
 
 # Create your views here.
@@ -11,3 +10,6 @@ def registro(request):
 
 def inicioDeSesion (request):
     return render(request,"autenticacion/inicioSesion.html")
+
+def cambioContrasenia (request):
+    return render(request,"autenticacion/cambio_contrasenia.html")
