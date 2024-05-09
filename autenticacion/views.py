@@ -8,3 +8,6 @@ def registro(request):
         'form': RegistrarUsuario()
     }
     )
+
+def inicioDeSesion (request):
+    return render(request,"inicioSesion.html")
