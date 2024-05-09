@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "autenticacion",
-    "landing_page",
+    "inicioSesion"
 ]
 
 MIDDLEWARE = [
