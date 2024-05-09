@@ -2,12 +2,18 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
+    types_users = {
+        0 : "Usuario normal",
+        1 : "Usuario con permisos para publicar",   # Creo que es mejor implementarlo de esta manera
+        2 : "Administrador",
+    }
     email = models.EmailField("Email", primary_key=True)
     password = models.CharField("Contraseña", max_length=20)
     name = models.CharField("Nombre", max_length=30)
     surname = models.CharField("Apellido", max_length=20)
     birthdate = models.DateField("Fecha de nacimiento")
-    type_user = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
+    type_user = models.IntegerField("Tipo de usuario", choices= types_users)
+    #type_user = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
     phone_number = models.PositiveBigIntegerField("Número de teléfono")
     creation_date = models.DateField("Fecha de registro", auto_now_add=False)
     is_bloqued = models.BooleanField("Bloquear", default=False)
