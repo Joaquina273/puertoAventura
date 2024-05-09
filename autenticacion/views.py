@@ -10,4 +10,4 @@ def registro(request):
     )
 
 def inicioDeSesion (request):
-    return render(request,"inicioSesion.html")
+    return render(request,"autenticacion/inicioSesion.html")
