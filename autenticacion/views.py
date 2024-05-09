@@ -10,3 +10,6 @@ def registro(request):
 
 def inicioDeSesion (request):
     return render(request,"autenticacion/inicioSesion.html")
+
+def cambioContrasenia (request):
+    return render(request,"autenticacion/cambio_contrasenia.html")
