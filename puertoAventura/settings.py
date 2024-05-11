@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "autenticacion.apps.AutenticacionConfig",
     "db.apps.DbConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -40,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "autenticacion",
-    "inicioSesion"
+    "landing_page"
 ]
 
 MIDDLEWARE = [
@@ -107,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "es-AR"
+LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
 
