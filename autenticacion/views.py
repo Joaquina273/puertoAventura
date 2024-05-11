@@ -15,14 +15,31 @@ def registro(request):
     return render(request, 'autenticacion/registro.html', { 'form':form })
 
 def inicioDeSesion (request):
-    print("Metodo:", request.method)
     if (request.method == 'POST'):
         mail = request.POST['email']
         if(User.objects.filter(email=mail).exists()):
             usuario = User.objects.get(email=mail)
             contrasenia = request.POST['password']
             if (usuario.password == contrasenia):
+                usuario.tries_left = 5
+                usuario.save()
                 return HttpResponseRedirect("/")
+            else:
+                if (usuario.tries_left > 1):
+                    usuario.tries_left -= 1
+                    usuario.save()
+                    return render (request, "autenticacion/inicioSesion.html", {
+                    "mensaje_error" : f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos."  
+                })
+                else:
+                    return render (request, "autenticacion/inicioSesion.html", {
+                    "mensaje_error" : f"Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar."  
+                })
+        else:
+            return render (request, "autenticacion/inicioSesion.html", {
+                    "mensaje_error" : "El email ingresado no se encuentra registrado."  
+                })
+                    
     return render(request,"autenticacion/inicioSesion.html")
 
 def cambioContrasenia (request):

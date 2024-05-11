@@ -16,6 +16,11 @@
               </a>
             </div>
             <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Iniciar sesión</h2>
+            {% if mensaje_error %}
+            <div class="alert alert-danger" role="alert">
+              {{ mensaje_error }}
+            </div>
+            {% endif %}
             <form method="POST"> {% csrf_token %}
               <div class="row gy-2 overflow-hidden">
                 <div class="col-12">
