@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class User(models.Model):
@@ -9,10 +10,15 @@ class User(models.Model):
     birthdate = models.DateField("Fecha de nacimiento")
     user_type = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
     phone_number = models.PositiveBigIntegerField("Número de teléfono")
-    creation_date = models.DateField("Fecha de registro", auto_now_add=False)
+    creation_date = models.DateField("Fecha de registro", auto_now_add=timezone.now)
     is_blocked = models.BooleanField("Bloquear", default=False)
     verification_requested = models.BooleanField("Solicita verificacion", default=False)
     recovery_ID = models.IntegerField("Id de recuperacion",blank=True,null=True)
+
+    USERNAME_FIELD = "usuario"
+
+    def __str__(self):
+        return self.USERNAME_FIELD
 
 class Port(models.Model):
     name = models.CharField(max_length=30)

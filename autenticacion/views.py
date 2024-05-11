@@ -5,10 +5,14 @@ from db.models import User
 
 # Create your views here.
 def registro(request):
-    return render(request, 'autenticacion/registro.html',{
-        'form': RegistrarUsuario()
-    }
-    )
+    if request.method == 'POST':
+        form = RegistrarUsuario(request.POST)
+        if form.is_valid():
+            form.save() 
+        else: 
+            print(form.errors)#Saving form user data in the model
+    form = RegistrarUsuario()
+    return render(request, 'autenticacion/registro.html', { 'form':form })
 
 def inicioDeSesion (request):
     print("Metodo:", request.method)
