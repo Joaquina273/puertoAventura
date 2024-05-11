@@ -16,7 +16,7 @@
               </a>
             </div>
             <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Iniciar sesión</h2>
-            <form action="#!">
+            <form method="POST"> {% csrf_token %}
               <div class="row gy-2 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
@@ -41,7 +41,7 @@
                   </div>
                 </div>
                 <div class="col-12">
-                  <p class="m-0 text-secondary text-center">¿No tienes una cuenta? <a href="#!" class="link-primary text-decoration-none">Registrate</a></p>
+                  <p class="m-0 text-secondary text-center">¿No tienes una cuenta? <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrate</a></p>
                 </div>
               </div>
             </form>

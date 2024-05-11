@@ -7,12 +7,12 @@ class User(models.Model):
     name = models.CharField("Nombre", max_length=30)
     surname = models.CharField("Apellido", max_length=20)
     birthdate = models.DateField("Fecha de nacimiento")
-    type_user = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
+    user_type = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
     phone_number = models.PositiveBigIntegerField("Número de teléfono")
     creation_date = models.DateField("Fecha de registro", auto_now_add=False)
-    is_bloqued = models.BooleanField("Bloquear", default=False)
-    request_verification = models.BooleanField("Solicita verificacion", default=False)
-    ID_recuperation = models.IntegerField("Id de recuperacion")
+    is_blocked = models.BooleanField("Bloquear", default=False)
+    verification_requested = models.BooleanField("Solicita verificacion", default=False)
+    recovery_ID = models.IntegerField("Id de recuperacion",blank=True,null=True)
 
 class Port(models.Model):
     name = models.CharField(max_length=30)
@@ -37,7 +37,7 @@ class Post(models.Model):
     image = models.ImageField()  # height_field=None, width_field=None,
     title = models.CharField("Titulo", max_length=30)
     value = models.DecimalField("Valor", max_digits=12, decimal_places=2) # Lo debe poner
-    type_ship = models.CharField("Tipo de embarcación", choices= types_ships, max_length=11) # quizas va blank = True
+    ship_type = models.CharField("Tipo de embarcación", choices= types_ships, max_length=11) # quizas va blank = True
     model = models.CharField("Modelo", max_length= 20)
     state = models.IntegerField(default = 0) # 0 --> disponible
     post_date = models.DateField(auto_now_add=False)
