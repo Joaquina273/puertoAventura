@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import RegistrarUsuario
 from db.models import User
+from django.contrib.auth import login
 
 # Create your views here.
 def registro(request):
@@ -22,6 +23,7 @@ def inicioDeSesion (request):
             usuario = User.objects.get(email=mail)
             contrasenia = request.POST['password']
             if (usuario.password == contrasenia):
+                login(request,usuario)
                 return HttpResponseRedirect("/")
     return render(request,"autenticacion/inicioSesion.html")
 
