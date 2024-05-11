@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>Inicio</h1>
+    <a href="/autenticacion/inicioSesion">Iniciar sesión</a>
+    <a href="/autenticacion/registro">Registrarse</a>
+    {% if user.is_authenticated %}
+        Sesión iniciada
+    {% else %}
+        Sesión no iniciada
+    {% endif %}
+{% endblock %}
