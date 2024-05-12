@@ -14,6 +14,7 @@ class User(models.Model):
     is_blocked = models.BooleanField("Bloquear", default=False)
     verification_requested = models.BooleanField("Solicita verificacion", default=False)
     recovery_ID = models.IntegerField("Id de recuperacion",blank=True,null=True)
+    last_login = last_login = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = "usuario"
 
