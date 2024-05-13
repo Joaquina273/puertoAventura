@@ -14,7 +14,7 @@ def registro(request):
     form = RegistrarUsuario()
     return render(request, 'autenticacion/registro.html', { 'form':form })
 
-def inicioDeSesion (request):
+def inicio_de_sesion (request):
     if (request.method == 'POST'):
         mail = request.POST['email']
         if(User.objects.filter(email=mail).exists()):
@@ -29,28 +29,37 @@ def inicioDeSesion (request):
                 if (usuario.tries_left > 1):
                     usuario.tries_left -= 1
                     usuario.save()
-                    return render (request, "autenticacion/inicioSesion.html", {
+                    return render (request, "autenticacion/inicio_sesion.html", {
                     "mensaje_error" : f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos."  
                 })
                 else:
-                    return render (request, "autenticacion/inicioSesion.html", {
+                    return render (request, "autenticacion/inicio_sesion.html", {
                     "mensaje_error" : f"Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar."  
                 })
         else:
-            return render (request, "autenticacion/inicioSesion.html", {
+            return render (request, "autenticacion/inicio_sesion.html", {
                     "mensaje_error" : "El email ingresado no se encuentra registrado."  
                 })
                     
-    return render(request,"autenticacion/inicioSesion.html")
+    return render(request,"autenticacion/inicio_sesion.html")
 
-def cambioContrasenia (request):
-    return render(request,"autenticacion/cambio_contrasenia.html", {'usuario' : seEncuentraConectado(request)})
+def cambio_contrasenia (request):
+    return render(request,"autenticacion/cambio_contrasenia.html", {'usuario' : se_encuentra_conectado(request)})
 
-def cerrarSesion (request):
+def cerrar_sesion (request):
     request.session.clear()
     return redirect("/autenticacion/registro")
 
-def seEncuentraConectado(request):
+def recuperar_contrasenia (request):
+    if (request.method == 'POST'):
+        mail = request.POST['email']
+        if(User.objects.filter(email=mail).exists()):
+            usuario = User.objects.get(email=mail)
+        else:
+            return render(request,'autenticacion/recuperar_contrasenia.html',{'mensaje_error':'El email ingresado no se encuentra registrado en el sistema.'})
+    return render(request,'autenticacion/recuperar_contrasenia.html')
+
+def se_encuentra_conectado(request):
     if ('usuario' in request.session):
         return request.session['usuario']
     else:
