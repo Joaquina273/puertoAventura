@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import RegistrarUsuario
 from db.models import User
 
@@ -23,7 +23,8 @@ def inicioDeSesion (request):
             if (usuario.password == contrasenia):
                 usuario.tries_left = 5
                 usuario.save()
-                return HttpResponseRedirect("/")
+                request.session['usuario'] = mail, usuario.name
+                return redirect("/autenticacion/cambioContrasenia")
             else:
                 if (usuario.tries_left > 1):
                     usuario.tries_left -= 1
@@ -43,4 +44,14 @@ def inicioDeSesion (request):
     return render(request,"autenticacion/inicioSesion.html")
 
 def cambioContrasenia (request):
-    return render(request,"autenticacion/cambio_contrasenia.html")
+    return render(request,"autenticacion/cambio_contrasenia.html", {'usuario' : seEncuentraConectado(request)})
+
+def cerrarSesion (request):
+    request.session.clear()
+    return redirect("/autenticacion/registro")
+
+def seEncuentraConectado(request):
+    if ('usuario' in request.session):
+        return request.session['usuario']
+    else:
+        return None
