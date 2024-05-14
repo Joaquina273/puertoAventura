@@ -6,12 +6,13 @@ class FormularioRegistrarPublicacion(forms.ModelForm):
     title = forms.CharField(label= "Titulo", max_length=40, widget = forms.TextInput(attrs={'class': 'form-control'}))
     value = forms.IntegerField(label="Valor", widget= forms.NumberInput(attrs= {'class':'form-control'}))
     image = forms.ImageField(label = "Imagen", widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+    patent = forms.CharField(label= "Patente", max_length=20, widget = forms.TextInput(attrs={'class': 'form-control'}))
     eslora = forms.DecimalField(label="Eslora", widget=forms.NumberInput(attrs={'class': 'form-control'}))
     model = forms.CharField(label= "Modelo", max_length=40, widget = forms.TextInput(attrs={'class': 'form-control'}))
     port = forms.ModelChoiceField(label= "Puerto", queryset= Port.objects.values_list('name', flat=True), widget= forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Post
-        fields = ["title","value","image","eslora","model","port"]
+        fields = ["title","value","image","patent","eslora","model","port"]
 
 """
 def save(self, commit=True):

@@ -49,7 +49,7 @@ def cambio_contrasenia (request):
 
 def cerrar_sesion (request):
     request.session.clear()
-    return redirect("/autenticacion/registro")
+    return redirect("/")
 
 def recuperar_contrasenia (request):
     if (request.method == 'POST'):
