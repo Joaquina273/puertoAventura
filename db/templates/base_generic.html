@@ -50,6 +50,7 @@
                     </form>
                   </div>
                 </li>
+                {% if usuario != nil %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -160,13 +161,13 @@
                     <li><a class="dropdown-item fs-7 text-center" href="#">Ver todas las notificaciones</a></li>
                   </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown"> 
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="./assets/img/profile/profile-img-1.jpg" width="35" height="35" class="img-fluid rounded-circle" alt="Luke Reeves">
+                    <img src="{% static 'images/user_icon.png' %}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
                     <li>
-                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, usuario</h6>
+                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.1 }}</h6>
                     </li>
                     <li>
                       <hr class="dropdown-divider">
@@ -175,12 +176,12 @@
                       <a href="#" class="dropdown-item" aria-current="true">
                         <div class="row g-0 align-items-center">
                           <div class="col-3">
-                            <img src="./assets/img/profile/profile-img-1.jpg" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
+                            <img src="{% static 'images/user_icon.png' %}" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
                           </div>
                           <div class="col-9">
                             <div class="ps-3">
                               <div class="text-secondary mt-1 fs-7">Cuenta</div>
-                              <div class="text-secondary mt-1 fs-7">email@domain.com</div>
+                              <div class="text-secondary mt-1 fs-7">{{ usuario.0 }}</div>
                             </div>
                           </div>
                         </div>
@@ -228,7 +229,7 @@
                       <hr class="dropdown-divider">
                     </li>
                     <li>
-                      <a class="dropdown-item text-center" href="#!">
+                      <a class="dropdown-item text-center" href="/autenticacion/cerrarSesion" name = "cerrar_sesion">
                         <span>
                           <span class="fs-7">Cerrar sesión</span>
                         </span>
@@ -236,6 +237,23 @@
                     </li>
                   </ul>
                 </li>
+                {% else %}
+                <div class="col-3">
+                  <div class="d-flex justify-content-between">
+                    <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrarse</a>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="d-flex justify-content-between">
+                    <a href="/autenticacion/inicioSesion" class="link-primary text-decoration-none">Iniciar sesion</a>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="d-flex justify-content-between">
+                    <a href="/publicaciones/registrarPublicacion" class="link-primary text-decoration-none">Realizar una publicacion</a>
+                  </div>
+                </div>
+                {% endif %}
               </ul>
             </div>
           </div>

@@ -1,0 +1,53 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<style>
+
+.user-info {
+    display: inline-block;
+    margin-right: 6px; /* Espacio entre elementos */
+}
+
+/* Estilo para el texto */
+.post-text {
+        font-size: 18px; /* Tamaño de fuente más grande */
+        font-weight: bold; /* Texto en negrita */
+    }
+
+.card-text,
+.user-info,
+.card-subtitle {
+    margin-bottom: 0px; /* Espacio entre elementos de texto */
+}
+    
+</style>
+
+{% if posts %}
+    {% for post in posts %}
+        {% if forloop.first %} <div class="row">{% endif %}
+            <a href="{{ post.id }}"><div class="col-4">
+                <div class="card">
+                    <img class="card-img-top" height="180" src="{{ post.image.url }}" alt="{{ post.title }}">
+                    <div class="=card-body">
+                        <h5 class="card-title post-text">{{ post.title }}</h5>
+                        <hr />
+                        <h6 class="card-subtitle post-text"> Valor: {{ post.value }}</h6>
+                        <p class="card-text post-text"> Tipo de embarcación: {{ post.ship_type }}</p>
+                        <p class="user-info post-text"> Nombre del dueño: {{ post.user.name }}</p>
+                        <p class="user-info post-text"> Email del dueño: {{ post.user.email }}</p>
+                        <p class="user-info post-text"> Teléfono del dueño: {{ post.user.phone_number }}</p>
+                        <p class="card-text post-text"> Puerto: {{ post.port.name }}</p>
+                    </div>
+                </div>
+            </div>
+            </a>
+            {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+            {% if forloop.last %}</div>{% endif %}
+    {% endfor %}
+{% else %}
+    <div class="alert alert-danger">No hay publicaciones disponibles</div> 
+{% endif %}
+{% endblock %}
