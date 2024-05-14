@@ -4,57 +4,13 @@
 
 {% block content %}
 
+<style>
+  h2{
+    font-size: 40px; /* Tamaño de fuente más grande */
+    font-weight: bold; /* Texto en negrita */
+  }
+</style>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Botones</title>
-  <style>
+<center><h2>Bienvenido/a al sitio web de Puerto Aventura</h2></center>
 
-    /* Estilo para el contenedor */
-    .botones-container {
-            text-align: center; /* Centrar los botones horizontalmente */
-            margin-top: 20px; /* Margen superior para separar del título */
-            margin-right: 10px; /* Espacio entre elementos  */
-        }
-
-      /* Estilo para los botones */
-      .boton {
-          background-color: #66ccff; /* Color celeste */
-          color: white;
-          border: none;
-          border-radius: 20px; /* Bordes redonditos */
-          padding: 10px 20px; /* Espacio interior */
-          margin-right: 10px; /* Espacio entre botones */
-          cursor: pointer;
-      }
-
-      /* Estilo cuando se pasa el cursor sobre los botones */
-      .boton:hover {
-          background-color: #3399ff; /* Cambio de color al pasar el cursor */
-      }
-  </style>
-</head>
-<body>
-
-<center><h2>Bienvenido/a al sitio web de Puerto Aventura:</h2></center>
-
-<div class="botones-container">
-<form action="/autenticacion/registro" method="get">
-  <button class="boton" type="submit">Registrarse</button>
-</form>
-
-<!-- Botón para iniciar sesión -->
-<form action="/autenticacion/inicioSesion" method="get">
-  <button class="boton" type="submit">Iniciar sesión</button>
-</form>
-
-<!-- Botón para realizar una publicación -->
-<form action="/publicaciones/registrarPublicacion" method="get">
-  <button class="boton" type="submit">Realizar una publicación</button>
-</form>
-
-</body>
-
-</div>
 {% endblock %}
