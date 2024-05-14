@@ -5,13 +5,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     initial = True
 
-    dependencies = []
+    dependencies = [
+    ]
 
     operations = [
         migrations.CreateModel(
-            name="Conversation",
+            name='Conversation',
             fields=[
                 (
                     "id",
@@ -35,20 +37,12 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Port",
+            name='Port',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("name", models.CharField(max_length=30)),
-                ("address", models.CharField(max_length=40)),
-                ("location", models.CharField(max_length=30)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=30)),
+                ('address', models.CharField(max_length=40)),
+                ('location', models.CharField(max_length=30)),
             ],
             options={
                 "verbose_name": "Puerto",
@@ -57,7 +51,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="User",
+            name='User',
             fields=[
                 (
                     "email",
@@ -108,7 +102,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Post",
+            name='Post',
             fields=[
                 (
                     "id",
@@ -185,7 +179,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Offer",
+            name='Offer',
             fields=[
                 (
                     "id",
@@ -228,7 +222,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Comment",
+            name='Comment',
             fields=[
                 (
                     "id",
@@ -273,7 +267,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Rating",
+            name='Rating',
             fields=[
                 (
                     "id",
@@ -299,7 +293,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Notification",
+            name='Notification',
             fields=[
                 (
                     "id",
@@ -362,7 +356,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Message",
+            name='Message',
             fields=[
                 (
                     "id",
@@ -406,21 +400,13 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddField(
-            model_name="conversation",
-            name="recipient",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="received_conversations",
-                to="db.user",
-            ),
+            model_name='conversation',
+            name='recipient',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='received_conversations', to='db.user'),
         ),
         migrations.AddField(
-            model_name="conversation",
-            name="sender",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="sent_conversations",
-                to="db.user",
-            ),
+            model_name='conversation',
+            name='sender',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sent_conversations', to='db.user'),
         ),
     ]

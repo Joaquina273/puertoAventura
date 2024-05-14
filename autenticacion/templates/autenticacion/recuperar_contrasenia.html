@@ -1,0 +1,52 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+
+{% block content %}
+<!-- Password Reset 2 - Bootstrap Brain Component -->
+<div class="bg-light py-3 py-md-5">
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+        <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+          <div class="row">
+            <div class="col-12">
+              <div class="mb-5">
+                <h2 class="h3">Recuperar contraseña</h2>
+                <h3 class="fs-6 fw-normal text-secondary m-0">Ingresa el email asociado a tu cuenta para recuperar tu contraseña.</h3>
+              </div>
+            </div>
+          </div>
+          {% if mensaje_error %}
+          <div class="alert alert-danger" role="alert">
+            {{ mensaje_error }}
+          </div>
+          {% endif %}
+          <form action="#!" method="POST">{% csrf_token %}
+            <div class="row gy-3 gy-md-4 overflow-hidden">
+              <div class="col-12">
+                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="mail@ejemplo.com" required>
+              </div>
+              <div class="col-12">
+                <div class="d-grid">
+                  <button class="btn btn-lg btn-primary" type="submit">Enviar código</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="row">
+            <div class="col-12">
+              <hr class="mt-5 mb-4 border-secondary-subtle">
+              <div class="d-flex gap-4 justify-content-end">
+                <a href="/autenticacion/inicioSesion" class="link-secondary text-decoration-none">Iniciar sesión</a>
+                <a href="/autenticacion/registro" class="link-secondary text-decoration-none">Registrarse</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
