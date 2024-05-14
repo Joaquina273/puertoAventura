@@ -9,10 +9,11 @@ def registro(request):
         form = RegistrarUsuario(request.POST)
         if form.is_valid():
             form.save() 
+            return HttpResponseRedirect("/")
         else: 
-            print(form.errors)#Saving form user data in the model
+            return render(request, 'autenticacion/registro.html', { 'form':form,'mensaje_error': form.errors })
     form = RegistrarUsuario()
-    return render(request, 'autenticacion/registro.html', { 'form':form })
+    return render(request, 'autenticacion/registro.html', {'form':form})
 
 def inicioDeSesion (request):
     if (request.method == 'POST'):
