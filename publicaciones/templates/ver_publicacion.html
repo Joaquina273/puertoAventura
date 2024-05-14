@@ -1,63 +1,53 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
-
 {% block content %}
 
 <style>
-    ul {
-        list-style-type: none;
+    ul{
+        list-style: none outside;
         padding: 0;
+        margin: 0;
     }
 
-    ul li {
-        margin-bottom: 10px; /* Espacio entre elementos */
+    ul li{
+        padding: 5px 0px;
+        margin: 20px 0px;
+        list-style: none;
     }
 
-   /* .user-info {
-        display: inline-block;
-        margin-right: 10px; /* Espacio entre elementos 
-    } */
-
-    /* Estilo para el contenedor */
-    .post-container {
-        text-align: center; /* Centrar contenido horizontalmente */
+    ul li::before{
+        content: ' ';
+	    display: table;
     }
 
-    /* Estilo para la imagen */
-    img {
-        max-width: 200%; /* Ancho máximo del contenedor */
-        max-height: 600px; /* Altura máxima */
-        height: auto; /* Altura automática para mantener la proporción */
-        display: block; /* Hacer que la imagen sea un bloque para controlar márgenes */
-        margin: 0 auto; /* Centrar la imagen horizontalmente */
+    ul li img{
+        float: right;
+        margin-left: 4px;
+        width: 70px;
+        height: auto;
+        -webkit-box-shadow: none;
+        box-shadow: none;
     }
-
-    /* Estilo para el texto */
-    .post-text {
-        font-size: 18px; /* Tamaño de fuente más grande */
-        font-weight: bold; /* Texto en negrita */
-    }
-
 </style>
-
-
 {% if post %}
+
 <div class="post-container">
-<ul>
-    <li class="post-text"> {{ post.title }}</li>
-    <li><a href="image"> <img src="{{ post.image.url }}" alt="Imagen de la publicación"></a> </li>
-    <li class="post-text">Valor: {{ post.value }}</li>
-    <li class="user-info post-text"> Nombre del dueño: {{ post.user.name }}</li>
-    <li class="user-info post-text"> Email del dueño: {{ post.user.email }}</li>
-    <li class="user-info post-text"> Telefono del dueño:{{ post.user.phone_number }}</li>
-    <li class="post-text">Tipo de embarcación: {{ post.ship_type }}</li>
-    <li class="post-text">Modelo: {{ post.model }}</li>
-    <li class="post-text">Puerto: {{ post.port.name }}</li>
-</ul>
+    <ul>
+        <li class="post-text">{{ post.title }}</li>
+        <li><a href="image"><img src="{{ post.image.url }}" alt="Imagen de la publicación"></a></li>
+        <li class="post-text">Valor: {{ post.value }}</li>
+        <li class="user-info">Nombre del dueño: {{ post.user.name }}</li>
+        <li class="user-info">Email del dueño: {{ post.user.email }}</li>
+        <li class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</li>
+        <li class="post-text">Tipo de embarcación: {{ post.ship_type }}</li>
+        <li class="post-text">Modelo: {{ post.model }}</li>
+        <li class="post-text">Puerto: {{ post.port.name }}</li>
+    </ul>
 </div>
 {% elif image %}
 <ul>
     <li><img src="{{ image.url }}" alt="Imagen"></li>
+</ul>
 {% endif %}
 {% endblock %}

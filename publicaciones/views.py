@@ -11,9 +11,10 @@ def registrar_publicacion(request):
             post = form.save(commit=False)
             post.user = request.user  # Assign the current user to the post
             post.save()
-            return redirect("/")
+            return redirect("")
     else:
         form = FormularioRegistrarPublicacion()
+        print(form.errors)
     return render(request, 'registrar_publicacion.html', {'form': form})
 
 def ver_publicaciones(request):

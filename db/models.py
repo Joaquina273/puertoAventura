@@ -31,9 +31,6 @@ class User(models.Model):
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
 
-    def __str__(self) :
-        return self.email
-
 class Port(models.Model):
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=40)
@@ -46,6 +43,7 @@ class Port(models.Model):
 
     def __str__(self) :
         return self.name
+    
 class Post(models.Model):
     types_ships = {
         "Barco Motor" : "Barco Motor",
@@ -60,6 +58,7 @@ class Post(models.Model):
         "Bote" : "Bote",
         "Otro" : "Otro",
     }
+    patent = models.CharField(max_length=20, unique=True, default=False)
     eslora = models.DecimalField(decimal_places=3, default=12, max_digits=12)
     image = models.ImageField("Imagen", upload_to='publicaciones/%Y/%m/%d')  # height_field=None, width_field=None,
     title = models.CharField("Titulo", max_length=30)
