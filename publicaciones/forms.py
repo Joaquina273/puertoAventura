@@ -13,8 +13,7 @@ class FormularioRegistrarPublicacion(forms.ModelForm):
         model = Post
         fields = ["title","value","image","eslora","model","port"]
 
-#forms.ModelChoiceField(queryset= Port.objects.values_list('name', flat=True),widget= 
-
+"""
 def save(self, commit=True):
         post = super(FormularioRegistrarPublicacion, self).save(commit=False)
         post.title = self.cleaned_data['title']
@@ -28,5 +27,5 @@ def save(self, commit=True):
         if commit:
             post.save()
         return post
-
+"""
 
