@@ -12,12 +12,13 @@ def registrar_publicacion(request):
             post.user = request.user  # Assign the current user to the post
             post.save()
             return redirect("/")
+        else:
+            print(form.errors) 
     else:
         form = FormularioRegistrarPublicacion()
     return render(request, 'registrar_publicacion.html', {'form': form})
 
 def ver_publicaciones(request):
-
     posts = Post.objects.all()
     for post in posts:
         user = User.objects.get(email=post.user_id)
