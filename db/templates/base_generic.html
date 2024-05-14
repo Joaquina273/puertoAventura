@@ -25,7 +25,7 @@
               </li>
             </ul>
             <a class="navbar-brand" href="#!">
-              <img src="{% static 'images/logo.png' %}" class="img-fluid" alt="Puerto Aventura logo" width="105" height="24">
+              <img src="{% static 'images/logo.png' %}" class="img-fluid" alt="Puerto Aventura logo" width="105" height="15">
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#bsbNavbar" aria-controls="bsbNavbar" aria-label="Toggle Navigation">
               <i class="bi bi-three-dots"></i>
@@ -161,6 +161,13 @@
                     <li><a class="dropdown-item fs-7 text-center" href="#">Ver todas las notificaciones</a></li>
                   </ul>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
+                    <span class="position-relative pt-1">
+                      <i class="bi bi-plus" style="font-size: 30px;"></i>
+                    </span>
+                  </a>
+                </li>
                 <li class="nav-item dropdown"> 
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{% static 'images/user_icon.png' %}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
@@ -238,19 +245,14 @@
                   </ul>
                 </li>
                 {% else %}
-                <div class="col-3">
+                <div class="col-5">
                   <div class="d-flex justify-content-between">
                     <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrarse</a>
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-7">
                   <div class="d-flex justify-content-between">
                     <a href="/autenticacion/inicioSesion" class="link-primary text-decoration-none">Iniciar sesion</a>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="d-flex justify-content-between">
-                    <a href="/publicaciones/registrarPublicacion" class="link-primary text-decoration-none">Realizar una publicacion</a>
                   </div>
                 </div>
                 {% endif %}
