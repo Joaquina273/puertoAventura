@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "autenticacion",
     "landing_page",
-    "publicaciones"
+    "publicaciones",
+    "usuarios"
 ]
 
 MIDDLEWARE = [

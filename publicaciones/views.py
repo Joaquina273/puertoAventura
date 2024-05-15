@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .forms import FormularioRegistrarPublicacion
 from db.models import Post,User
 from autenticacion.views import se_encuentra_conectado
@@ -35,4 +36,3 @@ def ver_imagen(request, post_id):
     
     post = Post.objects.get(id=post_id)
     return render(request, "ver_publicacion.html", {"image": post.image,'usuario': se_encuentra_conectado(request)})
-

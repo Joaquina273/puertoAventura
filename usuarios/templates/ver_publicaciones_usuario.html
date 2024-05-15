@@ -1,0 +1,155 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* Estilos generales */
+.card {
+    margin-bottom: 20px; /* Espacio entre tarjetas */
+    border: 1px solid #ddd; /* Borde de tarjeta */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+.card:hover {
+    box-shadow: 0 0 11px rgba(33,33,33,.2); /* Sombra al pasar el mouse */
+}
+
+.card-img-top {
+    border-top-left-radius: 8px; /* Bordes redondeados en la esquina superior izquierda */
+    border-top-right-radius: 8px; /* Bordes redondeados en la esquina superior derecha */
+}
+
+.card-body {
+    padding: 20px; /* Espacio interno del cuerpo de la tarjeta */
+}
+
+.card-title {
+    font-size: 20px; /* Tamaño de fuente del título */
+    margin-bottom: 10px; /* Espacio entre el título y otros elementos */
+}
+
+.card-subtitle {
+    font-size: 16px; /* Tamaño de fuente del subtítulo */
+    color: #666; /* Color del subtítulo */
+    margin-bottom: 10px; /* Espacio entre subtítulo y otros elementos */
+}
+
+.user-info {
+    font-size: 14px; /* Tamaño de fuente de la información del usuario */
+    color: #777; /* Color de la información del usuario */
+    margin-bottom: 5px; /* Espacio entre información del usuario y otros elementos */
+}
+
+.card-text {
+    font-size: 16px; /* Tamaño de fuente del texto de la tarjeta */
+    margin-bottom: 15px; /* Espacio entre texto de la tarjeta y otros elementos */
+}
+
+.row {
+    margin-left: -10px; /* Compensar el padding de la fila */
+    margin-right: -10px; /* Compensar el padding de la fila */
+}
+
+.col-4 {
+    padding-left: 10px; /* Espaciado izquierdo de la columna */
+    padding-right: 10px; /* Espaciado derecho de la columna */
+}
+
+.alert {
+    margin-top: 20px; /* Espacio superior de la alerta */
+    padding: 15px; /* Espaciado interno de la alerta */
+    border-radius: 8px; /* Bordes redondeados de la alerta */
+}
+
+.alert-danger {
+    color: #721c24; /* Color del texto de la alerta de peligro */
+    background-color: #f8d7da; /* Color de fondo de la alerta de peligro */
+    border: 1px solid #f5c6cb; /* Borde de la alerta de peligro */
+}
+
+</style>
+
+{% if posts %}
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-4">
+                <div class="card">
+                    <a href="/publicaciones/{{post.id}}">
+                        <img class="card-img-top" height="180" src="{{ post.image.url }}" alt="{{ post.title }}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <hr>
+                        <h6 class="card-subtitle">Valor: {{ post.value }}</h6>
+                        <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
+                        <p class="card-text">Patente: {{ post.patent }}</p>
+                        <p class="user-info">Nombre del dueño: {{ post.user.name }}</p>
+                        <p class="user-info">Email del dueño: {{ post.user.email }}</p>
+                        <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
+                        <p class="card-text">Puerto: {{ post.port.name }}</p>
+                        <button type="button" class="btn btn-danger delete-post-btn" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'>Eliminar publicacion</button>
+                        <button type="button" class="btn btn-danger delete-post-btn" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'>Editar publicacion</button>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-danger">No hay publicaciones disponibles</div> 
+{% endif %}
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var deleteButtons = document.querySelectorAll('.delete-post-btn');
+
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                var postId = event.target.getAttribute('data-post-id');
+                var csrfToken = button.getAttribute('data-csrf-token');
+
+                // Create a confirmation dialog
+                var confirmDialog = $('<div>').dialog({
+                    modal: true,
+                    title: 'Confirmar eliminación',
+                    zIndex: 10000,
+                    autoOpen: false,
+                    width: 'auto',
+                    resizable: false,
+                    buttons: {
+                        'Aceptar': function() {
+                            // Send an AJAX request to delete the post
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('DELETE', '/eliminarPublicacion/' + postId + '/');
+                            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+                            xhr.onload = function() {
+                                if (xhr.status === 204) {
+                                    // If the deletion is successful, remove the card from the UI
+                                    event.target.closest('.col-4').remove();
+                                } else {
+                                    // Handle any error that occurs during deletion
+                                    console.error('Error al eliminar el post:', xhr.statusText);
+                                }
+                            };
+                            xhr.send();
+                            $(this).dialog("close");
+                        },
+                        'Cancelar': function() {
+                            $(this).dialog("close");
+                        }
+                    },
+                    close: function(event, ui) {
+                        $(this).remove();
+                    }
+                });
+
+                // Open the confirmation dialog
+                confirmDialog.dialog("open");
+            });
+        });
+    });
+</script>
