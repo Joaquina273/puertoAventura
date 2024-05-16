@@ -9,24 +9,14 @@ class FormularioRegistrarPublicacion(forms.ModelForm):
     patent = forms.CharField(label= "Patente", max_length=20, widget = forms.TextInput(attrs={'class': 'form-control'}))
     eslora = forms.DecimalField(label="Eslora", widget=forms.NumberInput(attrs={'class': 'form-control'}))
     model = forms.CharField(label= "Modelo", max_length=40, widget = forms.TextInput(attrs={'class': 'form-control'}))
-    port = forms.ModelChoiceField(label= "Puerto", queryset= Port.objects.values_list('name', flat=True), widget= forms.Select(attrs={'class': 'form-control'}))
+    port = forms.ModelChoiceField(label="Puerto", queryset=Port.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Post
-        fields = ["title","value","image","patent","eslora","model","port"]
+        fields = ["title","value","image","patent","eslora","model","ship_type","port"]
+        
+    def __init__(self, *args, **kwargs):
+        exclude_patent = kwargs.pop('exclude_patent', False)  # Obtener el valor de exclude_patent, si no se proporciona, será False
+        super().__init__(*args, **kwargs)
 
-"""
-def save(self, commit=True):
-        post = super(FormularioRegistrarPublicacion, self).save(commit=False)
-        post.title = self.cleaned_data['title']
-        post.value = self.cleaned_data['value']
-        post.image = self.cleaned_data['image']
-        post.eslora = self.cleaned_data['eslora']
-        post.model = self.cleaned_data['model']
-        post.ship_type = self.cleaned_data['ship_type']
-        post.port = self.cleaned_data['port']
-        post.user = None
-        if commit:
-            post.save()
-        return post
-"""
-
+        if exclude_patent:
+            self.fields.pop('patent')  # Excluir el campo de patente si se establece exclude_patent como True

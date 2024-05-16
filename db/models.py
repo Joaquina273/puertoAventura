@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+import os
 # Create your models here.
 class User(models.Model):
     types_users = {
@@ -45,6 +45,10 @@ class Port(models.Model):
         return self.name
     
 class Post(models.Model):
+
+    def get_image_upload_path(instance, filename):
+        return os.path.join('publicaciones', instance.patent, filename)
+    
     types_ships = {
         "Barco Motor" : "Barco Motor",
         "Velero" : "Velero",
@@ -58,18 +62,20 @@ class Post(models.Model):
         "Bote" : "Bote",
         "Otro" : "Otro",
     }
-    patent = models.CharField(max_length=20, unique=True, default=False)
-    eslora = models.DecimalField(decimal_places=3, default=12, max_digits=12)
-    image = models.ImageField("Imagen", upload_to='publicaciones/%Y/%m/%d')  # height_field=None, width_field=None,
+    patent = models.CharField(max_length=20, unique=True)
+    eslora = models.DecimalField(decimal_places=3, max_digits=12)
+    patent = models.CharField(max_length=100)
+    image = models.ImageField("Imagen", upload_to=get_image_upload_path) # height_field=None, width_field=None,
     title = models.CharField("Titulo", max_length=30)
     value = models.DecimalField("Valor", max_digits=12, decimal_places=2) # Lo debe poner
     ship_type = models.CharField("Tipo de embarcación", choices= types_ships, max_length=11) # quizas va blank = True
     model = models.CharField("Modelo", max_length= 20)
     state = models.IntegerField(default = 0, verbose_name="Estado") # 0 --> disponible
-    post_date = models.DateField(auto_now_add=False, verbose_name="Fecha de publicacion")
-    end_date = models.DateField(blank = True, auto_now_add=False, verbose_name="Fecha de finalizacion")
+    post_date = models.DateField(auto_now_add=timezone.now, verbose_name="Fecha de publicacion")
+    end_date = models.DateField(blank = True, null=True, verbose_name="Fecha de finalizacion")
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
     port = models.ForeignKey(Port, on_delete= models.CASCADE, null = False, blank= False,verbose_name="Puerto")
+
 
     class Meta:
         db_table = 'posts'
@@ -80,7 +86,11 @@ class Post(models.Model):
         return self.title
 
 class Offer(models.Model):
-    image = models.ImageField("Imagen", upload_to='ofertas/%Y/%m/%d')  # heig
+
+    def get_image_upload_path(instance, filename):
+        return os.path.join('ofertas', instance.user.email, instance.post.patent, filename)
+    
+    image = models.ImageField("Imagen", upload_to=get_image_upload_path)  # heig
     description = models.CharField("Descripción", max_length= 300)
     answer = models.IntegerField(blank = True, default= 0) # 0 --> sin respuesta, 1 --> rechazada, 2 --> aceptada ?
     date = models.DateField(auto_now_add= False)
@@ -117,8 +127,8 @@ class Rating(models.Model):
 class Conversation(models.Model): # Analizar y definir bien
     sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_conversations")
     recipient = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "received_conversations")
-    created_at = models.DateTimeField(auto_now_add= False, verbose_name="Fecha de creacion")
-    updated_at = models.DateTimeField(auto_now= False, verbose_name= "Fecha de actualizacion")
+    created_at = models.DateTimeField(auto_now_add= timezone.now, verbose_name="Fecha de creacion")
+    updated_at = models.DateTimeField(auto_now= timezone.now, verbose_name= "Fecha de actualizacion")
 
     class Meta:
         db_table = 'conversations'
