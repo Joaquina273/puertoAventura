@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from django import forms
 from db.models import User
 class RegistrarUsuario(forms.ModelForm):
@@ -38,12 +38,14 @@ class RegistrarUsuario(forms.ModelForm):
             raise forms.ValidationError("Las contraseñas ingresadas son distintas")
         return password2
     
-    def clean_date_of_birth(self):
-        dob = self.cleaned_data['date_of_birth']
-        age = (datetime.now() - dob).days/365
+    def clean_birth_date(self):
+        print('Hola')
+        birth_date = self.cleaned_data.get('birth_date')
+        today = date.today()
+        age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
         if age < 18:
-            raise forms.ValidationError('Must be at least 18 years old to register')
-        return dob
+            raise forms.ValidationError('Debe tener al menos 18 años para registrarse')
+        return birth_date
 
     def save(self, commit=True):
         user = super(RegistrarUsuario, self).save(commit=False)
