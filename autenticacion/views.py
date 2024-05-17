@@ -87,9 +87,12 @@ def recuperar_contrasenia (request):
             from_email='Puerto Aventura',
             to=[usuario.email],
             )
-            email.send()
-            request.session['recupera'] = usuario.email
-            return redirect('/autenticacion/recuperarContrasenia/codigo')
+            try:
+                email.send()
+                request.session['recupera'] = usuario.email
+                return redirect('/autenticacion/recuperarContrasenia/codigo')
+            except Exception:
+                return render(request,'autenticacion/recuperar_contrasenia.html',{'mensaje_error':'Hubo un problema en la conexión con el servidor. Por favor intentalo nuevamente'})
         else:
             return render(request,'autenticacion/recuperar_contrasenia.html',{'mensaje_error':'El email ingresado no se encuentra registrado en el sistema.'})
     return render(request,'autenticacion/recuperar_contrasenia.html')
