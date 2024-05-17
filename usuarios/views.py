@@ -46,7 +46,7 @@ def editar_publicacion(request, post_id):
             # Verificar si el archivo existe y eliminarlo
             default_storage.delete(old_image_path)
             form.save()
-            return redirect('/usuarios/{}/publicaciones'.format(se_encuentra_conectado(request)[0]), user_email= se_encuentra_conectado(request)[0])
+            return redirect('/usuarios/publicaciones')
         else:
             print(form.errors)
     else:
