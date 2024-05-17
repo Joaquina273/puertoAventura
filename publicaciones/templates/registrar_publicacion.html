@@ -1,11 +1,12 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
+
 {% block content %}
 
 <style>
   body {
-    background: #ffffff url(../static/images/fondo-registrar-usuario.jpg) center center/cover no-repeat;
+    background: #ffffff url(../static/images/fondo-registrar-publicacion.jpg) center center/cover no-repeat;
   }
   .container-center {
     display: flex;
@@ -44,6 +45,7 @@
     content: "Este campo es obligatorio";
     color:black
   }
+
 </style>
 
 <div class="container-center">
@@ -51,7 +53,7 @@
     <div class="container p-6 text-center-vertical">
       <p class="text-muted mb-5">Ingresa la siguiente información para registrar su publicación.</p>
 
-      <form action="registrarPublicacion" method="post" enctype="multipart/for">
+      <form action="registrarPublicacion" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
           <div class="form-row mb-2">
@@ -59,6 +61,11 @@
             {{ field }}
           </div>
         {% endfor %}
+        {% if form.errors.patent %}
+        <script>
+            alert("Error: La patente ya existe. Por favor, ingrese una patente única.");
+        </script>
+        {% endif %}
         <button type="submit" class="btn btn-success w-100">Registrar publicación</button>
       </form>
       
@@ -68,3 +75,5 @@
 </div>
 
 {% endblock %}
+
+
