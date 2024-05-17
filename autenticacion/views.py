@@ -103,6 +103,7 @@ def ingresar_codigo (request):
         if (int(request.POST['code']) == usuario.recovery_ID):
             if (request.POST['password'] == request.POST['password2']):
                 usuario.password = request.POST['password']
+                usuario.tries_left = 5
                 usuario.save()
                 return render(request,'autenticacion/cambio_exitoso.html')
             else:
