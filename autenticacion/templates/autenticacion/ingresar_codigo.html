@@ -1,0 +1,57 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+
+{% block content %}
+<!-- Password Reset 2 - Bootstrap Brain Component -->
+<div class="bg-light py-3 py-md-5">
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+        <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+          <div class="row">
+            <div class="col-12">
+              <div class="mb-5">
+                <h2 class="h3">Ingreso de codigo</h2>
+                <h3 class="fs-6 fw-normal text-secondary m-0">Ingresa el código que enviamos al mail {{ mail }} y tu nueva contraseña.</h3>
+              </div>
+            </div>
+          </div>
+          {% if mensaje_error %}
+          <div class="alert alert-danger" role="alert">
+            {{ mensaje_error }}
+          </div>
+          {% endif %}
+          <form action="#!" method="POST">{% csrf_token %}
+            <div class="row gy-3 gy-md-4 overflow-hidden">
+              <div class="col-12">
+                <label for="code" class="form-label">Código <span class="text-danger">*</span></label>
+                <input type="code" class="form-control" name="code" id="code" placeholder="123456" required>
+                <label for="password" class="form-label">Nueva contraseña <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" minlength=8 maxlength=20 name="password" id="password" placeholder="*******" required>
+                <label for="password" class="form-label">Repetí la contraseña <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" minlength=8 maxlength=20 name="password2" id="password2" placeholder="*******" required>
+              </div>
+              <div class="col-12">
+                <div class="d-grid">
+                  <button class="btn btn-lg btn-primary" type="submit">Cambiar contraseña</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="row">
+            <div class="col-12">
+              <hr class="mt-5 mb-4 border-secondary-subtle">
+              <div class="d-flex gap-4 justify-content-end">
+                <p class="m-0 text-secondary text-center">¿No te llego ningún código? Verificá que tu dirección email coincida con la ingresada, verificá la carpeta de Spam o 
+                  <a href="/autenticacion/recuperarContrasenia" class="link-primary text-decoration-none">intentá nuevamente enviar un código</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
