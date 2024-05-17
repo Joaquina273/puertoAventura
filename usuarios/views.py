@@ -10,9 +10,9 @@ from autenticacion.views import se_encuentra_conectado
 # Create your views here.
 
 
-def ver_publicaciones(request, user_email):
+def ver_publicaciones(request):
 
-    user_posts = Post.objects.filter(user_id=user_email)
+    user_posts = Post.objects.filter(user_id=se_encuentra_conectado(request)[0])
     return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': se_encuentra_conectado(request)})
 
 def eliminar_publicacion(request, post_id):
@@ -31,7 +31,7 @@ def eliminar_publicacion(request, post_id):
         return redirect(' ')  
     return render(request, 'confirm_delete.html', {'post': post})"""
 
-def editar_publicacion(request, user_email, post_id):
+def editar_publicacion(request, post_id):
 
     post = get_object_or_404(Post, id = post_id)
     
@@ -46,10 +46,10 @@ def editar_publicacion(request, user_email, post_id):
             # Verificar si el archivo existe y eliminarlo
             default_storage.delete(old_image_path)
             form.save()
-            return redirect('/usuarios/{}/publicaciones'.format(user_email), user_email= user_email)
+            return redirect('/usuarios/{}/publicaciones'.format(se_encuentra_conectado(request)[0]), user_email= se_encuentra_conectado(request)[0])
         else:
             print(form.errors)
     else:
-        form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True)
+        form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form})
+    return render(request, "editar_publicacion.html", {'post': form, 'usuario': se_encuentra_conectado(request)})

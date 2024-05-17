@@ -9,7 +9,7 @@
     }
   .centered-credits-muted{
     text-align: center;
-    margin-left: 250px;
+    margin-left: 50px;
   }
   .centered-p-muted {
     text-align: center;
@@ -57,29 +57,21 @@
 </style>
 <div class="container-center">
   <div class="col-xl-7 col-lg-12">
-    <div class="container p-6 text-center-vertical mt-5">
-      <div class="my-auto"> <!-- Contenedor para centrar el contenido verticalmente -->
+    <div class="container p-6 text-center-vertical ">
           <p class="centered-p-muted mb-5">Modifique la siguiente información para editar su publicación.</p>
-
           <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in post %}
                 <div class="form-row mb-2">
-                  {% if field.name == 'image' %}
-                    <label class="required-field" for="{{ field.name }}"></label>
-                      {{ field }}
-                  {% else %}
                     <label class="required-field" for="{{ field.name }}">{{ field.label }}</label>
                       {{ field }}
-                  {% endif %}
                 </div>
             {% endfor %}
             <button type="submit" class="btn btn-success w-100">Guardar cambios</button>
           </form>
-          <small class="centered-credits-muted d-inline-block mt-5 margin-left: 100px">Todos los derechos reservados | © 2024 Aracnotech</small>
+          <small class="centered-credits-muted d-inline-block mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>
         </div>
       </div>
-    </div>
 </div>
 
 
