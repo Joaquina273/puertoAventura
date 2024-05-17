@@ -89,7 +89,7 @@
                         <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
                         <button type="button" class="btn btn-danger delete-post-btn rounded-pill" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'>Eliminar publicacion</button>
-                        <a href="/usuarios/{{ post.user.email }}/publicaciones/editarPublicacion/{{ post.id }}"><button type="button" class="btn btn-info rounded-pill">Editar publicación</button></a>
+                        <a href="/usuarios/publicaciones/editarPublicacion/{{ post.id }}"><button type="button" class="btn btn-info rounded-pill">Editar publicación</button></a>
                     </div>
                 </div>
             </div>
