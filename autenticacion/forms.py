@@ -58,3 +58,21 @@ class RegistrarUsuario(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+
+class cambiar_contrasenia_form (forms.ModelForm):
+      
+    actual_password = forms.CharField(label='Contraseña actual',min_length=8,max_length=20,widget=forms.PasswordInput(attrs={
+        'class':'form-control',
+    }))
+    new_password = forms.CharField(label='Nueva contraseña',min_length=8,max_length=20,widget=forms.PasswordInput(attrs={
+        'class':'form-control',
+    }))
+    confirm_new_password = forms.CharField(label='Repita la nueva contraseña',min_length=8,max_length=20,widget=forms.PasswordInput(attrs={
+        'class':'form-control',
+    }))
+
+    class Meta:
+        model = User
+        fields = ("actual_password", "new_password", "confirm_new_password")
+       

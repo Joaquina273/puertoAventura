@@ -1,6 +1,5 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from .forms import RegistrarUsuario
+from .forms import RegistrarUsuario, cambiar_contrasenia_form
 from db.models import User
 
 # Create your views here.
@@ -9,11 +8,33 @@ def registro(request):
         form = RegistrarUsuario(request.POST)
         if form.is_valid():
             form.save() 
-            return HttpResponseRedirect("/")
+            return redirect('/autenticacion/inicioSesion')
         else: 
-            return render(request, 'autenticacion/registro.html', { 'form':form,'mensaje_error': form.errors })
+            return render(request, 'autenticacion/registro.html', { 'form':form, 'mensaje_error': form.errors })
     form = RegistrarUsuario()
     return render(request, 'autenticacion/registro.html', {'form':form})
+
+def cambio_contraseña(request):
+    email = request.session['usuario'][0]
+    if (request.method == 'POST'):
+        form = cambiar_contrasenia_form(request.POST)
+        user = User.objects.get(email=email)
+        new_password = request.POST['new_password']
+        actual_password = request.POST['actual_password']
+        confirm_new_password = request.POST['confirm_new_password']
+        db_password = user.password
+        if(db_password == actual_password):
+            if(new_password == confirm_new_password):
+                user.password = new_password
+                user.save()
+                return redirect('/autenticacion/inicioSesion') #debería cerrar sesion
+            else:
+                return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'las contraseñas nuevas no coinciden' })
+        else:
+            return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'la contraseña actual es incorrecta' })
+    form = cambiar_contrasenia_form()
+    return render(request, 'autenticacion/cambio_contrasenia.html', {'usuario' : se_encuentra_conectado(request),'form':form})
+
 
 def inicio_de_sesion (request):
     if (request.method == 'POST'):
@@ -41,11 +62,7 @@ def inicio_de_sesion (request):
             return render (request, "autenticacion/inicio_sesion.html", {
                     "mensaje_error" : "El email ingresado no se encuentra registrado."  
                 })
-                    
     return render(request,"autenticacion/inicio_sesion.html")
-
-def cambio_contrasenia (request):
-    return render(request,"autenticacion/cambio_contrasenia.html", {'usuario' : se_encuentra_conectado(request)})
 
 def cerrar_sesion (request):
     request.session.clear()
