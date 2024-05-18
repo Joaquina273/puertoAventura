@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrarUsuario, cambiar_contrasenia_form
-from django.contrib import messages
 from db.models import User
 from django.core.mail import EmailMessage
 import random
