@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from db.models import Post,User
 from publicaciones.forms import FormularioRegistrarPublicacion
 from django.http import JsonResponse
+
 # Create your views here.
 def ver_perfil(request):
     usuario=request.session.get('usuario')
@@ -58,6 +59,11 @@ def ver_publicaciones(request):
 
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
     return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
+
+def ver_publicaciones_guardadas(request):
+    usuario = User.objects.get(email=request.session.get('usuario')[0])
+    usuario_publicaciones_guardadas = usuario.saved_posts.all
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas, 'usuario': request.session.get('usuario')})
 
 def eliminar_publicacion(request, post_id):
 
