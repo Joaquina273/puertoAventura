@@ -10,9 +10,16 @@ def registro(request):
     if request.method == 'POST':
         form = RegistrarUsuario(request.POST)
         if form.is_valid():
-            form.save() 
-            messages.success(request,"Usuario registrado exitosamente!")
-            return redirect('/autenticacion/inicioSesion')
+            form.save()
+            email = EmailMessage(
+                subject='¡Bienvenido a Puerto Aventura!',
+                body=f' ¡Hola {form.cleaned_data['name']}! Estamos muy contentos de que te hayas animado a vivir esta aventura juntos. Esperamos que tengas una buena experiencia utilizando nuestra página.'
+                + ' Cualquier duda no dudes en contactarte con nuestro equipo. Saludos aventurero.',
+                from_email='Puerto Aventura',
+                to=[form.cleaned_data['email']],
+                )
+            email.send(fail_silently=True)
+            request.session['mensaje_exito'] = "¡Usuario registrado exitosamente!"
         else: 
             return render(request, 'autenticacion/registro.html', { 'form':form, 'mensaje_error': form.errors })
     form = RegistrarUsuario()
@@ -31,15 +38,15 @@ def cambio_contraseña(request):
             if(new_password == confirm_new_password):
                 user.password = new_password
                 user.save()
-                messages.success(request,"Cambio de contraseña realizado exitosamente!")
                 request.session.clear()
+                request.session['mensaje_exito'] = "¡Cambio de contraseña realizado exitosamente!"
                 return redirect('/autenticacion/inicioSesion') #debería cerrar sesion
             else:
                 return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'las contraseñas nuevas no coinciden' })
         else:
             return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'la contraseña actual es incorrecta' })
     form = cambiar_contrasenia_form()
-    return render(request, 'autenticacion/cambio_contrasenia.html', {'usuario' : se_encuentra_conectado(request),'form':form})
+    return render(request, 'autenticacion/cambio_contrasenia.html', {'usuario' : request.session.get('usuario'),'form':form})
 
 
 def inicio_de_sesion (request):
@@ -52,7 +59,7 @@ def inicio_de_sesion (request):
                 usuario.tries_left = 5
                 usuario.save()
                 request.session['usuario'] = mail, usuario.name
-                return redirect("/autenticacion/cambioContrasenia")
+                return redirect("/")
             else:
                 if (usuario.tries_left > 1):
                     usuario.tries_left -= 1
@@ -68,11 +75,11 @@ def inicio_de_sesion (request):
             return render (request, "autenticacion/inicio_sesion.html", {
                     "mensaje_error" : "El email ingresado no se encuentra registrado."  
                 })
-    return render(request,"autenticacion/inicio_sesion.html")
+    return render(request,"autenticacion/inicio_sesion.html",{'mensaje_exito': request.session.get('mensaje_exito')})
 
 def cerrar_sesion (request):
     request.session.clear()
-    return redirect("/")
+    return render(request,'autenticacion/cierre_exitoso.html')
 
 def generar_codigo():
     codigo = ''.join(str(random.randint(0, 9)) for _ in range(6))
@@ -116,9 +123,3 @@ def ingresar_codigo (request):
             mensaje_error = 'El código ingresado es incorrecto, intentalo nuevamente.'
         return render(request, 'autenticacion/ingresar_codigo.html',{'mensaje_error': mensaje_error,'mail':request.session['recupera']})
     return render(request, 'autenticacion/ingresar_codigo.html',{'mail':request.session['recupera']})
-
-def se_encuentra_conectado(request):
-    if ('usuario' in request.session):
-        return request.session['usuario']
-    else:
-        return None

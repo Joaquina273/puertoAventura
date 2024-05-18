@@ -16,6 +16,11 @@
               </a>
             </div>
             <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Iniciar sesión</h2>
+            {% if mensaje_exito %}
+            <div class="alert alert-success"  role="alert">
+              {{ mensaje_exito }}
+            </div>
+            {% endif %}
             {% if mensaje_error %}
             <div class="alert alert-danger" role="alert">
               {{ mensaje_error }}
