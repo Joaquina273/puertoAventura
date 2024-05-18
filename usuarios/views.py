@@ -8,7 +8,9 @@ from publicaciones.forms import FormularioRegistrarPublicacion
 from autenticacion.views import se_encuentra_conectado
 
 # Create your views here.
-
+def ver_perfil(request):
+    usuario_conectado = se_encuentra_conectado(request)
+    return render(request, 'usuarios/perfil.html', {'usuario': usuario_conectado})
 
 def ver_publicaciones(request):
 
