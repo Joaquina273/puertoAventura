@@ -26,7 +26,6 @@ def ver_publicaciones(request):
 
 
 def ver_publicacion(request, post_id):
-    
     post = Post.objects.get(id=post_id)
     user = User.objects.get(email=post.user_id)
     return render(request, "ver_publicacion.html", {"post": post,'usuario':  request.session.get('usuario')})
