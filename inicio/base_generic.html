@@ -14,7 +14,6 @@
       <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/navbars/navbar-3/assets/css/navbar-3.css">
-      
       </head>
       <body>
         <!-- Header -->
@@ -25,19 +24,16 @@
               <li class="nav-item me-3">
               </li>
             </ul>
-            <a class="navbar-brand" href="/">
-              <img src="{% static 'images/logo.png' %}" class="img-fluid" alt="Puerto Aventura logo" width="105" height="15">
+            <a class="navbar-brand" href="#!">
+              <img src="{% static 'images/logo.png' %}" class="img-fluid" alt="Puerto Aventura logo" width="105" height="24">
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#bsbNavbar" aria-controls="bsbNavbar" aria-label="Toggle Navigation">
               <i class="bi bi-three-dots"></i>
             </button>
             <div class="collapse navbar-collapse" id="bsbNavbar">
               <ul class="navbar-nav bsb-dropdown-menu-responsive ms-auto align-items-center">
-                <!-- Escondo la barra de busqueda -->
-                <!--
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
+                  <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
                       <i class="bi bi-search"></i>
                     </span>
@@ -54,10 +50,6 @@
                     </form>
                   </div>
                 </li>
-                -->
-                {% if usuario != nil %}
-                <!-- Escondo los chats y notificaciones -->
-                <!--
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -79,7 +71,7 @@
                       <a href="#" class="list-group-item list-group-item-action" aria-current="true">
                         <div class="row g-0 align-items-center">
                           <div class="col-2">
-                            <img src="" class="img-fluid rounded-circle" alt="Luna John">
+                            <img src="./assets/img/chat/chat-img-1.jpg" class="img-fluid rounded-circle" alt="Luna John">
                           </div>
                           <div class="col-10">
                             <div class="ps-3">
@@ -93,7 +85,7 @@
                       <a href="#" class="list-group-item list-group-item-action">
                         <div class="row g-0 align-items-center">
                           <div class="col-2">
-                            <img src="" class="img-fluid rounded-circle" alt="Mark Smith">
+                            <img src="./assets/img/chat/chat-img-2.jpg" class="img-fluid rounded-circle" alt="Mark Smith">
                           </div>
                           <div class="col-10">
                             <div class="ps-3">
@@ -168,22 +160,13 @@
                     <li><a class="dropdown-item fs-7 text-center" href="#">Ver todas las notificaciones</a></li>
                   </ul>
                 </li>
-                -->
-                <li class="nav-item">
-                  <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
-                    <span class="position-relative pt-1">
-                      <i class="bi bi-plus" style="font-size: 30px;"></i>
-                    </span>
-                  </a>
-                </li>
-                {% endif %}
-                <li class="nav-item dropdown"> 
+                <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{% static 'images/user_icon.png' %}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
+                    <img src="./assets/img/profile/profile-img-1.jpg" width="35" height="35" class="img-fluid rounded-circle" alt="Luke Reeves">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
                     <li>
-                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.1 }}</h6>
+                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, usuario</h6>
                     </li>
                     <li>
                       <hr class="dropdown-divider">
@@ -192,12 +175,12 @@
                       <a href="#" class="dropdown-item" aria-current="true">
                         <div class="row g-0 align-items-center">
                           <div class="col-3">
-                            <img src="{% static 'images/user_icon.png' %}" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
+                            <img src="./assets/img/profile/profile-img-1.jpg" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
                           </div>
                           <div class="col-9">
                             <div class="ps-3">
                               <div class="text-secondary mt-1 fs-7">Cuenta</div>
-                              <div class="text-secondary mt-1 fs-7">{{ usuario.0 }}</div>
+                              <div class="text-secondary mt-1 fs-7">email@domain.com</div>
                             </div>
                           </div>
                         </div>
@@ -207,23 +190,13 @@
                       <hr class="dropdown-divider">
                     </li>
                     <li>
-                      <a class="dropdown-item" href="/usuarios/perfil">
+                      <a class="dropdown-item" href="#!">
                         <span>
                           <i class="bi bi-person-fill me-2"></i>
-                          <span class="fs-7">Mi perfil</span>
+                          <span class="fs-7">Ver perfil</span>
                         </span>
                       </a>
                     </li>
-                    <li>
-                      <a class="dropdown-item" href="/usuarios/publicaciones">
-                        <span>
-                          <i class="bi bi-map-fill me-2"></i>
-                          <span class="fs-7">Mis publicaciones</span>
-                        </span>
-                      </a>
-                    </li>
-                    <!-- Escondo configuracion y centro de ayuda -->
-                    <!--
                     <li>
                       <a class="dropdown-item" href="#!">
                         <span>
@@ -251,12 +224,11 @@
                         </span>
                       </a>
                     </li>
-                    -->
                     <li>
                       <hr class="dropdown-divider">
                     </li>
                     <li>
-                      <a class="dropdown-item text-center" href="/autenticacion/cerrarSesion" name = "cerrar_sesion">
+                      <a class="dropdown-item text-center" href="#!">
                         <span>
                           <span class="fs-7">Cerrar sesión</span>
                         </span>
@@ -264,27 +236,15 @@
                     </li>
                   </ul>
                 </li>
-                {% else %}
-                <div class="col-7">
-                  <div class="d-flex justify-content-between">
-                    <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrarse</a>
-                  </div>
-                </div>
-                <div class="col-7">
-                  <div class="d-flex justify-content-between">
-                    <a href="/autenticacion/inicioSesion" class="link-primary text-decoration-none">Iniciar sesion</a>
-                  </div>
-                </div>
-                {% endif %}
               </ul>
             </div>
           </div>
         </nav>
       </header>
       </body>
-        {% endblock %}
-        {% block content %}
-          <!-- default content text (typically empty) -->
-        {% endblock %}
-    </body>
+    {% endblock %}
+    {% block content %}
+      <!-- default content text (typically empty) -->
+    {% endblock %}
+  </body>
 </html>
