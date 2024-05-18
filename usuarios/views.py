@@ -1,22 +1,64 @@
+import datetime
 import os
 import shutil
+from datetime import datetime
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from db.models import Post,User
 from publicaciones.forms import FormularioRegistrarPublicacion
-from autenticacion.views import se_encuentra_conectado
-
+from django.http import JsonResponse
 # Create your views here.
 def ver_perfil(request):
-    usuario_conectado = se_encuentra_conectado(request)
-    return render(request, 'usuarios/perfil.html', {'usuario': usuario_conectado})
+    usuario=request.session.get('usuario')
+    user = User.objects.get(email=usuario[0])
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        phone_number = request.POST.get('phone_number')
+        birthdate_str = request.POST.get('birthdate')
+
+        # Check for changes
+        has_changes = False
+
+        if name and name != user.name:
+            user.name = name
+            has_changes = True
+        print(has_changes)
+        if surname and surname != user.surname:
+            user.surname = surname
+            has_changes = True
+        print(has_changes)
+        telefono_usuario = int(phone_number)
+        if phone_number and user.phone_number != telefono_usuario:
+            print(phone_number)
+            print(user.phone_number)
+            user.phone_number = phone_number
+            has_changes = True
+        print(has_changes)
+        if birthdate_str:
+            birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
+            if birthdate != user.birthdate:
+                user.birthdate = birthdate
+                has_changes = True
+        print(has_changes)
+        if has_changes:
+            user.save()
+            print("guardo")
+            mensaje = "Cambios guardados"
+            return render(request, 'usuarios/perfil.html', {'usuario': user})
+        else:
+            print("hola")   
+            return render(request, 'usuarios/perfil.html', {'usuario': user}) 
+    return render(request, 'usuarios/perfil.html', {'usuario': user})
+
 
 def ver_publicaciones(request):
 
-    user_posts = Post.objects.filter(user_id=se_encuentra_conectado(request)[0])
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': se_encuentra_conectado(request)})
+    user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
 
 def eliminar_publicacion(request, post_id):
 
@@ -57,4 +99,4 @@ def editar_publicacion(request, post_id):
     else:
         form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form, 'usuario': se_encuentra_conectado(request)})
+    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario')})

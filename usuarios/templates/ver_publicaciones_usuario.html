@@ -88,9 +88,6 @@
                         <h6 class="card-subtitle">Valor: {{ post.value }}</h6>
                         <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
                         <p class="card-text">Patente: {{ post.patent }}</p>
-                        <p class="user-info">Nombre del dueño: {{ post.user.name }}</p>
-                        <p class="user-info">Email del dueño: {{ post.user.email }}</p>
-                        <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
                         <a href="#" onclick="eliminarPublicacion({{ post.id }})" class= "btn btn-danger delete-post-btn rounded-pill" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'>Eliminar publicacion</a>
                         <a href="/usuarios/publicaciones/editarPublicacion/{{ post.id }}"><button type="button" class="btn btn-info rounded-pill">Editar publicación</button></a>

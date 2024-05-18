@@ -15,6 +15,7 @@
       <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/navbars/navbar-3/assets/css/navbar-3.css">
+      
       </head>
       <body>
         <!-- Header -->
@@ -33,8 +34,11 @@
             </button>
             <div class="collapse navbar-collapse" id="bsbNavbar">
               <ul class="navbar-nav bsb-dropdown-menu-responsive ms-auto align-items-center">
+                <!-- Escondo la barra de busqueda -->
+                <!--
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
                     <span class="position-relative pt-1">
                       <i class="bi bi-search"></i>
                     </span>
@@ -51,7 +55,10 @@
                     </form>
                   </div>
                 </li>
+                -->
                 {% if usuario != nil %}
+                <!-- Escondo los chats y notificaciones -->
+                <!--
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -162,6 +169,7 @@
                     <li><a class="dropdown-item fs-7 text-center" href="#">Ver todas las notificaciones</a></li>
                   </ul>
                 </li>
+                -->
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -199,13 +207,23 @@
                       <hr class="dropdown-divider">
                     </li>
                     <li>
-                      <a class="dropdown-item" href="/usuarios/perfil/">
+                      <a class="dropdown-item" href="/usuarios/perfil">
                         <span>
                           <i class="bi bi-person-fill me-2"></i>
-                          <span class="fs-7">Ver perfil</span>
+                          <span class="fs-7">Mi perfil</span>
                         </span>
                       </a>
                     </li>
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/publicaciones">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Mis publicaciones</span>
+                        </span>
+                      </a>
+                    </li>
+                    <!-- Escondo configuracion y centro de ayuda -->
+                    <!--
                     <li>
                       <a class="dropdown-item" href="#!">
                         <span>
@@ -233,6 +251,7 @@
                         </span>
                       </a>
                     </li>
+                    -->
                     <li>
                       <hr class="dropdown-divider">
                     </li>
@@ -246,7 +265,7 @@
                   </ul>
                 </li>
                 {% else %}
-                <div class="col-5">
+                <div class="col-7">
                   <div class="d-flex justify-content-between">
                     <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrarse</a>
                   </div>
@@ -264,25 +283,13 @@
       </header>
       </body>
         {% if messages %}
-          {% for m in messages %}
-            {% if m.tags == "success" %}
-            <script>
-              Swal.fire({
-                title: "Operación realizada",
-                text: "{{m}}",
-                icon: "success"
-              });
-            </script>
-            {% else %}
-            <script>
-              Swal.fire({
-                title: "Error",
-                text: "{{m}}",
-                icon: "error"
-              });
-            </script>
-            {% endif %}
-          {% endfor %}
+        <div class="alert alert-success" style=" width:30%; margin:auto; z-index:1"  role="alert">
+          <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+        </div>
         {% endif %}
         {% endblock %}
         {% block content %}
