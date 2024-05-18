@@ -159,7 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                         <div class="container text-center">
+                            {% if usuario.type_user != 1 %}
                             <button type="button" id="editButton" class="btn btn-primary">Editar perfil</button>
+                            {% endif %}
                             <button type="submit" class="btn btn-success" style="display: none;" id="saveButton">Guardar cambios</button>
                             <a class="btn btn-primary" href="/autenticacion/cambioContrasenia">Cambiar Contraseña</a>
                         </div>
