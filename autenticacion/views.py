@@ -12,7 +12,7 @@ def registro(request):
             form.save()
             email = EmailMessage(
                 subject='¡Bienvenido a Puerto Aventura!',
-                body=f' ¡Hola {form.cleaned_data['name']}! Estamos muy contentos de que te hayas animado a vivir esta aventura juntos. Esperamos que tengas una buena experiencia utilizando nuestra página.'
+                body=f' ¡Hola {form.cleaned_data["name"]}! Estamos muy contentos de que te hayas animado a vivir esta aventura juntos. Esperamos que tengas una buena experiencia utilizando nuestra página.'
                 + ' Cualquier duda no dudes en contactarte con nuestro equipo. Saludos aventurero.',
                 from_email='Puerto Aventura',
                 to=[form.cleaned_data['email']],

@@ -11,4 +11,5 @@ urlpatterns = [
     path("<int:post_id>/", views.ver_publicacion, name="ver_publicacion"),
     # ex: /publicaciones/4/image
     path("<int:post_id>/image/", views.ver_imagen, name="imagen_publicacion"),
+    path("<int:post_id>/guardar/", views.guardar_publicacion, name="guardar publicacion"),
 ]
