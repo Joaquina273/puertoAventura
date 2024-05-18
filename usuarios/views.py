@@ -7,11 +7,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from db.models import Post,User
 from publicaciones.forms import FormularioRegistrarPublicacion
-from autenticacion.views import se_encuentra_conectado
 from django.http import JsonResponse
 # Create your views here.
 def ver_perfil(request):
-    usuario = se_encuentra_conectado(request)
+    usuario=request.session.get('usuario')
     user = User.objects.get(email=usuario[0])
 
     if request.method == 'POST':
