@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import RegistrarUsuario, cambiar_contrasenia_form
 from db.models import User
 from django.core.mail import EmailMessage
+from django.contrib import messages
 import random
 
 # Create your views here.
@@ -18,7 +19,8 @@ def registro(request):
                 to=[form.cleaned_data['email']],
                 )
             email.send(fail_silently=True)
-            request.session['mensaje_exito'] = "¡Usuario registrado exitosamente!"
+            messages.success(request,"¡Usuario registrado exitosamente!")
+            #request.session['mensaje_exito'] = "¡Usuario registrado exitosamente!"
             return redirect('/autenticacion/inicioSesion')
         else: 
             return render(request, 'autenticacion/registro.html', { 'form':form, 'mensaje_error': form.errors })
