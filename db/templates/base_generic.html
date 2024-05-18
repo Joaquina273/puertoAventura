@@ -283,13 +283,25 @@
       </header>
       </body>
         {% if messages %}
-        <div class="alert alert-success" style=" width:30%; margin:auto; z-index:1"  role="alert">
-          <ul class="messages">
-              {% for message in messages %}
-              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-              {% endfor %}
-          </ul>
-        </div>
+          {% for m in messages %}
+            {% if m.tags == "success" %}
+              <script>
+                Swal.fire({
+                  title: "Operacion realizada",
+                  text: "{{m}}",
+                  icon: "success"
+                });
+              </script>
+            {% else %}
+              <script>
+                Swal.fire({
+                  title: "Operacion inválida",
+                  text: "{{m}}",
+                  icon: "error"
+                });
+              </script>
+            {% endif %}
+          {% endfor %}
         {% endif %}
         {% endblock %}
         {% block content %}
