@@ -44,7 +44,7 @@ def inicio_de_sesion (request):
         if(User.objects.filter(email=mail).exists()):
             usuario = User.objects.get(email=mail)
             contrasenia = request.POST['password']
-            if (usuario.password == contrasenia):
+            if ((usuario.password == contrasenia) and (usuario.tries_left > 1)):
                 usuario.tries_left = 5
                 usuario.save()
                 request.session['usuario'] = mail, usuario.name
