@@ -49,9 +49,9 @@ def ver_perfil(request):
             print("guardo")
             mensaje = "Cambios guardados"
             return render(request, 'usuarios/perfil.html', {'usuario': user})
-            return JsonResponse({'mensaje': mensaje})
         else:
-            print("hola")    
+            print("hola")   
+            return render(request, 'usuarios/perfil.html', {'usuario': user}) 
     return render(request, 'usuarios/perfil.html', {'usuario': user})
 
 
