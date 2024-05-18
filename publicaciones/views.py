@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from .forms import FormularioRegistrarPublicacion
 from db.models import Post,User
 from autenticacion.views import se_encuentra_conectado
@@ -11,8 +10,7 @@ def registrar_publicacion(request):
         form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            #post.user = se_encuentra_conectado(request)[0]  # Assign the current user to the post
-            post.user = User.objects.first()
+            post.user = se_encuentra_conectado(request)[0]  # Assign the current user to the post
             post.save()
             return redirect("/")
     else:

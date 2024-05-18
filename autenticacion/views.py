@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrarUsuario, cambiar_contrasenia_form
+from django.contrib import messages
 from db.models import User
 from django.core.mail import EmailMessage
 import random
@@ -10,6 +11,7 @@ def registro(request):
         form = RegistrarUsuario(request.POST)
         if form.is_valid():
             form.save() 
+            messages.success(request,"Usuario registrado exitosamente!")
             return redirect('/autenticacion/inicioSesion')
         else: 
             return render(request, 'autenticacion/registro.html', { 'form':form, 'mensaje_error': form.errors })
@@ -29,6 +31,8 @@ def cambio_contraseña(request):
             if(new_password == confirm_new_password):
                 user.password = new_password
                 user.save()
+                messages.success(request,"Cambio de contraseña realizado exitosamente!")
+                request.session.clear()
                 return redirect('/autenticacion/inicioSesion') #debería cerrar sesion
             else:
                 return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'las contraseñas nuevas no coinciden' })
