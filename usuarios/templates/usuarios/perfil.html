@@ -1,64 +1,168 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
+{% block body_class %}pagina-especial{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background: #93d2f0;
+    }
+</style>
+<script>
+    var usuario = "{{ usuario.name }}"
+    console.log(usuario)
+document.addEventListener('DOMContentLoaded', function() {
 
+    document.getElementById('editButton').addEventListener('click', function() {
+        const inputs = document.querySelectorAll('#edit_form .form-control');
+        inputs.forEach(function(input) {
+            input.removeAttribute('disabled');
+        });
+        this.style.display = 'none';
+        document.getElementById('saveButton').style.display = 'inline-block';
+    });
+    function calcularEdad(fechaNacimiento) {
+        const hoy = new Date();
+        const fechaNac = new Date(fechaNacimiento);
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+        const mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+            edad--;
+        }
+        return edad;
+    }
+    // Validar y procesar el formulario cuando se hace clic en el botón "Guardar cambios"
+    document.getElementById('saveButton').addEventListener('click', function(event) {
+        const firstNameInput = document.getElementById("inputFirstName");
+        const lastNameInput = document.getElementById("inputLastName");
+        const phoneInput = document.getElementById("inputPhone");
+        const birthdayInput = document.getElementById("inputBirthday");
+        const camposVacios = [];
 
+        if (firstNameInput.value.trim() === '') {
+            camposVacios.push("Nombre");
+            const labelName = document.querySelector('label[for="inputFirstName"]');
+            labelName.classList.add('text-danger');
+            firstNameInput.classList.add('is-invalid')
+            event.preventDefault();
+        }
+        if (lastNameInput.value.trim() === '') {
+            camposVacios.push("Apellido");
+            const labelApellido = document.querySelector('label[for="inputLastName"]');
+            labelApellido.classList.add('text-danger');
+            lastNameInput.classList.add('is-invalid')
+            event.preventDefault();
+        }
+        if (phoneInput.value.trim() === '') {
+            camposVacios.push("Número de teléfono");
+            const labelTelefono = document.querySelector('label[for="inputPhone"]');
+            labelTelefono.classList.add('text-danger');
+            phoneInput.classList.add('is-invalid')
+            event.preventDefault();
+        }
+        if (birthdayInput.value.trim() === ''|| calcularEdad(birthdayInput.value) < 18) {
+            camposVacios.push("Fecha de nacimiento");
+            const labelNacimiento = document.querySelector('label[for="inputBirthday"]');
+            labelNacimiento.classList.add('text-danger');
+            birthdayInput.classList.add('is-invalid')
+            event.preventDefault();
+        }
+        if (camposVacios.length > 0) {
+            const mensajeAnterior = document.getElementById('mensajeError');
+            const mensajeDiv = document.createElement("div");
+            mensajeDiv.classList.add("container", "text-center", "--bs-danger-text-emphasis");
+            mensajeDiv.id = "mensajeError";
 
-{% if usuario != nil %}
+            const mensajeP = document.createElement("p");
+            mensajeP.classList.add("container", "text-center", "text-danger");
+            mensajeP.innerText = "Complete los campos marcados en rojo antes de Guardar los cambios";
+            if (calcularEdad(birthdayInput.value) < 18){
+                mensajeP.innerText = "La edad no puede ser menor a 18 años";
+            }
+            mensajeDiv.appendChild(mensajeP);
+            if (mensajeAnterior == null) {
+                const saveButton = document.getElementById("saveButton");
+                saveButton.parentNode.insertBefore(mensajeDiv, saveButton);
+            }
+        }
+        if (firstNameInput.value.trim() === "{{ usuario.name }}" &&
+        lastNameInput.value.trim() === "{{ usuario.surname }}" &&
+        phoneInput.value.trim() === "{{ usuario.phone_number }}" &&
+        birthdayInput.value.trim() === "{{ usuario.birthdate|date:'Y-m-d' }}") {
+        // No se han realizado cambios, puedes mostrar un mensaje o tomar alguna acción
+        sessionStorage.setItem('mensajeExito', 'No se realizaron cambios');
+        document.getElementById('edit_form').submit();
+        }
+        else {
+            sessionStorage.setItem('mensajeExito', 'Cambios guardados con éxito');
+            document.getElementById('edit_form').submit();
+        }
+    });
+
+    const mensajeExito = sessionStorage.getItem('mensajeExito');
+    if (mensajeExito) {
+        console.log(mensajeExito)
+        const mensajeDiv = document.createElement("div");
+        mensajeDiv.classList.add("container", "text-center", "--bs-success-text-emphasis");
+        mensajeDiv.id = "mensajeExito";
+        const mensajeP = document.createElement("p");
+        mensajeP.classList.add("container", "text-center", "text-success");
+        mensajeP.innerText = mensajeExito;
+        mensajeDiv.appendChild(mensajeP);
+        const form = document.getElementById("edit_form");
+        form.parentNode.insertBefore(mensajeDiv, form);
+
+        sessionStorage.removeItem('mensajeExito');
+        const tiempoEspera = 2500;
+        setTimeout(function() {
+            mensajeDiv.remove(); // Eliminar el elemento
+    }, tiempoEspera);
+    }
+    
+});
+</script>
+{% if usuario %}
 <div class="container-xl px-4 mt-4">
     <div class="row">
-        <div class="col-xl-8">
-            <!-- Account details card-->
-            <div class="card mb-4">
+        <div class="col align-self-center">
+            <div class="card mb-3">
                 <div class="card-header">Datos Personales</div>
                 <div class="card-body">
-                    <form>
-                        <!-- Form Group (username)-->
+                    <form id="edit_form" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="container text-center bg-danger-subtle">
+                        <div class="container text-center text-danger-subtle" id="mensaje" style="display: none;"></div>
+                        </div>
                         <div class="mb-3">
                             <label class="small mb-1" for="inputUsername">Correo Electronico</label>
-                            <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username" value="username">
+                            <p class="form-control "  type="text" placeholder="Enter your username">{{ usuario.email }}</p>
                         </div>
-                        <!-- Form Row-->
                         <div class="row gx-3 mb-3">
-                            <!-- Form Group (first name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputFirstName">Nombre</label>
-                                <input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" value="Valerie">
+                                <input name="name" class="form-control" id="inputFirstName" type="text" placeholder="Ingrese su nombre" value="{{ usuario.name }}" disabled>
                             </div>
-                            <!-- Form Group (last name)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputLastName">Apellido</label>
-                                <input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" value="Luna">
+                                <label  class="small mb-1" for="inputLastName">Apellido</label>
+                                <input name="surname" class="form-control" id="inputLastName" type="text" placeholder="Ingrese su apellido" value="{{ usuario.surname }}" disabled>
                             </div>
                         </div>
-                        <!-- Form Row        -->
-                        
-                        <!-- Form Row-->
                         <div class="row gx-3 mb-3">
-                            <!-- Form Group (phone number)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">Numero de telefono</label>
-                                <input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number" value="555-123-4567">
+                                <input name="phone_number" class="form-control"  id="inputPhone" type="number" inputmode="numeric" placeholder="Ingrese su numero de telefono" value="{{ usuario.phone_number }}" disabled>
                             </div>
-                            <!-- Form Group (birthday)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputBirthday">Fecha de nacimiento</label>
-                                <input class="form-control" id="inputBirthday" type="text" name="birthday" placeholder="Enter your birthday" value="06/10/1988">
-                            </div>
-                            <!-- Form Group (birthday)-->
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputBirthday">Contraseña</label>
-                                <input class="form-control" id="inputBirthday" type="text" name="birthday" placeholder="Enter your birthday" value="06/10/1988">
+                                <input name="birthdate" class="form-control" id="inputBirthday" type="date" name="birthday" placeholder="Ingrese su  fecha de nacimiento" value="{{ usuario.birthdate|date:'Y-m-d' }}" disabled>
                             </div>
                         </div>
-                        <div class="row gx-3 mb-3">
+                        <div class="container text-center">
+                            <button type="button" id="editButton" class="btn btn-primary">Editar perfil</button>
+                            <button type="submit" class="btn btn-success" style="display: none;" id="saveButton">Guardar cambios</button>
+                            <a class="btn btn-primary" href="/autenticacion/cambioContrasenia">Cambiar Contraseña</a>
                         </div>
-                        <!-- Save changes button-->
-                        <button class="btn btn-primary" type="button">Save changes</button>
-                        <a class="btn btn-primary" href="/autenticacion/cambioContrasenia">
-                            cambiar Contraseña </a>
                     </form>
                 </div>
             </div>
@@ -66,7 +170,6 @@
     </div>
 </div>
 {% else %}
-<p>sesion no iniciada
-</p>
+<p>Sesión no iniciada</p>
 {% endif %}
 {% endblock %}
