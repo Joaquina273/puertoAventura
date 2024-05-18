@@ -5,3 +5,4 @@ pillow==10.3.0
 soupsieve==2.5
 sqlparse==0.5.0
 tzdata==2024.1
+sweetify==2.3.1
