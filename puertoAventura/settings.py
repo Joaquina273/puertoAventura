@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 # Application definition
 
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'sweetify',
     "autenticacion",
     "landing_page",
     "publicaciones",
@@ -137,3 +139,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'equipopuertoaventura@gmail.com'
 EMAIL_HOST_PASSWORD = 'rhed rqmz cfqm zxrd'
 EMAIL_USE_TLS = True
+
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'

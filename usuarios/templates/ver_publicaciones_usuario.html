@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
+
 {% block content %}
 
 <style>
@@ -70,6 +71,9 @@
 
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 {% if posts %}
     <div class="row">
         {% for post in posts %}
@@ -85,7 +89,7 @@
                         <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
                         <p class="card-text">Patente: {{ post.patent }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
-                        <button type="button" class="btn btn-danger delete-post-btn rounded-pill" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'>Eliminar publicacion</button>
+                        <a href="#" onclick="eliminarPublicacion({{ post.id }})" class= "btn btn-danger delete-post-btn rounded-pill" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'>Eliminar publicacion</a>
                         <a href="/usuarios/publicaciones/editarPublicacion/{{ post.id }}"><button type="button" class="btn btn-info rounded-pill">Editar publicación</button></a>
                     </div>
                 </div>
@@ -98,55 +102,31 @@
 {% else %}
     <div class="alert alert-danger">No hay publicaciones disponibles</div> 
 {% endif %}
-{% endblock %}
+
+
+
+{% block js %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var deleteButtons = document.querySelectorAll('.delete-post-btn');
-
-        deleteButtons.forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                var postId = event.target.getAttribute('data-post-id');
-                var csrfToken = button.getAttribute('data-csrf-token');
-
-                // Create a confirmation dialog
-                var confirmDialog = $('<div>').dialog({
-                    modal: true,
-                    title: 'Confirmar eliminación',
-                    zIndex: 10000,
-                    autoOpen: false,
-                    width: 'auto',
-                    resizable: false,
-                    buttons: {
-                        'Aceptar': function() {
-                            // Send an AJAX request to delete the post
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('DELETE', '/eliminarPublicacion/' + postId + '/');
-                            xhr.setRequestHeader('X-CSRFToken', csrfToken);
-                            xhr.onload = function() {
-                                if (xhr.status === 204) {
-                                    // If the deletion is successful, remove the card from the UI
-                                    event.target.closest('.col-4').remove();
-                                } else {
-                                    // Handle any error that occurs during deletion
-                                    console.error('Error al eliminar el post:', xhr.statusText);
-                                }
-                            };
-                            xhr.send();
-                            $(this).dialog("close");
-                        },
-                        'Cancelar': function() {
-                            $(this).dialog("close");
-                        }
-                    },
-                    close: function(event, ui) {
-                        $(this).remove();
-                    }
-                });
-
-                // Open the confirmation dialog
-                confirmDialog.dialog("open");
-            });
-        });
-    });
+    function eliminarPublicacion(id){
+    Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Esta accion no se puede deshacer",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
+        reverseButtons: true,
+        confirmButtonColor: "#cde7f6"
+    })
+    .then(function(result){
+        if(result.isConfirmed){
+        window.location.href = "publicaciones/eliminarPublicacion/"+id
+    }
+    })
+}
 </script>
+
+{% endblock %}
+
+{% endblock %}

@@ -6,14 +6,18 @@ from db.models import Post,User
 # Create your views here.
 
 def registrar_publicacion(request):
+
+    errorPatente = None
     if request.method == 'POST':
         form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.user = User.objects.get(email=request.session.get('usuario') [0]) # Assign the current user to the post
             post.save()
-            messages.success(request,"Publicacion registrada exitosamente!")
+            messages.success(request, "Publicacion registrada exitosamente")
             return redirect("/")
+        else:
+            messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
     else:
         form = FormularioRegistrarPublicacion()
     return render(request, 'registrar_publicacion.html', {'form': form, 'usuario':  request.session.get('usuario'),'mensaje_error': form.errors})
@@ -25,7 +29,6 @@ def ver_publicaciones(request):
     return render(request, "ver_publicaciones.html", {"posts": posts,'usuario':  request.session.get('usuario')})
 
 def ver_publicacion(request, post_id):
-    
     post = Post.objects.get(id=post_id)
     user = User.objects.get(email=post.user_id)
     if (None == request.session.get('usuario')):

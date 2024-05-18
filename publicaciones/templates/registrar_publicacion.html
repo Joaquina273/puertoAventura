@@ -1,13 +1,19 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
-
 {% block content %}
+
 
 <style>
   body {
     background: #ffffff url(../static/images/fondo-registrar-publicacion.jpg) center center/cover no-repeat;
   }
+
+  .centered-credits-muted{
+    text-align: center;
+    margin-left: 50px;
+  }
+
   .container-center {
     display: flex;
     justify-content: center;
@@ -48,24 +54,15 @@
 
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="container-center">
   <div class="col-xl-7 col-lg-12">
     <div class="container p-6 text-center-vertical">
       <p class="text-muted mb-5">Ingresa la siguiente información para registrar su publicación.</p>
 
-      {% if mensaje_error %}
-      <div class="alert alert-danger" role="alert">
-        <ul>
-            {% for field, errors in mensaje_error.items %}
-                {% for error in errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
-      </div> 
-    {% endif %}
     
-      <form action="registrarPublicacion" method="post" enctype="multipart/form-data">
+      <form id= "registroForm" action="registrarPublicacion" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
           <div class="form-row mb-2">
@@ -73,14 +70,16 @@
             {{ field }}
           </div>
         {% endfor %}
-        <button type="submit" class="btn btn-success w-100">Registrar publicación</button>
+
+        <button type="submit" class= "btn btn-success w-100">Registrar publicación</button>
       </form>
       
-      <small class="d-inline-block text-muted mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>
+      <small class="centered-credits-muted d-inline-block mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>
     </div>
   </div>
 </div>
 
+
+
+
 {% endblock %}
-
-
