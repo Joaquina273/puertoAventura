@@ -84,10 +84,10 @@ def editar_publicacion(request, post_id):
         form = FormularioRegistrarPublicacion(data=request.POST, instance=post, files=request.FILES, exclude_patent = True)
         if form.is_valid():
             old_image_path = os.path.join(settings.MEDIA_ROOT, old_image_url.replace('/', os.sep))
-            print(old_image_path)
+
             # Ensure the 'media' is not duplicated in the path
             old_image_path = old_image_path.replace(os.sep + 'media', '', 1)
-            print(old_image_path)
+
             # Verificar si el archivo existe y eliminarlo
             if (form.cleaned_data["image"] == old_image_path):
                 default_storage.delete(old_image_path)

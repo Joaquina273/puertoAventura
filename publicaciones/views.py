@@ -17,7 +17,6 @@ def registrar_publicacion(request):
             messages.success(request, "Publicacion registrada exitosamente")
             return redirect("/")
         else:
-            errorPatente = form.errors['patent']
             messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
     else:
         form = FormularioRegistrarPublicacion()
