@@ -5,17 +5,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from db.models import Post,User
 from publicaciones.forms import FormularioRegistrarPublicacion
-from autenticacion.views import se_encuentra_conectado
 
 # Create your views here.
 def ver_perfil(request):
-    usuario_conectado = se_encuentra_conectado(request)
+    usuario_conectado =  request.session.get('usuario')
     return render(request, 'usuarios/perfil.html', {'usuario': usuario_conectado})
 
 def ver_publicaciones(request):
 
-    user_posts = Post.objects.filter(user_id=se_encuentra_conectado(request)[0])
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': se_encuentra_conectado(request)})
+    user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
 
 def eliminar_publicacion(request, post_id):
 
@@ -54,4 +53,4 @@ def editar_publicacion(request, post_id):
     else:
         form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form, 'usuario': se_encuentra_conectado(request)})
+    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario')})
