@@ -20,3 +20,9 @@ class FormularioRegistrarPublicacion(forms.ModelForm):
 
         if exclude_patent:
             self.fields.pop('patent')  # Excluir el campo de patente si se establece exclude_patent como True
+    
+    def clean_patent(self):
+        patent = self.cleaned_data.get('patent')
+        if Post.objects.filter(patent=patent).exists():
+            raise forms.ValidationError("Ya existe una publicación con esa patente registrada en el sistema")
+        return patent

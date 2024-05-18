@@ -53,6 +53,18 @@
     <div class="container p-6 text-center-vertical">
       <p class="text-muted mb-5">Ingresa la siguiente información para registrar su publicación.</p>
 
+      {% if mensaje_error %}
+      <div class="alert alert-danger" role="alert">
+        <ul>
+            {% for field, errors in mensaje_error.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+      </div> 
+    {% endif %}
+    
       <form action="registrarPublicacion" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
@@ -61,11 +73,6 @@
             {{ field }}
           </div>
         {% endfor %}
-        {% if form.errors.patent %}
-        <script>
-            alert("Error: La patente ya existe. Por favor, ingrese una patente única.");
-        </script>
-        {% endif %}
         <button type="submit" class="btn btn-success w-100">Registrar publicación</button>
       </form>
       

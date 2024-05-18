@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import FormularioRegistrarPublicacion
+from django.contrib import messages
 from db.models import Post,User
 from autenticacion.views import se_encuentra_conectado
 
@@ -10,12 +11,13 @@ def registrar_publicacion(request):
         form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.user = se_encuentra_conectado(request)[0]  # Assign the current user to the post
+            post.user = User.objects.get(email=se_encuentra_conectado(request)[0]) # Assign the current user to the post
             post.save()
+            messages.success(request,"Publicacion registrada exitosamente!")
             return redirect("/")
     else:
         form = FormularioRegistrarPublicacion()
-    return render(request, 'registrar_publicacion.html', {'form': form, 'usuario': se_encuentra_conectado(request)})
+    return render(request, 'registrar_publicacion.html', {'form': form, 'usuario': se_encuentra_conectado(request), 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):
     posts = Post.objects.all()
