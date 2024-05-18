@@ -1,0 +1,79 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  body {
+      background: #ffffff url("{% static 'images/fondo-editar-publicacion.jpg' %}") center center/cover no-repeat;
+    }
+  .centered-credits-muted{
+    text-align: center;
+    margin-left: 50px;
+  }
+  .centered-p-muted {
+    text-align: center;
+    margin-left: 50px;
+  }
+  .container-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ajusta la altura de la pantalla completa */
+    font-size: 18px; /* Tamaño de fuente más grande */
+    font-weight: bold;
+    color: white; /* Texto en negrita */
+  }
+  .text-center-vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: -50px; /* Ajusta el margen superior para centrar verticalmente */
+    height: 70vh; /* Ajusta la altura del contenedor verticalmente centrado */
+  }
+  .required-field {
+    position: relative;
+  }
+  .required-field::after {
+    content: '*';
+    color: red;
+    margin-left: 5px;
+  }
+  .required-field:hover::after {
+    position: absolute;
+    top: -1.5em;
+    left: 100%;
+    width: auto;
+    white-space: nowrap;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    border-radius: 5px;
+    z-index: 1;
+    content: "Este campo es obligatorio";
+    color:black
+  }
+
+</style>
+<div class="container-center">
+  <div class="col-xl-7 col-lg-12">
+    <div class="container p-6 text-center-vertical ">
+          <p class="centered-p-muted mb-5">Modifique la siguiente información para editar su publicación.</p>
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in post %}
+                <div class="form-row mb-2">
+                    <label class="required-field" for="{{ field.name }}">{{ field.label }}</label>
+                      {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success w-100">Guardar cambios</button>
+          </form>
+          <small class="centered-credits-muted d-inline-block mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>
+        </div>
+      </div>
+</div>
+
+
+
+{% endblock %}
