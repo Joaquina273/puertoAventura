@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         this.style.display = 'none';
         document.getElementById('saveButton').style.display = 'inline-block';
+        document.querySelector('a[href="/autenticacion/cambioContrasenia"]').style.display = 'none';
     });
     function calcularEdad(fechaNacimiento) {
         const hoy = new Date();
