@@ -7,17 +7,24 @@ from autenticacion.views import se_encuentra_conectado
 # Create your views here.
 
 def registrar_publicacion(request):
+
+    errorPatente = None
     if request.method == 'POST':
         form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.user = User.objects.get(email=se_encuentra_conectado(request)[0]) # Assign the current user to the post
             post.save()
-            messages.success(request,"Publicacion registrada exitosamente!")
+            messages.success(request, "Publicacion registrada exitosamente")
             return redirect("/")
+        else:
+            errorPatente = form.errors['patent']
+            messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
     else:
         form = FormularioRegistrarPublicacion()
-    return render(request, 'registrar_publicacion.html', {'form': form, 'usuario': se_encuentra_conectado(request), 'mensaje_error': form.errors})
+        print(form.errors)
+    print(errorPatente)
+    return render(request, 'registrar_publicacion.html', {'form': form, 'usuario': se_encuentra_conectado(request), 'patente': errorPatente})
 
 def ver_publicaciones(request):
     posts = Post.objects.all()
