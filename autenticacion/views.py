@@ -20,6 +20,7 @@ def registro(request):
                 )
             email.send(fail_silently=True)
             request.session['mensaje_exito'] = "¡Usuario registrado exitosamente!"
+            return redirect('/autenticacion/inicioSesion')
         else: 
             return render(request, 'autenticacion/registro.html', { 'form':form, 'mensaje_error': form.errors })
     form = RegistrarUsuario()

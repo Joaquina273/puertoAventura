@@ -10,7 +10,7 @@ def registrar_publicacion(request):
         form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.user = User.objects.get(email=se_encuentra_conectado(request)[0]) # Assign the current user to the post
+            post.user = User.objects.get(email=request.session['usuario'][0]) # Assign the current user to the post
             post.save()
             messages.success(request,"Publicacion registrada exitosamente!")
             return redirect("/")
