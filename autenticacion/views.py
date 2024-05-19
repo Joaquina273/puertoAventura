@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrarUsuario, cambiar_contrasenia_form
-from django.contrib import messages
 from db.models import User
 from django.core.mail import EmailMessage
+from django.contrib import messages
 import random
 
 # Create your views here.
@@ -13,13 +13,14 @@ def registro(request):
             form.save()
             email = EmailMessage(
                 subject='¡Bienvenido a Puerto Aventura!',
-                body=f' ¡Hola {form.cleaned_data['name']}! Estamos muy contentos de que te hayas animado a vivir esta aventura juntos. Esperamos que tengas una buena experiencia utilizando nuestra página.'
+                body=f' ¡Hola {form.cleaned_data["name"]}! Estamos muy contentos de que te hayas animado a vivir esta aventura juntos. Esperamos que tengas una buena experiencia utilizando nuestra página.'
                 + ' Cualquier duda no dudes en contactarte con nuestro equipo. Saludos aventurero.',
                 from_email='Puerto Aventura',
                 to=[form.cleaned_data['email']],
                 )
             email.send(fail_silently=True)
-            request.session['mensaje_exito'] = "¡Usuario registrado exitosamente!"
+            messages.success(request,"¡Usuario registrado exitosamente!")
+            #request.session['mensaje_exito'] = "¡Usuario registrado exitosamente!"
             return redirect('/autenticacion/inicioSesion')
         else: 
             return render(request, 'autenticacion/registro.html', { 'form':form, 'mensaje_error': form.errors })
@@ -40,10 +41,11 @@ def cambio_contraseña(request):
                 user.password = new_password
                 user.save()
                 request.session.clear()
-                request.session['mensaje_exito'] = "¡Cambio de contraseña realizado exitosamente!"
+                messages.success(request,"¡Cambio de contraseña realizado exitosamente!")
                 return redirect('/autenticacion/inicioSesion') #debería cerrar sesion
             else:
-                return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'las contraseñas nuevas no coinciden' })
+                messages.error(request,"Las contraseñas nuevas no coinciden, vuelve a intentarlo")
+                return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form })
         else:
             return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'la contraseña actual es incorrecta' })
     form = cambiar_contrasenia_form()
@@ -65,14 +67,17 @@ def inicio_de_sesion (request):
                 if (usuario.tries_left > 1):
                     usuario.tries_left -= 1
                     usuario.save()
+                    messages.error(request, f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos.")
                     return render (request, "autenticacion/inicio_sesion.html", {
                     "mensaje_error" : f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos."  
                 })
                 else:
+                    messages.error(request, "Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar.")
                     return render (request, "autenticacion/inicio_sesion.html", {
-                    "mensaje_error" : f"Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar."  
+                    "mensaje_error" : "Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar."  
                 })
         else:
+            messages.error(request, "El email ingresado no se encuentra registrado.")
             return render (request, "autenticacion/inicio_sesion.html", {
                     "mensaje_error" : "El email ingresado no se encuentra registrado."  
                 })
@@ -104,8 +109,10 @@ def recuperar_contrasenia (request):
                 request.session['recupera'] = usuario.email
                 return redirect('/autenticacion/recuperarContrasenia/codigo')
             except Exception:
+                messages.error(request, 'Hubo un problema en la conexión con el servidor. Por favor intentalo nuevamente')
                 return render(request,'autenticacion/recuperar_contrasenia.html',{'mensaje_error':'Hubo un problema en la conexión con el servidor. Por favor intentalo nuevamente'})
         else:
+            messages.error(request, 'El email ingresado no se encuentra registrado en el sistema')
             return render(request,'autenticacion/recuperar_contrasenia.html',{'mensaje_error':'El email ingresado no se encuentra registrado en el sistema.'})
     return render(request,'autenticacion/recuperar_contrasenia.html')
 
@@ -119,8 +126,8 @@ def ingresar_codigo (request):
                 usuario.save()
                 return render(request,'autenticacion/cambio_exitoso.html')
             else:
-                mensaje_error = 'Las contraseñas ingresadas no coinciden, intentalo nuevamente.'
+                messages.error(request, 'Las contraseñas ingresadas no coinciden, intentalo nuevamente.')
         else:
-            mensaje_error = 'El código ingresado es incorrecto, intentalo nuevamente.'
-        return render(request, 'autenticacion/ingresar_codigo.html',{'mensaje_error': mensaje_error,'mail':request.session['recupera']})
+            messages.error(request, 'El código ingresado es incorrecto, intentalo nuevamente.')
+        return render(request, 'autenticacion/ingresar_codigo.html',{'mail':request.session['recupera']})
     return render(request, 'autenticacion/ingresar_codigo.html',{'mail':request.session['recupera']})

@@ -1,7 +1,6 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
-
 {% block content %}
 
 <style>
@@ -71,15 +70,12 @@
 
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
 {% if posts %}
     <div class="row">
         {% for post in posts %}
             <div class="col-4">
                 <div class="card">
-                    <a href="/publicaciones/{{post.id}}">
+                    <a href="/publicaciones/{{ post.id }}">
                         <img class="card-img-top" height="180" src="{{ post.image.url }}" alt="{{ post.title }}">
                     </a>
                     <div class="card-body">
@@ -88,9 +84,10 @@
                         <h6 class="card-subtitle">Valor: {{ post.value }}</h6>
                         <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
                         <p class="card-text">Patente: {{ post.patent }}</p>
+                        <p class="user-info">Nombre del dueño: {{ post.user.name }}</p>
+                        <p class="user-info">Email del dueño: {{ post.user.email }}</p>
+                        <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
-                        <a href="#" onclick="eliminarPublicacion({{ post.id }})" class= "btn btn-danger delete-post-btn rounded-pill" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'>Eliminar publicacion</a>
-                        <a href="/usuarios/publicaciones/editarPublicacion/{{ post.id }}"><button type="button" class="btn btn-info rounded-pill">Editar publicación</button></a>
                     </div>
                 </div>
             </div>
@@ -102,31 +99,4 @@
 {% else %}
     <div class="alert alert-danger">No hay publicaciones disponibles</div> 
 {% endif %}
-
-
-
-{% block js %}
-
-<script>
-    function eliminarPublicacion(id){
-    Swal.fire({
-        title: "¿Estas seguro?",
-        text: "Esta accion no se puede deshacer",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Eliminar",
-        reverseButtons: true,
-        confirmButtonColor: "#cde7f6"
-    })
-    .then(function(result){
-        if(result.isConfirmed){
-        window.location.href = "publicaciones/eliminarPublicacion/"+id
-    }
-    })
-}
-</script>
-
-{% endblock %}
-
 {% endblock %}

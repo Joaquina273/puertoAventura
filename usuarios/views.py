@@ -1,13 +1,15 @@
 import datetime
 import os
+import shutil
 from datetime import datetime
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.contrib import messages
 from db.models import Post,User
 from publicaciones.forms import FormularioRegistrarPublicacion
 from django.http import JsonResponse
+
 # Create your views here.
 def ver_perfil(request):
     usuario=request.session.get('usuario')
@@ -59,21 +61,24 @@ def ver_publicaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
     return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
 
+def ver_publicaciones_guardadas(request):
+    usuario = User.objects.get(email=request.session.get('usuario')[0])
+    usuario_publicaciones_guardadas = usuario.saved_posts.all
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas, 'usuario': request.session.get('usuario')})
+
 def eliminar_publicacion(request, post_id):
 
-    post = Post.objects.get(id=post_id)
+    post = get_object_or_404(Post,id = post_id)
+    post.delete()
 
-    if request.method == 'DELETE':
-        post.delete()
-        return JsonResponse({'message': 'Post eliminado exitosamente'}, status=204)
+    folder_path = os.path.join("C:\\Users\\x1\\Desktop\\Facultad\\Tercer Año\\Ingenieria de Software 2\\Puerto Aventura\\puertoAventura\\media\\publicaciones", str(post.patent))
 
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
+    shutil.rmtree(folder_path)
 
-    """post = Post.objects.get(id=post_id)
-    if request.method == 'POST':
-        post.delete()
-        return redirect(' ')  
-    return render(request, 'confirm_delete.html', {'post': post})"""
+    messages.success(request, "Publicacion eliminada exitosamente")
+
+    return redirect("/usuarios/publicaciones")
+
 
 def editar_publicacion(request, post_id):
 
@@ -85,11 +90,15 @@ def editar_publicacion(request, post_id):
         form = FormularioRegistrarPublicacion(data=request.POST, instance=post, files=request.FILES, exclude_patent = True)
         if form.is_valid():
             old_image_path = os.path.join(settings.MEDIA_ROOT, old_image_url.replace('/', os.sep))
+
             # Ensure the 'media' is not duplicated in the path
             old_image_path = old_image_path.replace(os.sep + 'media', '', 1)
+
             # Verificar si el archivo existe y eliminarlo
-            default_storage.delete(old_image_path)
+            if (form.cleaned_data["image"] == old_image_path):
+                default_storage.delete(old_image_path)
             form.save()
+            messages.success(request, "Publicacion modificada exitosamente")
             return redirect('/usuarios/publicaciones')
         else:
             print(form.errors)

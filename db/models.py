@@ -21,10 +21,8 @@ class User(models.Model):
     recovery_ID = models.IntegerField("Id de recuperacion",blank=True,null=True)
     tries_left = models.IntegerField("Intentos restantes",default=5)
 
-    USERNAME_FIELD = "usuario"
-
     def __str__(self):
-        return self.USERNAME_FIELD
+        return self.name
 
     class Meta:
         db_table = 'users'
@@ -75,6 +73,7 @@ class Post(models.Model):
     end_date = models.DateField(blank = True, null=True, verbose_name="Fecha de finalizacion")
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
     port = models.ForeignKey(Port, on_delete= models.CASCADE, null = False, blank= False,verbose_name="Puerto")
+    saved_by = models.ManyToManyField(User, related_name='saved_posts')
 
 
     class Meta:
