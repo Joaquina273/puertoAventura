@@ -22,7 +22,7 @@ class User(models.Model):
     tries_left = models.IntegerField("Intentos restantes",default=5)
 
     def __str__(self):
-        return self.USERNAME_FIELD
+        return self.name
 
     class Meta:
         db_table = 'users'
