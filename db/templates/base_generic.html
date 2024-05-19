@@ -170,7 +170,7 @@
                   </ul>
                 </li>
                 -->
-                {% if usuario.type_user == 1 %}
+                {% if type_user == 1 %}
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -185,7 +185,7 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
                     <li>
-                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.name }}</h6>
+                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.1 }}</h6>
                     </li>
                     <li>
                       <hr class="dropdown-divider">
@@ -198,8 +198,8 @@
                           </div>
                           <div class="col-9">
                             <div class="ps-3">
-                              <div class="text-secondary mt-1 fs-7">Cuenta {{ usuario.name }}</div>
-                              <div class="text-secondary mt-1 fs-7">{{ usuario.email }}</div>
+                              <div class="text-secondary mt-1 fs-7">Cuenta {{ usuario.1 }}</div>
+                              <div class="text-secondary mt-1 fs-7">{{ usuario.0 }}</div>
                             </div>
                           </div>
                         </div>
@@ -216,7 +216,7 @@
                         </span>
                       </a>
                     </li>
-                    {% if usuario.type_user == 1 %}
+                    {% if type_user == 1 %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicaciones">
                         <span>
@@ -225,7 +225,16 @@
                         </span>
                       </a>
                     </li>
+                    
                     {% endif %}
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/publicacionesGuardadas">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Mis publicaciones guardadas</span>
+                        </span>
+                      </a>
+                    </li>
                     <!-- Escondo configuracion y centro de ayuda -->
                     <!--
                     <li>

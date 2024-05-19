@@ -28,6 +28,12 @@ def registro(request):
     return render(request, 'autenticacion/registro.html', {'form':form})
 
 def cambio_contraseña(request):
+    usuario=request.session.get('usuario')
+    if usuario: 
+        user = User.objects.get(email=usuario[0])
+        tipoo_user=user.type_user
+    else:
+        tipoo_user=0
     email = request.session['usuario'][0]
     if (request.method == 'POST'):
         form = cambiar_contrasenia_form(request.POST)
@@ -49,7 +55,7 @@ def cambio_contraseña(request):
         else:
             return render(request, 'autenticacion/cambio_contrasenia.html', { 'form':form, 'mensaje_error': 'la contraseña actual es incorrecta' })
     form = cambiar_contrasenia_form()
-    return render(request, 'autenticacion/cambio_contrasenia.html', {'usuario' : request.session.get('usuario'),'form':form})
+    return render(request, 'autenticacion/cambio_contrasenia.html', {'usuario' : request.session.get('usuario'),'form':form,'type_user':tipoo_user})
 
 
 def inicio_de_sesion (request):

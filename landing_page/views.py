@@ -5,11 +5,13 @@ from db.models import Post,User
 
 def landing_page(request):
     usuario=request.session.get('usuario')
-    if usuario:
+    if usuario: 
         user = User.objects.get(email=usuario[0])
-    else: 
-        user = usuario
-    return render(request, "home.html",{'usuario': user})
+        tipoo_user=user.type_user
+    else:
+        tipoo_user=0
+    usuario=request.session.get('usuario')
+    return render(request, "home.html",{'usuario': request.session.get('usuario'),'type_user':tipoo_user})
 
 
 def visualizar_publicaciones_finalizadas(request):
