@@ -72,20 +72,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (camposVacios.length > 0) {
             const mensajeAnterior = document.getElementById('mensajeError');
             const mensajeDiv = document.createElement("div");
-            mensajeDiv.classList.add("container", "text-center", "--bs-danger-text-emphasis");
+            mensajeDiv.classList.add("p-3",);
             mensajeDiv.id = "mensajeError";
 
             const mensajeP = document.createElement("p");
-            mensajeP.classList.add("container", "text-center", "text-danger");
+            mensajeP.classList.add("p-3", "text-danger-emphasis", "bg-danger-subtle", "border", "border-danger-subtle", "rounded-1", "shadow-sm");
             mensajeP.innerText = "Complete los campos marcados en rojo antes de Guardar los cambios";
             if (calcularEdad(birthdayInput.value) < 18){
                 mensajeP.innerText = "La edad no puede ser menor a 18 años";
             }
             mensajeDiv.appendChild(mensajeP);
-            if (mensajeAnterior == null) {
-                const saveButton = document.getElementById("saveButton");
-                saveButton.parentNode.insertBefore(mensajeDiv, saveButton);
-            }
+            if (mensajeAnterior == null || mensajeAnterior.innerText !== mensajeP.innerText) {
+            const saveButton = document.getElementById("saveButton");
+            saveButton.parentNode.insertBefore(mensajeDiv, saveButton);
+        }
             return;
         }
         if (firstNameInput.value.trim() === "{{ usuario.name }}" &&
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mensajeExito) {
         console.log(mensajeExito)
         const mensajeDiv = document.createElement("div");
-        mensajeDiv.classList.add("container", "text-center", "--bs-success-text-emphasis");
+        mensajeDiv.classList.add("p-3", "text-success-emphasis", "bg-success-subtle", "border", "border-success-subtle", "rounded-1", "shadow-sm");
         mensajeDiv.id = "mensajeExito";
         const mensajeP = document.createElement("p");
         mensajeP.classList.add("container", "text-center", "text-success");
