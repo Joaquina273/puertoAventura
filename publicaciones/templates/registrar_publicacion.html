@@ -9,6 +9,18 @@
     background: #ffffff url(../static/images/fondo-registrar-publicacion.jpg) center center/cover no-repeat;
   }
 
+  .custom-button {
+            background-color: #EDC5AB; /* Color de fondo */
+            color: white; /* Color del texto */
+            border: none; /* Sin borde */
+            padding: 10px 20px; /* Espaciado interno */
+            font-size: 16px; /* Tamaño de la fuente */
+            font-weight: bold; /* Texto en negrita */
+            border-radius: 25px; /* Esquinas redondeadas */
+            width: 100%; /* Ancho completo */
+            cursor: pointer; /* Cambiar cursor al pasar el mouse */
+  }
+
   .centered-credits-muted{
     text-align: center;
     margin-left: 50px;
@@ -29,14 +41,17 @@
     margin-top: -50px; /* Ajusta el margen superior para centrar verticalmente */
     height: 70vh; /* Ajusta la altura del contenedor verticalmente centrado */
   }
+
   .required-field {
     position: relative;
+    color: #BBC6C8;
   }
   .required-field::after {
     content: '*';
-    color: red;
+    color: #d297b1;
     margin-left: 5px;
   }
+  
   .required-field:hover::after {
     position: absolute;
     top: -1.5em;
@@ -71,7 +86,7 @@
           </div>
         {% endfor %}
 
-        <button type="submit" class= "btn btn-success w-100">Registrar publicación</button>
+        <button type="submit" class=" custom-button w-100">Registrar publicación</button>
       </form>
       
       <small class="centered-credits-muted d-inline-block mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>

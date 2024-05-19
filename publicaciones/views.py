@@ -7,7 +7,6 @@ from db.models import Post,User
 
 def registrar_publicacion(request):
 
-    errorPatente = None
     if request.method == 'POST':
         form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
         if form.is_valid():
@@ -20,7 +19,7 @@ def registrar_publicacion(request):
             messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
     else:
         form = FormularioRegistrarPublicacion()
-    return render(request, 'registrar_publicacion.html', {'form': form, 'usuario':  request.session.get('usuario'),'mensaje_error': form.errors})
+    return render(request, 'registrar_publicacion.html', {'form': form, 'usuario':  request.session.get('usuario')})
 
 def ver_publicaciones(request):
     posts = Post.objects.all()
