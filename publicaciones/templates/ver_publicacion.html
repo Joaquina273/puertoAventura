@@ -4,6 +4,45 @@
 {% block content %}
 
 <style>
+
+    .guardar-button {
+      background-color: #E5E3E4; /* Color de fondo */
+      color: white; /* Color del texto */
+      border: none; /* Sin borde */
+      padding: 10px 20px; /* Espaciado interno */
+      font-size: 16px; /* Tamaño de la fuente */
+      font-weight: bold; /* Texto en negrita */
+      border-radius: 25px; /* Esquinas redondeadas */
+      cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      flex: 1; /* Para que los botones tengan el mismo tamaño */
+      text-align: center; /* Centrar el texto */
+  }
+
+  .guardada-button {
+      background-color: #BBC6C8; /* Color de fondo */
+      color: white; /* Color del texto */
+      border: none; /* Sin borde */
+      padding: 10px 20px; /* Espaciado interno */
+      font-size: 16px; /* Tamaño de la fuente */
+      font-weight: bold; /* Texto en negrita */
+      border-radius: 25px; /* Esquinas redondeadas */
+      cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      flex: 1; /* Para que los botones tengan el mismo tamaño */
+      text-align: center; /* Centrar el texto */
+  }
+
+  .compartir-button {
+      background-color: #469597; /* Color de fondo */
+      color: white; /* Color del texto */
+      border: none; /* Sin borde */
+      padding: 10px 20px; /* Espaciado interno */
+      font-size: 16px; /* Tamaño de la fuente */
+      font-weight: bold; /* Texto en negrita */
+      border-radius: 25px; /* Esquinas redondeadas */
+      cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      flex: 1; /* Para que los botones tengan el mismo tamaño */
+      text-align: center; /* Centrar el texto */
+}
     .icon-hover:hover {
     border-color: #3b71ca !important;
     background-color: white !important;
@@ -64,12 +103,12 @@
   
             <hr />
   
-            <a href="#" class="btn btn-primary shadow-0" onclick="copyToClipboard()"> <i class="me-1 fa fa-shopping-basket"></i> Compartir </a>
+            <a href="#" class="compartir-button" onclick="copyToClipboard()"> <i class="compartir-button"></i> Compartir </a>
             {% if usuario %}
               {% if saved == True %}
-                <a href="guardar" class="btn btn-dark border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Guardada </a>
+                <a href="guardar" class="guardada-button"> <i class="guardada-button"></i> Guardada </a>
               {% else %}
-                <a href="guardar" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Guardar </a>
+                <a href="guardar" class="guardar-button"> <i class="guardar-button"></i> Guardar </a>
               {% endif %}
               <!-- Comento el botón de ofertar 
               <a href="#" class="btn btn-warning shadow-0"> Ofertar </a>

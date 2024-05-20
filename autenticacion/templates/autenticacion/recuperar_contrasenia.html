@@ -3,6 +3,46 @@
 
 
 {% block content %}
+
+<style>
+
+    .custom-button {
+              background-color: #EDC5AB; /* Color de fondo */
+              color: white; /* Color del texto */
+              border: none; /* Sin borde */
+              padding: 10px 20px; /* Espaciado interno */
+              font-size: 16px; /* Tamaño de la fuente */
+              font-weight: bold; /* Texto en negrita */
+              border-radius: 25px; /* Esquinas redondeadas */
+              width: 100%; /* Ancho completo */
+              cursor: pointer; /* Cambiar cursor al pasar el mouse */
+    }
+  
+    .required-field {
+    position: relative;
+    color: #BBC6C8;
+  }
+  .required-field::after {
+    content: '*';
+    color: #012E4A;
+    margin-left: 5px;
+  }
+  .required-field:hover::after {
+    position: absolute;
+    top: -1.5em;
+    left: 100%;
+    width: auto;
+    white-space: nowrap;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    border-radius: 5px;
+    z-index: 1;
+    content: "Este campo es obligatorio";
+    color:black
+  }
+
+</style>
 <!-- Password Reset 2 - Bootstrap Brain Component -->
 <div class="bg-light py-3 py-md-5">
   <div class="container">
@@ -25,12 +65,12 @@
           <form action="#!" method="POST">{% csrf_token %}
             <div class="row gy-3 gy-md-4 overflow-hidden">
               <div class="col-12">
-                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                <label for="email" class="required-field">Email</label>
                 <input type="email" class="form-control" name="email" id="email" placeholder="mail@ejemplo.com" required>
               </div>
               <div class="col-12">
                 <div class="d-grid">
-                  <button class="btn btn-lg btn-primary" type="submit">Enviar código</button>
+                  <button class="custom-button" type="submit">Enviar código</button>
                 </div>
               </div>
             </div>
