@@ -15,4 +15,6 @@ urlpatterns = [
     path("publicaciones/eliminarPublicacion/<int:post_id>", views.eliminar_publicacion, name="eliminar_publicacion"),
     # ex: usuarios/perfil/
     path('perfil/', views.ver_perfil, name='ver perfil'),
+    
+    path('listado/', views.listado, name='listado'),
 ]

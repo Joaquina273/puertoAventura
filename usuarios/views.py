@@ -11,6 +11,15 @@ from publicaciones.forms import FormularioRegistrarPublicacion
 from django.http import JsonResponse
 
 # Create your views here.
+def Lista_usuarios(request):
+    usuario=request.session.get('usuario')
+    if usuario: 
+        user = User.objects.get(email=usuario[0])
+        tipoo_user=user.type_user
+    else:
+        tipoo_user=0
+    return render(request, 'usuarios/listado.html',{'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
+
 def ver_perfil(request):
     usuario=request.session.get('usuario')
     if usuario: 
