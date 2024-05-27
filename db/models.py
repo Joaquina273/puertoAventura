@@ -150,9 +150,10 @@ class Message(models.Model):
         verbose_name_plural = 'Mensajes'
 
 class Notification(models.Model):
+    title = models.CharField(max_length=50)
     content = models.CharField(max_length=200)
-    date = models.DateField(auto_now_add=False)
-    user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
+    date = models.DateField(auto_now_add=timezone.now)
+    user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False, related_name='notifications')
     offer = models.ForeignKey(Offer, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
     post = models.ForeignKey(Post, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
     comment = models.ForeignKey(Comment, on_delete= models.CASCADE, null= True, blank= True) # En el diagrama esta como que un comentario puede tener muchas notificaciones, pero para mi un comentario va a recibir solo una notificacion

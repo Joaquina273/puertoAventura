@@ -57,7 +57,7 @@
                 </li>
                 -->
                 {% if usuario != nil %}
-                <!-- Escondo los chats y notificaciones -->
+                <!-- Escondo los chats -->
                 <!--
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -114,6 +114,7 @@
                     </div>
                   </div>
                 </li>
+                 -->
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -130,6 +131,25 @@
                     <li>
                       <hr class="dropdown-divider">
                     </li>
+                    {% for notificacion in notificaciones %}
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                      <div class="row g-0 align-items-center">
+                        <div class="col-2">
+                          <i class="bi bi-envelope-fill me-2"></i>
+                        </div>
+                        <div class="col-10">
+                          <div class="ps-3">
+                            <div class="text-dark">{{ notificacion.title }}</div>
+                            <div class="text-secondary mt-1 fs-7">{{ notificacion.content }}.</div>
+                            <div class="text-secondary mt-1 fs-7">Hace 15m</div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    {% endfor %}
                     <li>
                       <a class="dropdown-item d-flex align-items-center" href="#!">
                         <span>
@@ -169,8 +189,7 @@
                     <li><a class="dropdown-item fs-7 text-center" href="#">Ver todas las notificaciones</a></li>
                   </ul>
                 </li>
-                -->
-                {% if type_user == 1 %}
+                {% if usuario.2 == 1 %}
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -216,7 +235,7 @@
                         </span>
                       </a>
                     </li>
-                    {% if type_user == 1 %}
+                    {% if usuario.2 == 1 %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicaciones">
                         <span>

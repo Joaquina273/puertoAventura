@@ -12,13 +12,7 @@ from publicaciones.forms import FormularioRegistrarPublicacion
 
 # Create your views here.
 def ver_perfil(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
-
+    user = User.objects.get(email=request.session.get('usuario')[0])
     if request.method == 'POST':
         name = request.POST.get('name')
         surname = request.POST.get('surname')
@@ -53,33 +47,25 @@ def ver_perfil(request):
             user.save()
             print("guardo")
             mensaje = "Cambios guardados"
-            return render(request, 'usuarios/perfil.html', {'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
+            return render(request, 'usuarios/perfil.html', {'user':user}) 
         else:
             print("hola")   
-            return render(request, 'usuarios/perfil.html', {'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
-    return render(request, 'usuarios/perfil.html', {'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
+            return render(request, 'usuarios/perfil.html', {'user':user}) 
+    return render(request, 'usuarios/perfil.html', {'user':user}) 
 
 
 def ver_publicaciones(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts})
+
+def ver_notificaciones(request):
+    user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
+    return render(request, "usuarios/ver_notificaciones.html", {"posts": user_posts})
 
 def ver_publicaciones_guardadas(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     usuario = User.objects.get(email=request.session.get('usuario')[0])
     usuario_publicaciones_guardadas = usuario.saved_posts.all
-    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas})
 
 def eliminar_publicacion(request, post_id):
 
@@ -96,13 +82,6 @@ def eliminar_publicacion(request, post_id):
     return redirect("/usuarios/publicaciones")
 
 def editar_publicacion(request, post_id):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
-    print(tipoo_user)
     post = get_object_or_404(Post, id = post_id)
     old_image_url = post.image.url.lstrip('/')  # Remove leading slash
     if request.method == 'POST':
@@ -122,4 +101,4 @@ def editar_publicacion(request, post_id):
     else:
         form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "editar_publicacion.html", {'post': form})
