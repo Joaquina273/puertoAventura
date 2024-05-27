@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "autenticacion",
     "landing_page",
     "publicaciones",
-    "usuarios"
+    "usuarios",
+    "ofertas"
 ]
 
 MIDDLEWARE = [

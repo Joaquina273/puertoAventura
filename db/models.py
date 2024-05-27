@@ -89,10 +89,11 @@ class Offer(models.Model):
     def get_image_upload_path(instance, filename):
         return os.path.join('ofertas', instance.user.email, instance.post.patent, filename)
     
+    title = models.CharField("Titulo", max_length=30)
     image = models.ImageField("Imagen", upload_to=get_image_upload_path)  # heig
     description = models.CharField("Descripción", max_length= 300)
     answer = models.IntegerField(blank = True, default= 0) # 0 --> sin respuesta, 1 --> rechazada, 2 --> aceptada ?
-    date = models.DateField(auto_now_add= False)
+    date = models.DateField(auto_now_add=timezone.now, verbose_name="Fecha de publicacion")
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
     post = models.ForeignKey(Post, on_delete= models.CASCADE, null = False, blank= False)
 

@@ -1,0 +1,134 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    .guardar-button {
+      background-color: #E5E3E4; /* Color de fondo */
+      color: white; /* Color del texto */
+      border: none; /* Sin borde */
+      padding: 10px 20px; /* Espaciado interno */
+      font-size: 16px; /* Tamaño de la fuente */
+      font-weight: bold; /* Texto en negrita */
+      border-radius: 25px; /* Esquinas redondeadas */
+      cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      flex: 1; /* Para que los botones tengan el mismo tamaño */
+      text-align: center; /* Centrar el texto */
+  }
+
+  .guardada-button {
+      background-color: #BBC6C8; /* Color de fondo */
+      color: white; /* Color del texto */
+      border: none; /* Sin borde */
+      padding: 10px 20px; /* Espaciado interno */
+      font-size: 16px; /* Tamaño de la fuente */
+      font-weight: bold; /* Texto en negrita */
+      border-radius: 25px; /* Esquinas redondeadas */
+      cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      flex: 1; /* Para que los botones tengan el mismo tamaño */
+      text-align: center; /* Centrar el texto */
+  }
+
+  .compartir-button {
+      background-color: #469597; /* Color de fondo */
+      color: white; /* Color del texto */
+      border: none; /* Sin borde */
+      padding: 10px 20px; /* Espaciado interno */
+      font-size: 16px; /* Tamaño de la fuente */
+      font-weight: bold; /* Texto en negrita */
+      border-radius: 25px; /* Esquinas redondeadas */
+      cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      flex: 1; /* Para que los botones tengan el mismo tamaño */
+      text-align: center; /* Centrar el texto */
+}
+    .icon-hover:hover {
+    border-color: #3b71ca !important;
+    background-color: white !important;
+    color: #3b71ca !important;
+    }
+
+    .icon-hover:hover i {
+  color: #3b71ca !important;
+    }
+</style>
+{% if offer %}
+<section class="py-5">
+    <div class="container">
+      <div class="row gx-5">
+        <aside class="col-lg-6">
+          <div class="border rounded-4 mb-3 d-flex justify-content-center">
+            <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="image">
+              <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="{{ offer.image.url }}" />
+            </a>
+          </div>
+          <!-- thumbs-wrap.// -->
+          <!-- gallery-wrap .end// -->
+        </aside>
+        <main class="col-lg-6">
+          <div class="ps-lg-3">
+            <h4 class="title text-dark">
+                {{ offer.title }}
+            </h4>
+  
+            <p>
+                Una breve descripción
+            </p>
+  
+            <div class="row">
+              <dt class="col-3">Descripcion:</dt>
+              <dd class="col-9">{{ offer.description }}</dd>
+
+              <dt class="col-3">Propietario:</dt>
+              <dd class="col-9">{{ offer.post.user.name }} {{ offer.post.user.surname }}</dd>
+            </div>
+  
+            <hr />
+  
+            <a href="#" class="compartir-button" onclick="copyToClipboard()"> <i class="compartir-button"></i> Compartir </a>
+            {% if usuario %}
+              {% if saved == True %}
+                <a href="guardar" class="guardada-button"> <i class="guardada-button"></i> Guardada </a>
+              {% else %}
+                <a href="guardar" class="guardar-button"> <i class="guardar-button"></i> Guardar </a>
+              {% endif %}
+              <!-- Comento el botón de ofertar 
+              <a href="#" class="btn btn-warning shadow-0"> Ofertar </a>
+              -->
+            {% endif %}
+          </div>
+          <div id="copyAlert" class="alert alert-success" role="alert" style="display: none;">
+            Enlace copiado al portapapeles.
+        </div>
+        </main>
+      </div>
+    </div>
+  </section>
+{% elif image %}
+<ul>
+    <li><img src="{{ image.url }}" alt="Imagen"></li>
+</ul>
+{% endif %}
+
+<script>
+  function copyToClipboard() {
+      // Crear un campo de texto temporal
+      var tempInput = document.createElement('input');
+      tempInput.value = window.location.href;
+      document.body.appendChild(tempInput);
+      // Seleccionar el contenido del campo de texto
+      tempInput.select();
+      // Copiar el texto seleccionado al portapapeles
+      document.execCommand("copy");
+      // Remover el campo de texto temporal
+      document.body.removeChild(tempInput);
+      var copyAlert = document.getElementById("copyAlert");
+            copyAlert.style.display = "block";
+            // Ocultar la alerta después de 3 segundos
+            setTimeout(function() {
+                copyAlert.style.display = "none";
+            }, 3000);
+    }
+</script>
+{% endblock %}

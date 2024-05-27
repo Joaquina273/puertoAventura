@@ -6,7 +6,7 @@
 
 <style>
   body {
-    background: #ffffff url("{% static 'images/fondo-registrar-publicacion.jpg' %}") center center/cover no-repeat;
+    background: #ffffff url("{% static 'images/fondo_realizarOferta.jpg' %}") center center/cover no-repeat;
   }
 
   .custom-button {
@@ -74,10 +74,10 @@
 <div class="container-center">
   <div class="col-xl-7 col-lg-12">
     <div class="container p-6 text-center-vertical">
-      <p class="text-muted mb-5">Ingresa la siguiente información para registrar su publicación.</p>
+      <p class="text-muted mb-5">Ingresa la siguiente información para registrar su oferta.</p>
 
     
-      <form id= "registroPublicacionForm" action="/publicaciones/registrarPublicacion/" method="post" enctype="multipart/form-data">
+      <form id= "registroForm" action="registrarOferta" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
           <div class="form-row mb-2">
@@ -86,7 +86,7 @@
           </div>
         {% endfor %}
 
-        <button type="submit" class=" custom-button w-100">Registrar publicación</button>
+        <button type="submit" class=" custom-button w-100">Registrar oferta</button>
       </form>
       
       <small class="centered-credits-muted d-inline-block mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>

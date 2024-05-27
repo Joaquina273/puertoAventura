@@ -3,11 +3,10 @@
 
 {% block content %}
 
-
 <style>
   body {
-    background: #ffffff url("{% static 'images/fondo-registrar-publicacion.jpg' %}") center center/cover no-repeat;
-  }
+      background: #ffffff url("{% static 'images/fondo-editar-publicacion.jpg' %}") center center/cover no-repeat;
+    }
 
   .custom-button {
             background-color: #EDC5AB; /* Color de fondo */
@@ -25,14 +24,18 @@
     text-align: center;
     margin-left: 50px;
   }
-
+  .centered-p-muted {
+    text-align: center;
+    margin-left: 50px;
+  }
   .container-center {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh; /* Ajusta la altura de la pantalla completa */
     font-size: 18px; /* Tamaño de fuente más grande */
-    font-weight: bold; /* Texto en negrita */
+    font-weight: bold;
+    color: #BBC6C8; /* Texto en negrita */
   }
   .text-center-vertical {
     display: flex;
@@ -46,12 +49,13 @@
     position: relative;
     color: #BBC6C8;
   }
+
   .required-field::after {
     content: '*';
     color: #d297b1;
     margin-left: 5px;
   }
-  
+
   .required-field:hover::after {
     position: absolute;
     top: -1.5em;
@@ -68,32 +72,24 @@
   }
 
 </style>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <div class="container-center">
   <div class="col-xl-7 col-lg-12">
-    <div class="container p-6 text-center-vertical">
-      <p class="text-muted mb-5">Ingresa la siguiente información para registrar su publicación.</p>
-
-    
-      <form id= "registroPublicacionForm" action="/publicaciones/registrarPublicacion/" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-          <div class="form-row mb-2">
-            <label class="required-field" for="{{ field.name }}">{{ field.label }}</label>
-            {{ field }}
-          </div>
-        {% endfor %}
-
-        <button type="submit" class=" custom-button w-100">Registrar publicación</button>
-      </form>
-      
-      <small class="centered-credits-muted d-inline-block mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>
-    </div>
-  </div>
+    <div class="container p-6 text-center-vertical ">
+          <p class="centered-p-muted mb-5">Modifique la siguiente información para editar su oferta.</p>
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in offer %}
+                <div class="form-row mb-2">
+                    <label class="required-field" for="{{ field.name }}">{{ field.label }}</label>
+                      {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="custom-button">Guardar cambios</button>
+          </form>
+          <small class="centered-credits-muted d-inline-block mt-5">Todos los derechos reservados | © 2024 Aracnotech</small>
+        </div>
+      </div>
 </div>
-
 
 
 
