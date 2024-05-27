@@ -3,6 +3,27 @@
 
 
 {% block content %}
+
+
+<style>
+
+  .custom-button {
+            background-color: #EDC5AB; /* Color de fondo */
+            color: white; /* Color del texto */
+            border: none; /* Sin borde */
+            padding: 10px 20px; /* Espaciado interno */
+            font-size: 16px; /* Tamaño de la fuente */
+            font-weight: bold; /* Texto en negrita */
+            border-radius: 25px; /* Esquinas redondeadas */
+            width: 100%; /* Ancho completo */
+            cursor: pointer; /* Cambiar cursor al pasar el mouse */
+  }
+
+  .custom-link {
+    color:#81BECE !important;/* Reemplaza con el color deseado */
+  }
+
+</style>
 <!-- Login 13 - Bootstrap Brain Component -->
 <section class="bg-light py-3 py-md-5">
   <div class="container">
@@ -42,15 +63,15 @@
                 </div>
                 <div class="col-12">
                   <div class="d-flex gap-2 justify-content-between">
-                    <a href="/autenticacion/recuperarContrasenia" class="link-primary text-decoration-none">¿Olvidaste tu contraseña?</a>
+                    <a href="/autenticacion/recuperarContrasenia" class="link-primary text-decoration-none custom-link">¿Olvidaste tu contraseña?</a>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="d-grid my-3">
-                    <button class="btn btn-primary btn-lg" type="submit">Acceder</button>
+                    <button class="custom-button" type="submit">Acceder</button>
                   </div>
                 </div>
-                <p class="m-0 text-secondary text-center">¿No tenés una cuenta? <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrate</a></p>
+                <p class="m-0 text-secondary text-center">¿No tenés una cuenta? <a href="/autenticacion/registro" class=" registro link-primary text-decoration-none custom-link" >Registrate</a></p>
                 <div class="col-12">
                 </div>
               </div>

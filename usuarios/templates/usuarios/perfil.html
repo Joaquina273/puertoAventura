@@ -10,7 +10,7 @@
     }
 </style>
 <script>
-    var usuario = "{{ usuario.name }}"
+    var usuario = "{{ user.name }}"
     console.log(usuario)
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -72,26 +72,26 @@ document.addEventListener('DOMContentLoaded', function() {
         if (camposVacios.length > 0) {
             const mensajeAnterior = document.getElementById('mensajeError');
             const mensajeDiv = document.createElement("div");
-            mensajeDiv.classList.add("container", "text-center", "--bs-danger-text-emphasis");
+            mensajeDiv.classList.add("p-3",);
             mensajeDiv.id = "mensajeError";
 
             const mensajeP = document.createElement("p");
-            mensajeP.classList.add("container", "text-center", "text-danger");
+            mensajeP.classList.add("p-3", "text-danger-emphasis", "bg-danger-subtle", "border", "border-danger-subtle", "rounded-1", "shadow-sm");
             mensajeP.innerText = "Complete los campos marcados en rojo antes de Guardar los cambios";
             if (calcularEdad(birthdayInput.value) < 18){
                 mensajeP.innerText = "La edad no puede ser menor a 18 años";
             }
             mensajeDiv.appendChild(mensajeP);
-            if (mensajeAnterior == null) {
-                const saveButton = document.getElementById("saveButton");
-                saveButton.parentNode.insertBefore(mensajeDiv, saveButton);
-            }
+            if (mensajeAnterior == null || mensajeAnterior.innerText !== mensajeP.innerText) {
+            const saveButton = document.getElementById("saveButton");
+            saveButton.parentNode.insertBefore(mensajeDiv, saveButton);
+        }
             return;
         }
-        if (firstNameInput.value.trim() === "{{ usuario.name }}" &&
-        lastNameInput.value.trim() === "{{ usuario.surname }}" &&
-        phoneInput.value.trim() === "{{ usuario.phone_number }}" &&
-        birthdayInput.value.trim() === "{{ usuario.birthdate|date:'Y-m-d' }}") {
+        if (firstNameInput.value.trim() === "{{ user.name }}" &&
+        lastNameInput.value.trim() === "{{ user.surname }}" &&
+        phoneInput.value.trim() === "{{ user.phone_number }}" &&
+        birthdayInput.value.trim() === "{{ user.birthdate|date:'Y-m-d' }}") {
         // No se han realizado cambios, puedes mostrar un mensaje o tomar alguna acción
         sessionStorage.setItem('mensajeExito', 'No se realizaron cambios');
         document.getElementById('edit_form').submit();
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mensajeExito) {
         console.log(mensajeExito)
         const mensajeDiv = document.createElement("div");
-        mensajeDiv.classList.add("container", "text-center", "--bs-success-text-emphasis");
+        mensajeDiv.classList.add("p-3", "text-success-emphasis", "bg-success-subtle", "border", "border-success-subtle", "rounded-1", "shadow-sm");
         mensajeDiv.id = "mensajeExito";
         const mensajeP = document.createElement("p");
         mensajeP.classList.add("container", "text-center", "text-success");
@@ -138,30 +138,37 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="mb-3">
                             <label class="small mb-1" for="inputUsername">Correo Electronico</label>
-                            <p class="form-control "  type="text" placeholder="Enter your username">{{ usuario.email }}</p>
+                            <p class="form-control "  type="text" placeholder="Enter your username">{{ user.email }}</p>
                         </div>
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputFirstName">Nombre</label>
-                                <input name="name" class="form-control" id="inputFirstName" type="text" placeholder="Ingrese su nombre" value="{{ usuario.name }}" disabled>
+                                <input name="name" class="form-control" id="inputFirstName" type="text" placeholder="Ingrese su nombre" value="{{ user.name }}" disabled>
                             </div>
                             <div class="col-md-6">
                                 <label  class="small mb-1" for="inputLastName">Apellido</label>
-                                <input name="surname" class="form-control" id="inputLastName" type="text" placeholder="Ingrese su apellido" value="{{ usuario.surname }}" disabled>
+                                <input name="surname" class="form-control" id="inputLastName" type="text" placeholder="Ingrese su apellido" value="{{ user.surname }}" disabled>
                             </div>
                         </div>
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">Numero de telefono</label>
-                                <input name="phone_number" class="form-control"  id="inputPhone" type="number" inputmode="numeric" placeholder="Ingrese su numero de telefono" value="{{ usuario.phone_number }}" disabled>
+                                <input name="phone_number" class="form-control"  id="inputPhone" type="number" inputmode="numeric" placeholder="Ingrese su numero de telefono" value="{{ user.phone_number }}" disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputBirthday">Fecha de nacimiento</label>
-                                <input name="birthdate" class="form-control" id="inputBirthday" type="date" name="birthday" placeholder="Ingrese su  fecha de nacimiento" value="{{ usuario.birthdate|date:'Y-m-d' }}" disabled>
+                                <input name="birthdate" class="form-control" id="inputBirthday" type="date" name="birthday" placeholder="Ingrese su  fecha de nacimiento" value="{{ user.birthdate|date:'Y-m-d' }}" disabled>
                             </div>
                         </div>
                         <div class="container text-center">
-                            {% if usuario.type_user != 1 %}
+                            {% if type_user == 1 %}
+                        
+                            <div class=" mb-3 container d-flex justify-content-center align-items-center" >
+                                <div class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-1 shadow-sm">
+                                    Usted es un usuario verificado y no puede cambiar su información. Por algún problema, contáctese con soporte.
+                                </div>
+                            </div>
+                            {% else %}
                             <button type="button" id="editButton" class="btn btn-primary">Editar perfil</button>
                             {% endif %}
                             <button type="submit" class="btn btn-success" style="display: none;" id="saveButton">Guardar cambios</button>
