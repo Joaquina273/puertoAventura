@@ -39,7 +39,6 @@ class RegistrarUsuario(forms.ModelForm):
         return password2
     
     def clean_birth_date(self):
-        print('Hola')
         birth_date = self.cleaned_data.get('birth_date')
         today = date.today()
         age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))

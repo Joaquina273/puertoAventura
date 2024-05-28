@@ -1,18 +1,11 @@
 from django.shortcuts import render, redirect
-from .forms import FormularioRegistrarPublicacion
-from ofertas.forms import FormularioRegistrarOferta
+from .forms import FormularioRegistrarPublicacion, CommentForm
 from django.contrib import messages
 from db.models import Post,User
 
 # Create your views here.
 
 def registrar_publicacion(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     if request.method == 'POST':
         form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
         if form.is_valid():
@@ -25,44 +18,33 @@ def registrar_publicacion(request):
             messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
     else:
         form = FormularioRegistrarPublicacion()
-    return render(request, 'registrar_publicacion.html', {'form': form, 'usuario': request.session.get('usuario'),'type_user':tipoo_user,'mensaje_error': form.errors})
+    return render(request, 'registrar_publicacion.html', {'form': form, 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     posts = Post.objects.all()
-    for post in posts:
-        user = User.objects.get(email=post.user_id)
-    return render(request, "ver_publicaciones.html", {"posts": posts,'usuario': request.session.get('usuario'), 'type_user':tipoo_user })
+    return render(request, "ver_publicaciones.html", {"posts": posts })
 
 def ver_publicacion(request, post_id):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     post = Post.objects.get(id=post_id)
-    user = User.objects.get(email=post.user_id)
     if (None == request.session.get('usuario')):
         saved = None
     else:
         saved = post.saved_by.filter(email=request.session.get('usuario')[0]).exists()
-    return render(request, "ver_publicacion.html", {"post": post,'usuario':  request.session.get('usuario'),'saved': saved,'type_user':tipoo_user})
+    form = CommentForm()
+    return render(request, "ver_publicacion.html", {'form': form, "post": post,'saved': saved})
+
+def crear_comentario(request, post_id):
+    if request.method == 'POST':
+        form = CommentForm(request.POST, post_id=post_id, request=request)
+        if form.is_valid():
+            form.save()
+    form = CommentForm()
+    return ver_publicacion(request,post_id)
 
 def ver_imagen(request, post_id):
     usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     post = Post.objects.get(id=post_id)
-    return render(request, "ver_publicacion.html", {"image": post.image,'usuario':  request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "ver_publicacion.html", {"image": post.image})
 
 def guardar_publicacion(request, post_id):
     post = Post.objects.get(id=post_id)

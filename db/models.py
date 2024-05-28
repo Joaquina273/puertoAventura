@@ -104,12 +104,15 @@ class Offer(models.Model):
     
 
 class Comment(models.Model):  # Un comentario puede tener otro comentario
-    content = models.CharField("Ingrese el mensaje", max_length= 300)
-    date = models.DateField(auto_now_add= False)
-    post = models.ForeignKey(Post, on_delete= models.CASCADE, null = False, blank= False)
+    content = models.TextField("Ingrese el mensaje", max_length= 300) 
+    date = models.DateField(auto_now_add=timezone.now)
+    post = models.ForeignKey(Post, related_name="comments", on_delete= models.CASCADE, null = False, blank= False)
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
     answer = models.OneToOneField("self", on_delete= models.CASCADE, null = True, blank= True) # Como es una relación recursiva se pasa el propio objeto "self" y se pone null en True ya que no es obligatorio que un comentario tenga una respuesta
 
+    def __str__(self):
+        return '%s - %s' %(self.post.title, self.user.name)
+    
     class Meta:
         db_table = 'comments'
         verbose_name = 'Comentario'
@@ -148,9 +151,10 @@ class Message(models.Model):
         verbose_name_plural = 'Mensajes'
 
 class Notification(models.Model):
+    title = models.CharField(max_length=50)
     content = models.CharField(max_length=200)
-    date = models.DateField(auto_now_add=False)
-    user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
+    date = models.DateField(auto_now_add=timezone.now)
+    user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False, related_name='notifications')
     offer = models.ForeignKey(Offer, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
     post = models.ForeignKey(Post, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
     comment = models.ForeignKey(Comment, on_delete= models.CASCADE, null= True, blank= True) # En el diagrama esta como que un comentario puede tener muchas notificaciones, pero para mi un comentario va a recibir solo una notificacion

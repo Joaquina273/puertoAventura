@@ -1,5 +1,5 @@
 from django import forms
-from db.models import Port,Post,User
+from db.models import Port,Post, Comment, User
 
 class FormularioRegistrarPublicacion(forms.ModelForm):
     
@@ -26,3 +26,29 @@ class FormularioRegistrarPublicacion(forms.ModelForm):
         if Post.objects.filter(patent=patent).exists():
             raise forms.ValidationError("Ya existe una publicación con esa patente registrada en el sistema")
         return patent
+    
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea(attrs={
+            'class': "form-control", 
+            'id': "textAreaExample",
+            'style': "background: #fff;",
+            'rows': '4'
+            }))
+    
+    class Meta: 
+        model = Comment
+        fields = ["content"]
+
+    def __init__(self, *args, **kwargs):
+        self.post_id = kwargs.pop('post_id', None)
+        self.request = kwargs.pop('request', None)
+        super(CommentForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        comment = super(CommentForm, self).save(commit=False)
+        comment.content = self.cleaned_data['content']
+        comment.post = Post.objects.get(id=self.post_id)
+        comment.user = User.objects.get(email=self.request.session.get('usuario') [0])
+        if commit:
+            comment.save()
+        return comment
