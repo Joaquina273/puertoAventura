@@ -57,13 +57,6 @@ def guardar_publicacion(request, post_id):
 
 
 def registrar_oferta(request, post_id):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
-    errorPatente = None
     if request.method == 'POST':
         form = FormularioRegistrarOferta(data=request.POST, files=request.FILES)
         if form.is_valid():
@@ -75,4 +68,4 @@ def registrar_oferta(request, post_id):
             return redirect("/")
     else:
         form = FormularioRegistrarOferta()
-    return render(request, 'registrar_oferta.html', {'form': form, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, 'registrar_oferta.html', {'form': form, 'usuario': request.session.get('usuario')})
