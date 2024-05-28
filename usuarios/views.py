@@ -59,8 +59,7 @@ def ver_publicaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
     user_posts_disponibles = user_posts.filter(state = 0)
 
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts_disponibles, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts})
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts_disponibles, 'usuario': request.session.get('usuario')})
 
 def ver_notificaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
@@ -71,7 +70,7 @@ def ver_publicaciones_guardadas(request):
     usuario_publicaciones_guardadas = usuario.saved_posts.all
     usuario_publicaciones_guardadas_disponibles = usuario_publicaciones_guardadas.filter(state = 0)
 
-    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas_disponibles, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas_disponibles, 'usuario': request.session.get('usuario')})
 
 def eliminar_publicacion(request, post_id):
 
@@ -107,32 +106,19 @@ def editar_publicacion(request, post_id):
     else:
         form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario')})
 
 
 def ver_ofertas_recibidas(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
     ofertas_recibidas = Offer.objects.filter(post__in= user_posts)
     ofertas_recibidas_disponibles = ofertas_recibidas.filter(answer = 0)
-    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles, 'usuario': request.session.get('usuario')})
 
 
 def ver_ofertas_realizadas(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     user_offers = Offer.objects.filter(user_id= request.session.get('usuario')[0])
-
-    return render(request, "ver_ofertas_realizadas.html", {"offers": user_offers, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "ver_ofertas_realizadas.html", {"offers": user_offers, 'usuario': request.session.get('usuario')})
 
 
 def eliminar_oferta(request, offer_id):
@@ -150,13 +136,6 @@ def eliminar_oferta(request, offer_id):
     return redirect("/usuarios/ofertasRealizadas")
 
 def editar_oferta(request, offer_id):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
-    print(tipoo_user)
     offer = get_object_or_404(Offer,id = offer_id)
     old_image_url = offer.image.url.lstrip('/')  # Remove leading slash
     if request.method == 'POST':
@@ -176,5 +155,4 @@ def editar_oferta(request, offer_id):
     else:
         form = FormularioRegistrarOferta(instance=offer), 
 
-    return render(request, "editar_oferta.html", {'offer': form, 'usuario':  request.session.get('usuario'),'type_user':tipoo_user})
-    return render(request, "editar_publicacion.html", {'post': form})
+    return render(request, "editar_oferta.html", {'offer': form, 'usuario':  request.session.get('usuario')})

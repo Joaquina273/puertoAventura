@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import FormularioRegistrarPublicacion, CommentForm
+from ofertas.forms import FormularioRegistrarOferta
 from django.contrib import messages
 from db.models import Post,User
 
@@ -55,7 +56,6 @@ def guardar_publicacion(request, post_id):
     return redirect ('/publicaciones/'+str(post_id))
 
 
-
 def registrar_oferta(request, post_id):
     usuario=request.session.get('usuario')
     if usuario: 
@@ -73,8 +73,6 @@ def registrar_oferta(request, post_id):
             offer.save()
             messages.success(request, "Oferta registrada exitosamente")
             return redirect("/")
-        else:
-            messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
     else:
         form = FormularioRegistrarOferta()
-    return render(request, 'registrar_oferta.html', {'form': form, 'usuario': request.session.get('usuario'),'type_user':tipoo_user,'mensaje_error': form.errors})
+    return render(request, 'registrar_oferta.html', {'form': form, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
