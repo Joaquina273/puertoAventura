@@ -119,9 +119,11 @@
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
                       <i class="bi bi-bell"></i>
+                      {% if sin_leer %}
                       <span class="p-1 bg-danger border border-light rounded-circle position-absolute top-0 start-100 translate-middle">
-                        <span class="visually-hidden">Notifiaciones nuevas</span>
+                        <span class="visually-hidden">Notificaciones nuevas</span>
                       </span>
+                      {% endif %}
                     </span>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
@@ -131,17 +133,18 @@
                     <li>
                       <hr class="dropdown-divider">
                     </li>
+                    {% if notificaciones %}
                     {% for notificacion in notificaciones %}
                     <a href="#" class="list-group-item list-group-item-action" aria-current="true">
                       <div class="row g-0 align-items-center">
-                        <div class="col-2">
-                          <i class="bi bi-envelope-fill me-2"></i>
+                        <div class="col-2 text-center">
+                          <i class="bi bi-envelope-fill me-2" style="font-size: 20px;"></i>
                         </div>
                         <div class="col-10">
                           <div class="ps-3">
                             <div class="text-dark">{{ notificacion.title }}</div>
                             <div class="text-secondary mt-1 fs-7">{{ notificacion.content }}.</div>
-                            <div class="text-secondary mt-1 fs-7">Hace 15m</div>
+                            <div class="text-secondary mt-1 fs-7" id="notification-time-{{ forloop.counter0 }}" data-created-at="{{ notificacion.date|date:"Y-m-dTH:i:s" }}"></div>
                           </div>
                         </div>
                       </div>
@@ -150,43 +153,10 @@
                       <hr class="dropdown-divider">
                     </li>
                     {% endfor %}
-                    <li>
-                      <a class="dropdown-item d-flex align-items-center" href="#!">
-                        <span>
-                          <i class="bi bi-envelope-fill me-2"></i>
-                          <span class="fs-7">Mensajes nuevos</span>
-                        </span>
-                        <span class="fs-7 ms-auto text-secondary">5 minutos</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                      <a class="dropdown-item d-flex align-items-center" href="#!">
-                        <span>
-                          <i class="bi bi-person-fill me-2"></i>
-                          <span class="fs-7">Solicitudes</span>
-                        </span>
-                        <span class="fs-7 ms-auto text-secondary">17 horas</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                      <a class="dropdown-item d-flex align-items-center" href="#!">
-                        <span>
-                          <i class="bi bi-file-earmark-fill me-2"></i>
-                          <span class="fs-7">Reportes</span>
-                        </span>
-                        <span class="fs-7 ms-auto text-secondary">3 días</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item fs-7 text-center" href="#">Ver todas las notificaciones</a></li>
+                    <li><a class="dropdown-item fs-7 text-center" href="/usuarios/notificaciones">Ver todas las notificaciones</a></li>
+                    {% else %}
+                      <h6 class="dropdown-header fs-7 text-center">No tenés ninguna notificación.</h6>
+                    {% endif %}
                   </ul>
                 </li>
                 {% if usuario.2 == 1 %}
@@ -344,4 +314,42 @@
           <!-- default content text (typically empty) -->
         {% endblock %}
     </body>
+    <script>
+      function getElapsedTime(createdAt) {
+          const now = new Date();
+          const notificationTime = new Date(createdAt);
+          const elapsedTime = now - notificationTime;
+  
+          const seconds = Math.floor(elapsedTime / 1000);
+          const minutes = Math.floor(seconds / 60);
+          const hours = Math.floor(minutes / 60);
+          const days = Math.floor(hours / 24);
+  
+          let timeString = '';
+          if (days > 0) {
+              timeString = `${days} días`;
+          } else if (hours > 0) {
+              timeString = `${hours} horas`;
+          } else if (minutes > 0) {
+              timeString = `${minutes} minutos`;
+          } else {
+              timeString = `${seconds} segundos`;
+          }
+  
+          return `Hace ${timeString}`;
+      }
+  
+      function updateNotificationTimes() {
+          document.querySelectorAll('[id^="notification-time-"]').forEach(el => {
+              const createdAt = el.getAttribute('data-created-at');
+              el.textContent = getElapsedTime(createdAt);
+          });
+      }
+  
+      // Actualizar el tiempo transcurrido cada segundo
+      setInterval(updateNotificationTimes, 1000);
+  
+      // Inicializar el tiempo transcurrido
+      updateNotificationTimes();
+  </script>
 </html>

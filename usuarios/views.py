@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from db.models import Post,User,Offer
+from db.models import Post,User,Offer, Notification
 from publicaciones.forms import FormularioRegistrarPublicacion
 from ofertas.forms import FormularioRegistrarOferta
 
@@ -57,20 +57,18 @@ def ver_perfil(request):
 
 def ver_publicaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
-    user_posts_disponibles = user_posts.filter(state = 0)
 
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts_disponibles, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
 
 def ver_notificaciones(request):
-    user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
-    return render(request, "usuarios/ver_notificaciones.html", {"posts": user_posts})
+    notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
+    return render(request, "usuarios/ver_notificaciones.html", {"todas_notificaciones": notificaciones})
 
 def ver_publicaciones_guardadas(request):
     usuario = User.objects.get(email=request.session.get('usuario')[0])
-    usuario_publicaciones_guardadas = usuario.saved_posts.all
-    usuario_publicaciones_guardadas_disponibles = usuario_publicaciones_guardadas.filter(state = 0)
+    publicaciones_guardadas = usuario.saved_posts.all
 
-    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas_disponibles, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": publicaciones_guardadas, 'usuario': request.session.get('usuario')})
 
 def eliminar_publicacion(request, post_id):
 
