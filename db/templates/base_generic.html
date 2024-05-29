@@ -137,9 +137,6 @@
                     {% for notificacion in notificaciones %}
                     <a href="#" class="list-group-item list-group-item-action" aria-current="true">
                       <div class="row g-0 align-items-center">
-                        <div class="col-2 text-center">
-                          <i class="bi bi-envelope-fill me-2" style="font-size: 20px;"></i>
-                        </div>
                         <div class="col-10">
                           <div class="ps-3">
                             <div class="text-dark">{{ notificacion.title }}</div>
@@ -147,6 +144,11 @@
                             <div class="text-secondary mt-1 fs-7" id="notification-time-{{ forloop.counter0 }}" data-created-at="{{ notificacion.date|date:"Y-m-dTH:i:s" }}"></div>
                           </div>
                         </div>
+                        {% if notificacion.read == False %}
+                        <div class="col-2 text-center">
+                          <span class="p-1 rounded-circle bg-primary position-absolute top-20 translate-middle" style="font-size: 50px;">
+                        </div>
+                        {% endif %}
                       </div>
                     </a>
                     <li>
