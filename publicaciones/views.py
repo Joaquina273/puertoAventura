@@ -23,7 +23,9 @@ def registrar_publicacion(request):
 
 def ver_publicaciones(request):
     posts = Post.objects.all()
-    return render(request, "ver_publicaciones.html", {"posts": posts })
+    user_email = request.session.get('usuario')[0]
+    print(user_email)
+    return render(request, "ver_publicaciones.html", {"posts": posts, 'user_email': user_email})
 
 def ver_publicacion(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -43,7 +45,6 @@ def crear_comentario(request, post_id):
     return ver_publicacion(request,post_id)
 
 def ver_imagen(request, post_id):
-    usuario=request.session.get('usuario')
     post = Post.objects.get(id=post_id)
     return render(request, "ver_publicacion.html", {"image": post.image})
 
