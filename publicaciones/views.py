@@ -23,7 +23,10 @@ def registrar_publicacion(request):
 
 def ver_publicaciones(request):
     posts = Post.objects.all()
-    user_email = request.session.get('usuario')[0]
+    if (None == request.session.get('usuario')):
+        user_email = None
+    else:
+        user_email = request.session.get('usuario')[0]
     print(user_email)
     return render(request, "ver_publicaciones.html", {"posts": posts, 'user_email': user_email})
 
