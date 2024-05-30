@@ -6,19 +6,14 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from db.models import Post,User
+from db.models import Post,User,Offer, Notification
 from publicaciones.forms import FormularioRegistrarPublicacion
+from ofertas.forms import FormularioRegistrarOferta
 
 
 # Create your views here.
 def ver_perfil(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
-
+    user = User.objects.get(email=request.session.get('usuario')[0])
     if request.method == 'POST':
         name = request.POST.get('name')
         surname = request.POST.get('surname')
@@ -53,33 +48,27 @@ def ver_perfil(request):
             user.save()
             print("guardo")
             mensaje = "Cambios guardados"
-            return render(request, 'usuarios/perfil.html', {'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
+            return render(request, 'usuarios/perfil.html', {'user':user}) 
         else:
             print("hola")   
-            return render(request, 'usuarios/perfil.html', {'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
-    return render(request, 'usuarios/perfil.html', {'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
+            return render(request, 'usuarios/perfil.html', {'user':user}) 
+    return render(request, 'usuarios/perfil.html', {'user':user}) 
 
 
 def ver_publicaciones(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
+
+def ver_notificaciones(request):
+    notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
+    return render(request, "usuarios/ver_notificaciones.html", {"todas_notificaciones": notificaciones})
 
 def ver_publicaciones_guardadas(request):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
     usuario = User.objects.get(email=request.session.get('usuario')[0])
-    usuario_publicaciones_guardadas = usuario.saved_posts.all
-    return render(request, "ver_publicaciones_guardadas.html", {"posts": usuario_publicaciones_guardadas, 'usuario': request.session.get('usuario'),'type_user':tipoo_user})
+    publicaciones_guardadas = usuario.saved_posts.all
+
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": publicaciones_guardadas, 'usuario': request.session.get('usuario')})
 
 def eliminar_publicacion(request, post_id):
 
@@ -96,13 +85,6 @@ def eliminar_publicacion(request, post_id):
     return redirect("/usuarios/publicaciones")
 
 def editar_publicacion(request, post_id):
-    usuario=request.session.get('usuario')
-    if usuario: 
-        user = User.objects.get(email=usuario[0])
-        tipoo_user=user.type_user
-    else:
-        tipoo_user=0
-    print(tipoo_user)
     post = get_object_or_404(Post, id = post_id)
     old_image_url = post.image.url.lstrip('/')  # Remove leading slash
     if request.method == 'POST':
@@ -122,4 +104,53 @@ def editar_publicacion(request, post_id):
     else:
         form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario'),'type_user':tipoo_user})
+    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario')})
+
+
+def ver_ofertas_recibidas(request):
+    user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
+    ofertas_recibidas = Offer.objects.filter(post__in= user_posts)
+    ofertas_recibidas_disponibles = ofertas_recibidas.filter(answer = 0)
+    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles, 'usuario': request.session.get('usuario')})
+
+
+def ver_ofertas_realizadas(request):
+    user_offers = Offer.objects.filter(user_id= request.session.get('usuario')[0])
+    return render(request, "ver_ofertas_realizadas.html", {"offers": user_offers, 'usuario': request.session.get('usuario')})
+
+
+def eliminar_oferta(request, offer_id):
+
+    offer = get_object_or_404(Offer,id = offer_id)
+    offer.delete()
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Construye la ruta relativa desde el directorio base del proyecto
+    relative_path = os.path.join(base_dir, 'media', 'ofertas', str(offer.user.email), str(offer.post.patent))
+    # Normaliza la ruta
+    relative_path = os.path.normpath(relative_path)
+    print(relative_path)
+    shutil.rmtree(relative_path)
+    messages.success(request, "Oferta eliminada exitosamente")
+    return redirect("/usuarios/ofertasRealizadas")
+
+def editar_oferta(request, offer_id):
+    offer = get_object_or_404(Offer,id = offer_id)
+    old_image_url = offer.image.url.lstrip('/')  # Remove leading slash
+    if request.method == 'POST':
+        form = FormularioRegistrarOferta(data=request.POST, instance=offer, files=request.FILES)
+        if form.is_valid():
+            old_image_path = os.path.join(settings.MEDIA_ROOT, old_image_url.replace('/', os.sep))
+
+            # Ensure the 'media' is not duplicated in the path
+            old_image_path = old_image_path.replace(os.sep + 'media', '', 1)
+
+            # Verificar si el archivo existe y eliminarlo
+            if (form.cleaned_data["image"] != old_image_path):
+                default_storage.delete(old_image_path)
+            form.save()
+            messages.success(request, "Oferta modificada exitosamente")
+            return redirect('/usuarios/ofertasRealizadas')
+    else:
+        form = FormularioRegistrarOferta(instance=offer), 
+
+    return render(request, "editar_oferta.html", {'offer': form, 'usuario':  request.session.get('usuario')})

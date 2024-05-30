@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "autenticacion",
     "landing_page",
     "publicaciones",
-    "usuarios"
+    "usuarios",
+    "ofertas"
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "db.context_processors.navbar_variables",
             ],
         },
     },

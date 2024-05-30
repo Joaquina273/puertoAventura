@@ -5,8 +5,26 @@
 
 <style>
 
+.titulo-publicacion a {
+        color: black;  
+        font-weight: bold;  
+        text-decoration: none;  /* Quitar el subrayado */
+    }
 
-.offer-button {
+.delete-button {
+    background-color: #469597; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de la fuente */
+    font-weight: bold; /* Texto en negrita */
+    border-radius: 25px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cambiar cursor al pasar el mouse */
+    flex: 1; /* Para que los botones tengan el mismo tamaño */
+    text-align: center; /* Centrar el texto */
+}
+
+.edit-button {
             background-color: #EDC5AB; /* Color de fondo */
             color: white; /* Color del texto */
             border: none; /* Sin borde */
@@ -23,7 +41,6 @@
     gap: 10px; /* Espacio entre los botones */
     margin-top: 10px; /* Espacio superior para separar los botones del contenido anterior */
 }
-
 
 /* Estilos generales */
 .card {
@@ -88,32 +105,30 @@
     background-color: #f8d7da; /* Color de fondo de la alerta de peligro */
     border: 1px solid #f5c6cb; /* Borde de la alerta de peligro */
 }
-
 </style>
 
-{% if posts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% if offers %}
     <div class="row">
-        {% for post in posts %}
+        {% for offer in offers %}
             <div class="col-4">
                 <div class="card">
-                    <a href="{{ post.id }}">
-                        <img class="card-img-top" height="180" src="{{ post.image.url }}" alt="{{ post.title }}">
+                    <a href="/ofertas/{{offer.id}}">
+                        <img class="card-img-top" height="180" src="{{ offer.image.url }}" alt="{{ offer.title }}">
                     </a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
+                        <h5 class="card-title">{{ offer.title }}</h5>
                         <hr>
-                        <h6 class="card-subtitle">Valor: {{ post.value }}</h6>
-                        <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
-                        <p class="card-text">Patente: {{ post.patent }}</p>
-                        <p class="user-info">Nombre del dueño: {{ post.user.name }}</p>
-                        <p class="user-info">Email del dueño: {{ post.user.email }}</p>
-                        <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
-                        <p class="card-text">Puerto: {{ post.port.name }}</p>
-                        {% if post.user_email != user_email %}
-                        <div class="button-container">
-                            <a href="{{ post.id }}/registrarOferta"><button type="button" class="offer-button">Realizar oferta</button></a>
+                        <h6 class="card-subtitle">Descripcion: {{ offer.description }}</h6>
+                        <hr>
+                        <div class="titulo-publicacion">
+                        <p> Publicación: <a href="/publicaciones/{{ offer.post_id }}">{{ offer.post.title }}</a> </p>
                         </div>
-                        {% endif %}
+                        <div class="button-container">
+                            <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
+                            <a href="/usuarios/ofertasRecibidas/editarOferta/{{ offer.id }}"><button type="button" class="edit-button">Editar oferta</button></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,6 +138,32 @@
         {% endfor %}
     </div>
 {% else %}
-    <div class="alert alert-danger">No hay publicaciones disponibles</div> 
+    <div class="alert alert-danger">No hay ofertas realizadas</div> 
 {% endif %}
+
+
+{% block js %}
+
+<script>
+    function eliminarOferta(id){
+    Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Esta accion no se puede deshacer",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
+        reverseButtons: true,
+        confirmButtonColor: "#cde7f6"
+    })
+    .then(function(result){
+        if(result.isConfirmed){
+        window.location.href = "ofertasRecibidas/eliminarOferta/"+id
+    }
+    })
+}
+</script>
+
+{% endblock %}
+
 {% endblock %}
