@@ -43,7 +43,7 @@ class Port(models.Model):
         return self.name
     
 class Post(models.Model):
-
+      
     def get_image_upload_path(instance, filename):
         return os.path.join('publicaciones', instance.patent, filename)
     
@@ -83,6 +83,9 @@ class Post(models.Model):
     
     def __str__(self) :
         return self.title
+  
+    def get_comments(self):
+        return self.comments.filter(parent_id__isnull=True) 
 
 class Offer(models.Model):
 
@@ -108,7 +111,7 @@ class Comment(models.Model):  # Un comentario puede tener otro comentario
     date = models.DateField(auto_now_add=timezone.now)
     post = models.ForeignKey(Post, related_name="comments", on_delete= models.CASCADE, null = False, blank= False)
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
-    answer = models.OneToOneField("self", on_delete= models.CASCADE, null = True, blank= True) # Como es una relación recursiva se pasa el propio objeto "self" y se pone null en True ya que no es obligatorio que un comentario tenga una respuesta
+    parent = models.OneToOneField("self", on_delete= models.CASCADE, related_name='answer', null = True, blank= True) # Como es una relación recursiva se pasa el propio objeto "self" y se pone null en True ya que no es obligatorio que un comentario tenga una respuesta
 
     def __str__(self):
         return '%s - %s' %(self.post.title, self.user.name)
