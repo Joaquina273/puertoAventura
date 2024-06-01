@@ -26,4 +26,6 @@ urlpatterns = [
     path("ofertasRecibidas/editarOferta/<int:offer_id>", views.editar_oferta, name="editar_oferta"),
     # ex: usuarios/notificaciones/
     path('notificaciones/', views.ver_notificaciones, name='ver notificaciones'),
+
+    path('listado/',views.ver_listado, name="ver_listado"),
 ]

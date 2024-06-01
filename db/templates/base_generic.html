@@ -161,7 +161,7 @@
                     {% endif %}
                   </ul>
                 </li>
-                {% if usuario.2 == 1 %}
+                {% if usuario.2 > 0 %}
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -207,12 +207,23 @@
                         </span>
                       </a>
                     </li>
-                    {% if usuario.2 == 1 %}
+                    {% if usuario.2  > 0 %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicaciones">
                         <span>
                           <i class="bi bi-map-fill me-2"></i>
                           <span class="fs-7">Mis publicaciones</span>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    {% endif %}
+                    {% if usuario.2  == 3 %}
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/listado">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Listado de usuarios</span>
                         </span>
                       </a>
                     </li>

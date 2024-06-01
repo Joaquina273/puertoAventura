@@ -6,7 +6,8 @@ class User(models.Model):
     types_users = {
         0 : "Usuario normal",
         1 : "Usuario con permisos para publicar",   # Creo que es mejor implementarlo de esta manera
-        2 : "Administrador",
+        2 : "Personal",
+        3 : "Administrador"
     }
     email = models.EmailField("Email", primary_key=True)
     password = models.CharField("Contraseña", max_length=20)

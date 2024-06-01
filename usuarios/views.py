@@ -14,45 +14,62 @@ from ofertas.forms import FormularioRegistrarOferta
 # Create your views here.
 def ver_perfil(request):
     user = User.objects.get(email=request.session.get('usuario')[0])
+
     if request.method == 'POST':
-        name = request.POST.get('name')
-        surname = request.POST.get('surname')
-        phone_number = request.POST.get('phone_number')
-        birthdate_str = request.POST.get('birthdate')
+        form_type = request.POST.get('form_type')
+        print(form_type)
+        if form_type == 'edit_form':
+            name = request.POST.get('name')
+            surname = request.POST.get('surname')
+            phone_number = request.POST.get('phone_number')
+            birthdate_str = request.POST.get('birthdate')
 
-        # Check for changes
-        has_changes = False
+            # Check for changes
+            has_changes = False
 
-        if name and name != user.name:
-            user.name = name
-            has_changes = True
-        print(has_changes)
-        if surname and surname != user.surname:
-            user.surname = surname
-            has_changes = True
-        print(has_changes)
-        telefono_usuario = int(phone_number)
-        if phone_number and user.phone_number != telefono_usuario:
-            print(phone_number)
-            print(user.phone_number)
-            user.phone_number = phone_number
-            has_changes = True
-        print(has_changes)
-        if birthdate_str:
-            birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
-            if birthdate != user.birthdate:
-                user.birthdate = birthdate
+            if name and name != user.name:
+                user.name = name
                 has_changes = True
-        print(has_changes)
-        if has_changes:
+       
+            if surname and surname != user.surname:
+                user.surname = surname
+                has_changes = True
+        
+            telefono_usuario = int(phone_number)
+            if phone_number and user.phone_number != telefono_usuario:
+                print(phone_number)
+                print(user.phone_number)
+                user.phone_number = phone_number
+                has_changes = True
+     
+            if birthdate_str:
+                birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
+                if birthdate != user.birthdate:
+                    user.birthdate = birthdate
+                    has_changes = True
+       
+            if has_changes:
+                user.save()
+                print("guardo")
+                messages.success(request, 'Cambios guardados.')
+                return render(request, 'usuarios/perfil.html', {'user':user}) 
+        if form_type == 'verificacion_form':
+            print("pidio verificaion")
+            user.verification_requested=True
             user.save()
-            print("guardo")
-            mensaje = "Cambios guardados"
-            return render(request, 'usuarios/perfil.html', {'user':user}) 
-        else:
-            print("hola")   
+            
+            return render(request, 'usuarios/perfil.html', {'user':user})
+        else:   
             return render(request, 'usuarios/perfil.html', {'user':user}) 
     return render(request, 'usuarios/perfil.html', {'user':user}) 
+
+
+def ver_listado(request):
+    usuarios = User.objects.all()
+    print("aca abajo!!")
+    for usuario in usuarios:
+        print(usuario.name)
+    return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 
 def ver_publicaciones(request):

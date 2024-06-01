@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block body_class %}pagina-especial{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center p-5">
+        <div class="col-md-6">
+            <ul class="list-group">
+                {% for usuario in usuarios %}
+                <li class="list-group-item">
+                    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
+                    <label class="form-check-label" for="firstCheckbox">{{ usuario.name }} {{ usuario.surname }}</label>
+                    {% if usuario.verification_requested == True %}
+                    <button>aceptar</button>
+                    <button>rechazar</button>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
