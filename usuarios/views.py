@@ -12,6 +12,15 @@ from ofertas.forms import FormularioRegistrarOferta
 
 
 # Create your views here.
+def Lista_usuarios(request):
+    usuario=request.session.get('usuario')
+    if usuario: 
+        user = User.objects.get(email=usuario[0])
+        tipoo_user=user.type_user
+    else:
+        tipoo_user=0
+    return render(request, 'usuarios/listado.html',{'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
+
 def ver_perfil(request):
     user = User.objects.get(email=request.session.get('usuario')[0])
 
