@@ -158,11 +158,8 @@ class Notification(models.Model):
     content = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False, related_name='notifications')
-    offer = models.ForeignKey(Offer, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
-    post = models.ForeignKey(Post, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
-    comment = models.ForeignKey(Comment, on_delete= models.CASCADE, null= True, blank= True) # En el diagrama esta como que un comentario puede tener muchas notificaciones, pero para mi un comentario va a recibir solo una notificacion
-    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= True, blank= True) # Depende como lo implementemos puede ser muchos a uno o uno a uno
     read = models.BooleanField("Leída",default=False)
+    link = models.CharField(max_length=50)
 
     class Meta:
         db_table = 'notifications'

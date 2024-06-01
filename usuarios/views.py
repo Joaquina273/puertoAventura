@@ -64,6 +64,12 @@ def ver_notificaciones(request):
     notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
     return render(request, "usuarios/ver_notificaciones.html", {"todas_notificaciones": notificaciones})
 
+def leer_notificacion(request,id_notificacion):
+    notificacion = Notification.objects.get(id=id_notificacion)
+    notificacion.read = True
+    notificacion.save()
+    return redirect(notificacion.link)
+
 def ver_publicaciones_guardadas(request):
     usuario = User.objects.get(email=request.session.get('usuario')[0])
     publicaciones_guardadas = usuario.saved_posts.all
