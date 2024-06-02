@@ -42,11 +42,14 @@ class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.post_id = kwargs.pop('post_id', None)
         self.request = kwargs.pop('request', None)
+        self.parent_id = kwargs.pop('parent_id', None)
         super(CommentForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
         comment = super(CommentForm, self).save(commit=False)
         comment.content = self.cleaned_data['content']
+        if(self.parent_id):
+            comment.parent = Comment.objects.get(id=self.parent_id)
         comment.post = Post.objects.get(id=self.post_id)
         comment.user = User.objects.get(email=self.request.session.get('usuario') [0])
         if commit:

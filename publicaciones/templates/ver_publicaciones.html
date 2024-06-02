@@ -109,11 +109,6 @@
                         <p class="user-info">Email del dueño: {{ post.user.email }}</p>
                         <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
-                        {% if user_email and post.user_email != user_email %}
-                        <div class="button-container">
-                            <a href="{{ post.id }}/registrarOferta"><button type="button" class="offer-button">Realizar oferta</button></a>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
