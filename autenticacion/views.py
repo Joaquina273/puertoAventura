@@ -11,6 +11,9 @@ def create_avatar():
     avatar_path = 'media/avatares/'  # carpeta con avatares aleatorios
     avatars = os.listdir(avatar_path)
     random_avatar = random.choice(avatars)
+    avatar_path = avatar_path.replace("media/", "")
+    print(random_avatar)
+    print(os.path.join(avatar_path, random_avatar))
     return os.path.join(avatar_path, random_avatar)
 
 # Create your views here.
@@ -71,8 +74,7 @@ def inicio_de_sesion (request):
                 usuario.tries_left = 5
                 usuario.save()
                 avatar_url = usuario.avatar.url
-                corrected_avatar_url = avatar_url.replace('/media/media/', '/media/')
-                request.session['usuario'] = mail, usuario.name, usuario.type_user, corrected_avatar_url
+                request.session['usuario'] = mail, usuario.name, usuario.type_user, avatar_url
                 return redirect("/")
             else:
                 if (usuario.tries_left > 1):
