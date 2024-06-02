@@ -3,6 +3,7 @@ from django.utils import timezone
 import os
 # Create your models here.
 class User(models.Model):
+    
     types_users = {
         0 : "Usuario normal",
         1 : "Usuario con permisos para publicar",   # Creo que es mejor implementarlo de esta manera
@@ -12,6 +13,7 @@ class User(models.Model):
     password = models.CharField("Contraseña", max_length=20)
     name = models.CharField("Nombre", max_length=30)
     surname = models.CharField("Apellido", max_length=20)
+    avatar = models.ImageField("Avatar", upload_to='avatares/', blank=True, null=True)
     birthdate = models.DateField("Fecha de nacimiento")
     type_user = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
     phone_number = models.PositiveBigIntegerField("Número de teléfono")
@@ -165,7 +167,6 @@ class Notification(models.Model):
         db_table = 'notifications'
         verbose_name = 'Notificacion'
         verbose_name_plural = 'Notificaciones'
-
 
 
 

@@ -24,6 +24,10 @@ urlpatterns = [
     path("ofertasRecibidas/eliminarOferta/<int:offer_id>", views.eliminar_oferta, name="eliminar_oferta"),
     # ex: usuarios/ofertasRecibidas/editarOferta/1
     path("ofertasRecibidas/editarOferta/<int:offer_id>", views.editar_oferta, name="editar_oferta"),
+    # ex: usuarios/ofertasRecibidas/aceptarOferta/1
+    path("ofertasRecibidas/aceptarOferta/<int:offer_id>", views.aceptar_oferta, name="aceptar_oferta"),
+    # ex: usuarios/ofertasRecibidas/rechazarOferta/1
+    path("ofertasRecibidas/rechazarOferta/<int:offer_id>", views.rechazar_oferta, name="rechazar_oferta"),
     # ex: usuarios/notificaciones/
     path('notificaciones/', views.ver_notificaciones, name='ver notificaciones'),
 ]
