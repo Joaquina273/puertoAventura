@@ -18,7 +18,8 @@ def Lista_usuarios(request):
         user = User.objects.get(email=usuario[0])
         tipoo_user=user.type_user
     else:
-        tipoo_user=0
+        tipoo_user=0  # Redirige a la misma página después de procesar la solicitud
+
     return render(request, 'usuarios/listado.html',{'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
 
 def ver_perfil(request):
@@ -60,11 +61,13 @@ def ver_perfil(request):
             if has_changes:
                 user.save()
                 print("guardo")
-                messages.success(request, 'Cambios guardados.')
                 return render(request, 'usuarios/perfil.html', {'user':user}) 
         if form_type == 'verificacion_form':
             print("pidio verificaion")
             user.verification_requested=True
+            admin = User.objects.filter(type_user=3).first()
+            noti = Notification(title='Nueva solicitud de verificacion',user=admin,content=f'El usuario {user.name} pidio la verificacion',link=f'/usuarios/listado')
+            noti.save()
             user.save()
             
             return render(request, 'usuarios/perfil.html', {'user':user})
@@ -78,6 +81,40 @@ def ver_listado(request):
     print("aca abajo!!")
     for usuario in usuarios:
         print(usuario.name)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        user_email = request.POST.get('user_email')
+        user_solicitud = User.objects.get(email=user_email)
+        
+        if action == 'aceptar':
+
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 1  
+            user_solicitud.save()
+            messages.success(request, f'La verificación de {user_solicitud.name} ha sido aceptada.')
+            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted a sido verificado con exito',link=f'/usuarios/perfil')
+            noti.save()
+        elif action == 'rechazar':
+            # Lógica para rechazar la solicitud de verificación
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 0  
+            user_solicitud.save()
+            messages.success(request, f'La verificación de {user_solicitud.name} no ha sido aceptada.')
+            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted no a sido verificado',link=f'/usuarios/perfil')
+            noti.save()
+        elif action == 'eliminar':
+            # Lógica para rechazar la solicitud de verificación
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 0  
+            user_solicitud.save()
+            messages.success(request, f'Se elimino la verificacion de {user_solicitud.name}.')
+            noti = Notification(title='Se elimino su verificacion',user=user_solicitud,content=f'Usted deja de estar verificado',link=f'/usuarios/perfil')
+            noti.save()
+        usuarios = User.objects.all()
+        return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
     return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 

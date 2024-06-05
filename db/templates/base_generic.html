@@ -115,6 +115,11 @@
                   </div>
                 </li>
                  -->
+                 {% if usuario.2  == 3 %}
+                 <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/usuarios/listado">Listado de usuarios</a>
+                </li>
+                    {% endif %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -218,17 +223,7 @@
                     </li>
                     
                     {% endif %}
-                    {% if usuario.2  == 3 %}
-                    <li>
-                      <a class="dropdown-item" href="/usuarios/listado">
-                        <span>
-                          <i class="bi bi-map-fill me-2"></i>
-                          <span class="fs-7">Listado de usuarios</span>
-                        </span>
-                      </a>
-                    </li>
                     
-                    {% endif %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicacionesGuardadas">
                         <span>

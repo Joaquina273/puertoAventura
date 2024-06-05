@@ -4,19 +4,26 @@
 {% block body_class %}pagina-especial{% endblock %}
 
 {% block content %}
+
 <div class="container">
     <div class="row justify-content-center p-5">
         <div class="col-md-6">
             <ul class="list-group">
                 {% for usuario in usuarios %}
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
-                    <label class="form-check-label" for="firstCheckbox">{{ usuario.name }} {{ usuario.surname }}</label>
+                <label class="form-check-label" for="firstCheckbox">{{ usuario.name }} {{ usuario.surname }}</label>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_email" value="{{ usuario.email }}">
                     {% if usuario.verification_requested == True %}
-                    <button>aceptar</button>
-                    <button>rechazar</button>
+  
+                    <input type="hidden" name="user_email" value="{{ usuario.email }}">
+                    <button type="submit" class="btn btn-success" name="action" value="aceptar">Aceptar</button>
+                    <button type="submit" class="btn btn-danger" name="action" value="rechazar">Rechazar</button>
                     {% endif %}
-                </li>
+                    {% if usuario.type_user == 1 %}
+                    <button type="submit" class="btn btn-danger" name="action" value="eliminar">Eliminar verificacion</button>
+                    {% endif %}
+                </form>
                 {% endfor %}
             </ul>
         </div>
