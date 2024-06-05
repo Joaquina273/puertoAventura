@@ -96,9 +96,9 @@ body {
             {% if todas_notificaciones %}
             {% for notificacion in todas_notificaciones %}
                 {% if notificacion.read %}
-                    <div class="notification-list">
+                    <a class="notification-list nav-link" href="/usuarios/notificaciones/leer/{{ notificacion.id }}">
                 {% else %}
-                    <div class="notification-list notification-list--unread">
+                    <a class="notification-list notification-list--unread nav-link" href="/usuarios/notificaciones/leer/{{ notificacion.id }}">
                 {% endif %}
                     <div class="notification-list_content">
                         <div class="notification-list_feature-img">
@@ -111,7 +111,7 @@ body {
                             <p class="text-muted"><small id="notification-time-{{ forloop.counter0 }}" data-created-at="{{ notificacion.date|date:"Y-m-dTH:i:s" }}"></small></p>
                         </div>
                     </div>
-                </div>
+                </a>
             {% endfor %}
             {% else %}
                 <div class="alert alert-danger">No tenés ninguna notificación.</div> 

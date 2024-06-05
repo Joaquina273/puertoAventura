@@ -90,6 +90,12 @@ def ver_notificaciones(request):
     notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
     return render(request, "usuarios/ver_notificaciones.html", {"todas_notificaciones": notificaciones})
 
+def leer_notificacion(request,id_notificacion):
+    notificacion = Notification.objects.get(id=id_notificacion)
+    notificacion.read = True
+    notificacion.save()
+    return redirect(notificacion.link)
+
 def ver_publicaciones_guardadas(request):
     usuario = User.objects.get(email=request.session.get('usuario')[0])
     publicaciones_guardadas = usuario.saved_posts.all
@@ -180,3 +186,21 @@ def editar_oferta(request, offer_id):
         form = FormularioRegistrarOferta(instance=offer), 
 
     return render(request, "editar_oferta.html", {'offer': form, 'usuario':  request.session.get('usuario')})
+
+def aceptar_oferta(request, offer_id):
+
+    offer = get_object_or_404(Offer,id = offer_id)
+    offer.answer = 2
+    offer.post.state = 1
+    offer.save()
+    offer.post.save()
+    messages.success(request, "Oferta aceptada exitosamente")
+    return redirect("/usuarios/ofertasRecibidas")
+
+def rechazar_oferta(request, offer_id):
+
+    offer = get_object_or_404(Offer,id = offer_id)
+    offer.answer = 1
+    offer.save()
+    messages.success(request, "Oferta rechazada exitosamente")
+    return redirect("/usuarios/ofertasRecibidas")

@@ -74,10 +74,13 @@
           {% else %}
           <a href="guardar" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i
               class="me-1 fa fa-heart fa-lg"></i> Guardar </a>
+          
           {% endif %}
-          <!-- Comento el botón de ofertar 
-              <a href="#" class="btn btn-warning shadow-0"> Ofertar </a>
-              -->
+            {% if post.user.email != usuario.0 %}
+                <a href="registrarOferta" class="btn btn-warning shadow-0"> Ofertar </a>
+            {% endif %}
+          {% else %}
+            <a href="/autenticacion/inicioSesion" class="btn btn-warning shadow-0"> Ofertar </a>
           {% endif %}
         </div>
         <div id="copyAlert" class="alert alert-success" role="alert" style="display: none;">
@@ -93,9 +96,12 @@
           <div class="col-md-12 col-lg-10 col-xl-8">
             <div class="card">
               <div class="card-body">
-                {% for comment in post.get_comments %}
+                {% if not post.comments.all %}
+                No hay comentarios <a href='#'>Realizar comentario</a>
+                {% else %}
+                {% for comment in post.comments.all %}
                 <div class="d-flex flex-start align-items-center">
-                  <img class="rounded-circle shadow-1-strong me-3" src="/static/images/user_icon.png" alt="avatar"
+                  <img class="rounded-circle shadow-1-strong me-3" src="{{ comment.user.avatar.url}}" alt="avatar"
                     width="60" height="60" />
                   <div>
                     <h6 class="fw-bold text-primary mb-1">{{comment.user.name }}</h6>
@@ -125,7 +131,7 @@
                 {% if comment.answer %}
                 <div class="d-flex flex-start mt-4">
                   <a class="me-3" href="#">
-                    <img class="rounded-circle shadow-1-strong" src="/static/images/user_icon.png" alt="avatar" width="65" height="65" />
+                    <img class="rounded-circle shadow-1-strong" src="{{ comment.answer.user.avatar.url }}" alt="avatar" width="65" height="65" />
                   </a>
                   <div class="flex-grow-1 flex-shrink-1">
                     <div>
@@ -144,21 +150,22 @@
                 {% endif %}
                 <br />
                 {% endfor %}
-                <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
-                  <div class="d-flex flex-start w-100">
-                    <img class="rounded-circle shadow-1-strong me-3" src="/static/images/user_icon.png" alt="avatar"
-                      width="40" height="40" />
-                    <div data-mdb-input-init class="form-outline w-100">
-                      <form method="POST" action='comentario'>
-                        {% csrf_token %}
-                        {% for field in form %}
-                        <div class="form-row mb-2">
-                          {{ field }}
-                        </div>
-                        {% endfor %}
-                        <button type="submit" class="btn btn-success btn-lg">Comentar</button>
-                      </form>
-                    </div>
+                {% endif %}
+              </div>
+              <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                <div class="d-flex flex-start w-100">
+                  <img class="rounded-circle shadow-1-strong me-3" src="{{ usuario.3 }}" alt="avatar"
+                    width="40" height="40" />
+                  <div data-mdb-input-init class="form-outline w-100" >
+                    <form method="POST" action='comentario' >
+                      {% csrf_token %}
+                      {% for field in form %}
+                      <div class="form-row mb-2">
+                        {{ field }}
+                      </div>
+                      {% endfor %} 
+                      <button type="submit" class="btn btn-success btn-lg">Comentar</button>
+                    </form>
                   </div>
                 </div>
               </div>

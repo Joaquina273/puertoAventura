@@ -4,13 +4,25 @@ from db.models import User
 from django.core.mail import EmailMessage
 from django.contrib import messages
 import random
+import os
+
+
+def create_avatar():
+    avatar_path = 'media/avatares/'  # carpeta con avatares aleatorios
+    avatars = os.listdir(avatar_path)
+    random_avatar = random.choice(avatars)
+    avatar_path = avatar_path.replace("media/", "")
+    print(random_avatar)
+    print(os.path.join(avatar_path, random_avatar))
+    return os.path.join(avatar_path, random_avatar)
 
 # Create your views here.
 def registro(request):
     if request.method == 'POST':
         form = RegistrarUsuario(request.POST)
         if form.is_valid():
-            form.save()
+            avatar = create_avatar()
+            form.save(avatar=avatar)
             email = EmailMessage(
                 subject='¡Bienvenido a Puerto Aventura!',
                 body=f' ¡Hola {form.cleaned_data["name"]}! Estamos muy contentos de que te hayas animado a vivir esta aventura juntos. Esperamos que tengas una buena experiencia utilizando nuestra página.'
@@ -61,7 +73,8 @@ def inicio_de_sesion (request):
             if ((usuario.password == contrasenia) and (usuario.tries_left > 1)):
                 usuario.tries_left = 5
                 usuario.save()
-                request.session['usuario'] = mail, usuario.name, usuario.type_user
+                avatar_url = usuario.avatar.url
+                request.session['usuario'] = mail, usuario.name, usuario.type_user, avatar_url
                 return redirect("/")
             else:
                 if (usuario.tries_left > 1):

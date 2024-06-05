@@ -1,6 +1,7 @@
 from datetime import date
 from django import forms
 from db.models import User
+
 class RegistrarUsuario(forms.ModelForm):
 
     email = forms.EmailField(label='Email',widget=forms.EmailInput(attrs={
@@ -46,7 +47,7 @@ class RegistrarUsuario(forms.ModelForm):
             raise forms.ValidationError('Debe tener al menos 18 años para registrarse')
         return birth_date
 
-    def save(self, commit=True):
+    def save(self, commit=True, avatar= None):
         user = super(RegistrarUsuario, self).save(commit=False)
         user.email = self.cleaned_data['email']
         user.password = self.cleaned_data['password1']
@@ -54,6 +55,8 @@ class RegistrarUsuario(forms.ModelForm):
         user.surname = self.cleaned_data['surname']
         user.birthdate = self.cleaned_data['birth_date']
         user.phone_number = self.cleaned_data['phone_number']
+        if avatar:
+            user.avatar = avatar
         if commit:
             user.save()
         return user
