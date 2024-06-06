@@ -210,7 +210,7 @@ if (verificacionButton) {
 
                         </div>
                     </form>
-                    {% if user.type_user == 0 and user.verification_requested == False %}
+                    {% if user.type_user == 0 and user.verification_requested == False and user.verification_canceled == False %}
                     <form method="POST" action=""id="verificacion_form">
                         {% csrf_token %}
                         <input type="hidden" name="form_type" value="verificacion_form">
@@ -222,16 +222,18 @@ if (verificacionButton) {
                         </div>
                     </form>
                     {% endif %}
-                    {% if user.type_user == 0 and user.verification_requested == True %}
+                    {% if user.type_user == 0 and user.verification_requested == True  %}
                         <div  class=" container text-center">
                             <div class="m-2 mb-3 container d-flex justify-content-center align-items-center alert alert-info" role="alert">
                                 <p>Solicitud realizada, espere confirmación del personal</p>
                             </div>
                         </div>
                     {% endif %}
-                    {% if user.type_user == 1 %}
-                    <div class="m-2 mb-3 container d-flex justify-content-center align-items-center alert alert-info" role="alert">
-                        <p>Usted es un usuario ya verificado y puede realizar publicaciones</p>
+                    {% if user.verification_canceled == True %}
+                    <div class=" mb-3 container text-center" >
+                        <div class="m-2 p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-1 shadow-sm">
+                            Su verificaion fue cancelada ante algun problema, contáctese con soporte.
+                        </div>
                     </div>
                     {% endif %}
                 </div>

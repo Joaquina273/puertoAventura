@@ -23,6 +23,7 @@ class User(models.Model):
     verification_requested = models.BooleanField("Solicita verificacion", default=False)
     recovery_ID = models.IntegerField("Id de recuperacion",blank=True,null=True)
     tries_left = models.IntegerField("Intentos restantes",default=5)
+    verification_canceled = models.BooleanField("Verificacion anulada", default=False)
 
     def __str__(self):
         return self.name

@@ -77,7 +77,7 @@ def ver_perfil(request):
 
 
 def ver_listado(request):
-    usuarios = User.objects.all()
+    usuarios = User.objects.exclude(type_user=3)
     print("aca abajo!!")
     for usuario in usuarios:
         print(usuario.name)
@@ -101,6 +101,8 @@ def ver_listado(request):
             user_solicitud.save()
             user_solicitud.type_user = 0  
             user_solicitud.save()
+            user_solicitud.verification_canceled = True
+            user_solicitud.save()
             messages.success(request, f'La verificación de {user_solicitud.name} no ha sido aceptada.')
             noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted no a sido verificado',link=f'/usuarios/perfil')
             noti.save()
@@ -110,10 +112,23 @@ def ver_listado(request):
             user_solicitud.save()
             user_solicitud.type_user = 0  
             user_solicitud.save()
+            user_solicitud.verification_canceled = True
+            user_solicitud.save()
             messages.success(request, f'Se elimino la verificacion de {user_solicitud.name}.')
             noti = Notification(title='Se elimino su verificacion',user=user_solicitud,content=f'Usted deja de estar verificado',link=f'/usuarios/perfil')
             noti.save()
-        usuarios = User.objects.all()
+        if action == 'verificar':
+
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 1  
+            user_solicitud.save()
+            user_solicitud.verification_canceled = False
+            user_solicitud.save()
+            messages.success(request, f'La verificación de {user_solicitud.name} ha sido realizada.')
+            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted a sido verificado',link=f'/usuarios/perfil')
+            noti.save()
+        usuarios = User.objects.exclude(type_user=3)
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
     return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
