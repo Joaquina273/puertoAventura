@@ -61,9 +61,6 @@
                         <button type="submit" class="btn btn-success" name="action" value="aceptar">Aceptar</button>
                         <button type="submit" class="btn btn-danger" name="action" value="rechazar">Rechazar</button>
                         {% endif %}
-                        {% if usuario.type_user == 1 %}
-                        <button type="submit" class="btn btn-danger" name="action" value="eliminar">Eliminar verificación</button>
-                        {% endif %}
                         {% if usuario.type_user == 0 and usuario.verification_requested == False or usuario.verification_canceled %}
                         <button type="submit" class="btn btn-success" name="action" value="verificar">Verificar usuario</button>
                         {% endif %}

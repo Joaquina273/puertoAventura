@@ -34,6 +34,9 @@
             </button>
             <div class="collapse navbar-collapse" id="bsbNavbar">
               <ul class="navbar-nav bsb-dropdown-menu-responsive ms-auto align-items-center">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/publicaciones/">Publicaciones</a>
+                </li>
                 <!-- Escondo la barra de busqueda -->
                 <!--
                 <li class="nav-item dropdown">
@@ -221,14 +224,28 @@
                         </span>
                       </a>
                     </li>
-                    
-                    {% endif %}
-                    
                     <li>
-                      <a class="dropdown-item" href="/usuarios/publicacionesGuardadas">
+                      <a class="dropdown-item" href="/usuarios/ofertasRecibidas">
                         <span>
                           <i class="bi bi-map-fill me-2"></i>
-                          <span class="fs-7">Mis publicaciones guardadas</span>
+                          <span class="fs-7">Ofertas recibidas</span>
+                        </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/ofertasRecibidas">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Ofertas recibidas</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/ofertasRealizadas">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Ofertas realizadas</span>
                         </span>
                       </a>
                     </li>
@@ -277,12 +294,12 @@
                 {% else %}
                 <div class="col-7">
                   <div class="d-flex justify-content-between">
-                    <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrarse</a>
+                    <a href="/autenticacion/registro" class=" nav-link active">Registrarse</a>
                   </div>
                 </div>
                 <div class="col-7">
                   <div class="d-flex justify-content-between">
-                    <a href="/autenticacion/inicioSesion" class="link-primary text-decoration-none">Iniciar sesion</a>
+                    <a href="/autenticacion/inicioSesion" class="nav-link active">Iniciar sesion</a>
                   </div>
                 </div>
                 {% endif %}
