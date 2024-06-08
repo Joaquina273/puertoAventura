@@ -13,6 +13,7 @@
   .icon-hover:hover i {
     color: #3b71ca !important;
   }
+
 </style>
 {% if post %}
 <section class="py-5">
@@ -92,75 +93,94 @@
         <div class="row d-flex justify-content-center">
           <div class="col-md-12 col-lg-10 col-xl-8">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body p-4">
+                <h4 class="text-center mb-4 pb-2">Comentarios</h4>
                 {% for comment in post.get_comments %}
-                <div class="d-flex flex-start align-items-center">
-                  <img class="rounded-circle shadow-1-strong me-3" src="/static/images/user_icon.png" alt="avatar"
-                    width="60" height="60" />
-                  <div>
-                    <h6 class="fw-bold text-primary mb-1">{{comment.user.name }}</h6>
-                    <p class="text-muted small mb-0">- {{comment.date}} </p>
-                  </div>
-                </div>
-                <p class="small mb-0">
-                  {{comment.content}}
-                </p>
-                {% if post.user.email == usuario.0 %}
-                <div class="small d-flex justify-content-start">
-                  <button id="reply-button-{{ comment.id }} " onclick="showReplyForm({{ comment.id }}, this)" class="btn btn-success ">Responder comentario</button>
-                </div>
-                <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none;">
-                  <form method="post" action='respuesta'>
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="form-row mb-2">
-                      {{ field }}
-                      <input type="hidden" value="{{comment.id}}" name="parent_id">
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                  </form>
-                </div>
-                {% endif %}
-                {% if comment.answer %}
-                <div class="d-flex flex-start mt-4">
-                  <a class="me-3" href="#">
-                    <img class="rounded-circle shadow-1-strong" src="/static/images/user_icon.png" alt="avatar" width="65" height="65" />
-                  </a>
-                  <div class="flex-grow-1 flex-shrink-1">
-                    <div>
-                      <div class="d-flex justify-content-between align-items-center">
-                        <p class="mb-1">
-                          <h6 class="fw-bold text-primary mb-1">{{comment.answer.user.name }}</h6>
-                          <p class="text-muted small mb-0">- {{comment.answer.date}} </p>
-                        </p>
-                      </div>
-                      <p class="small mb-0">
-                        {{comment.answer.content}}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {% endif %}
-                <br />
-                {% endfor %}
-                <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
-                  <div class="d-flex flex-start w-100">
+                <div class="row">
+                  <div class="col">
+                    <div class="d-flex flex-start">
                     <img class="rounded-circle shadow-1-strong me-3" src="/static/images/user_icon.png" alt="avatar"
-                      width="40" height="40" />
-                    <div data-mdb-input-init class="form-outline w-100">
-                      <form method="POST" action='comentario'>
-                        {% csrf_token %}
-                        {% for field in form %}
-                        <div class="form-row mb-2">
-                          {{ field }}
+                      width="60" height="60" />
+                      <div class="flex-grow-1 flex-shrink-1">
+                        <div>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold text-primary mb-1">{{comment.user.name}}</h6>
+                            <p class="text-muted small mb-0"> - {{comment.date}} </p>
+                          </div>
+                            <p class="small mb-0">
+                              {{comment.content}}
+                            </p>
                         </div>
-                        {% endfor %}
-                        <button type="submit" class="btn btn-success btn-lg">Comentar</button>
-                      </form>
+                        {% if comment.user_id == usuario.0%}
+                          <button id="edit-button-{{ comment.id }}" 
+                            class="btn btn-warning ">Editar comentario</button>
+                          <button id="delete-button-{{ comment.id }}" 
+                              class="btn btn-danger ">Eliminar comentario</button>
+                        {%endif%}
+                        {% if post.user.email == usuario.0 %}
+                          <div class="d-flex flex-start mt-4">
+                            {% if not comment.answer%}
+                              <button id="reply-button-{{ comment.id }} " onclick="showReplyForm({{ comment.id }}, this)"
+                                class="btn btn-success ">Responder comentario</button>
+                            {%endif%}
+                          </div>
+                          <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none;">
+                            <form method="post" action='respuesta'>
+                              {% csrf_token %}
+                              {% for field in form %}
+                              <div class="form-row mb-2">
+                                {{ field }}
+                                <input type="hidden" value="{{comment.id}}" name="parent_id">
+                              </div>
+                              {% endfor %}
+                              <button type="submit" class="btn btn-primary">Enviar</button>
+                            </form>
+                          </div>
+                        {% endif %}
+                        {% if comment.answer %}
+                          <div class="d-flex flex-start mt-4">
+                              <img class="rounded-circle shadow-1-strong p-2" src="/static/images/user_icon.png" alt="avatar"
+                                width="65" height="65" />
+                            <div class="flex-grow-1 flex-shrink-1">
+                              <div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="fw-bold text-primary mb-1">{{comment.answer.user.name }}</h6>
+                                    <p class="text-muted small mb-0">- {{comment.answer.date}} </p>
+                                </div>
+                                <p class="small mb-0">
+                                  {{comment.answer.content}}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          {% if post.user.email == usuario.0 %}
+                            <button id="edit-button-{{ comment.answer.id }}"  class="btn btn-warning ">Editar comentario</button>
+                            <button id="delete-button-{{ comment.answer.id }}"  class="btn btn-danger ">Eliminar comentario</button>
+                          {%endif%}
+                        {% endif %}
+                        <br />
+                      </div>
                     </div>
-                  </div>
-                </div>
+                      {% endfor %}
+                      {% if post.user.email != usuario.0 %}
+                        <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                          <div class="d-flex flex-start w-100">
+                            <img class="rounded-circle shadow-1-strong me-3" src="/static/images/user_icon.png" alt="avatar"
+                              width="40" height="40" />
+                            <div data-mdb-input-init class="form-outline w-100">
+                              <form method="POST" action='comentario'>
+                                {% csrf_token %}
+                                {% for field in form %}
+                                <div class="form-row mb-2">
+                                  {{ field }}
+                                </div>
+                                {% endfor %}
+                                <button type="submit" class="btn btn-success btn-lg">Comentar</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
               </div>
             </div>
           </div>
@@ -205,5 +225,6 @@
       button.style.display = 'block';
     }
   }
+
 </script>
 {% endblock %}
