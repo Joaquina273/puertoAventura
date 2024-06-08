@@ -61,7 +61,7 @@ def ver_perfil(request):
             if has_changes:
                 user.save()
                 print("guardo")
-                return render(request, 'usuarios/perfil.html', {'user':user}) 
+                return redirect("/usuarios/perfil") 
         if form_type == 'verificacion_form':
             print("pidio verificaion")
             user.verification_requested=True
@@ -70,9 +70,9 @@ def ver_perfil(request):
             noti.save()
             user.save()
             
-            return render(request, 'usuarios/perfil.html', {'user':user})
+            return redirect("/usuarios/perfil")
         else:   
-            return render(request, 'usuarios/perfil.html', {'user':user}) 
+            return redirect("/usuarios/perfil")
     return render(request, 'usuarios/perfil.html', {'user':user}) 
 
 
@@ -129,14 +129,16 @@ def ver_listado(request):
             noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted a sido verificado',link=f'/usuarios/perfil')
             noti.save()
         usuarios = User.objects.exclude(type_user=3)
+        return redirect("/usuarios/listado")
+        #return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
+    else:
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
-    return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 
 def ver_publicaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
 
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts })
 
 def ver_notificaciones(request):
     notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
@@ -152,7 +154,7 @@ def ver_publicaciones_guardadas(request):
     usuario = User.objects.get(email=request.session.get('usuario')[0])
     publicaciones_guardadas = usuario.saved_posts.all
 
-    return render(request, "ver_publicaciones_guardadas.html", {"posts": publicaciones_guardadas, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": publicaciones_guardadas })
 
 def eliminar_publicacion(request, post_id):
 
@@ -188,19 +190,19 @@ def editar_publicacion(request, post_id):
     else:
         form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario')})
+    return render(request, "editar_publicacion.html", {'post': form})
 
 
 def ver_ofertas_recibidas(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
     ofertas_recibidas = Offer.objects.filter(post__in= user_posts)
     ofertas_recibidas_disponibles = ofertas_recibidas.filter(answer = 0)
-    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles})
 
 
 def ver_ofertas_realizadas(request):
     user_offers = Offer.objects.filter(user_id= request.session.get('usuario')[0])
-    return render(request, "ver_ofertas_realizadas.html", {"offers": user_offers, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_ofertas_realizadas.html", {"offers": user_offers})
 
 
 def eliminar_oferta(request, offer_id):
@@ -237,7 +239,7 @@ def editar_oferta(request, offer_id):
     else:
         form = FormularioRegistrarOferta(instance=offer), 
 
-    return render(request, "editar_oferta.html", {'offer': form, 'usuario':  request.session.get('usuario')})
+    return render(request, "editar_oferta.html", {'offer': form})
 
 def aceptar_oferta(request, offer_id):
 

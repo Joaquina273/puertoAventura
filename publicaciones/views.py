@@ -84,4 +84,4 @@ def registrar_oferta(request, post_id):
             return redirect("/")
     else:
         form = FormularioRegistrarOferta()
-    return render(request, 'registrar_oferta.html', {'form': form, 'usuario': request.session.get('usuario')})
+    return render(request, 'registrar_oferta.html', {'form': form})
