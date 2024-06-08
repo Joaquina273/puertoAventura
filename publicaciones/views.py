@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .forms import FormularioRegistrarPublicacion, CommentForm
 from ofertas.forms import FormularioRegistrarOferta
 from django.contrib import messages
-from db.models import Post,User,Comment
+from db.models import Post,User,Comment, Notification
 
 # Create your views here.
 
@@ -43,7 +43,10 @@ def crear_comentario(request, post_id):
     if request.method == 'POST':
         form = CommentForm(request.POST, post_id=post_id, request=request)
         if form.is_valid():
-            form.save()
+            comentario = form.save()
+            post = Post.objects.get(id=post_id)
+            noti = Notification(title='Nuevo comentario',user=post.user,content=f'Has recibido un nuevo comentario en la publicación {post.title}',link=f'/publicaciones/{post_id}#comentario{comentario.id}')
+            noti.save()
     form = CommentForm()
     return ver_publicacion(request,post_id)
 
@@ -81,4 +84,4 @@ def registrar_oferta(request, post_id):
             return redirect("/")
     else:
         form = FormularioRegistrarOferta()
-    return render(request, 'registrar_oferta.html', {'form': form, 'usuario': request.session.get('usuario')})
+    return render(request, 'registrar_oferta.html', {'form': form})

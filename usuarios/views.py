@@ -12,63 +12,149 @@ from ofertas.forms import FormularioRegistrarOferta
 
 
 # Create your views here.
+def Lista_usuarios(request):
+    usuario=request.session.get('usuario')
+    if usuario: 
+        user = User.objects.get(email=usuario[0])
+        tipoo_user=user.type_user
+    else:
+        tipoo_user=0  # Redirige a la misma página después de procesar la solicitud
+
+    return render(request, 'usuarios/listado.html',{'usuario': request.session.get('usuario'),'user':user,'type_user':tipoo_user}) 
+
 def ver_perfil(request):
     user = User.objects.get(email=request.session.get('usuario')[0])
+
     if request.method == 'POST':
-        name = request.POST.get('name')
-        surname = request.POST.get('surname')
-        phone_number = request.POST.get('phone_number')
-        birthdate_str = request.POST.get('birthdate')
+        form_type = request.POST.get('form_type')
+        print(form_type)
+        if form_type == 'edit_form':
+            name = request.POST.get('name')
+            surname = request.POST.get('surname')
+            phone_number = request.POST.get('phone_number')
+            birthdate_str = request.POST.get('birthdate')
 
-        # Check for changes
-        has_changes = False
+            # Check for changes
+            has_changes = False
 
-        if name and name != user.name:
-            user.name = name
-            has_changes = True
-        print(has_changes)
-        if surname and surname != user.surname:
-            user.surname = surname
-            has_changes = True
-        print(has_changes)
-        telefono_usuario = int(phone_number)
-        if phone_number and user.phone_number != telefono_usuario:
-            print(phone_number)
-            print(user.phone_number)
-            user.phone_number = phone_number
-            has_changes = True
-        print(has_changes)
-        if birthdate_str:
-            birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
-            if birthdate != user.birthdate:
-                user.birthdate = birthdate
+            if name and name != user.name:
+                user.name = name
                 has_changes = True
-        print(has_changes)
-        if has_changes:
+       
+            if surname and surname != user.surname:
+                user.surname = surname
+                has_changes = True
+        
+            telefono_usuario = int(phone_number)
+            if phone_number and user.phone_number != telefono_usuario:
+                print(phone_number)
+                print(user.phone_number)
+                user.phone_number = phone_number
+                has_changes = True
+     
+            if birthdate_str:
+                birthdate = datetime.strptime(birthdate_str, '%Y-%m-%d').date()
+                if birthdate != user.birthdate:
+                    user.birthdate = birthdate
+                    has_changes = True
+       
+            if has_changes:
+                user.save()
+                print("guardo")
+                return redirect("/usuarios/perfil") 
+        if form_type == 'verificacion_form':
+            print("pidio verificaion")
+            user.verification_requested=True
+            admin = User.objects.filter(type_user=3).first()
+            noti = Notification(title='Nueva solicitud de verificacion',user=admin,content=f'El usuario {user.name} pidio la verificacion',link=f'/usuarios/listado')
+            noti.save()
             user.save()
-            print("guardo")
-            mensaje = "Cambios guardados"
-            return render(request, 'usuarios/perfil.html', {'user':user}) 
-        else:
-            print("hola")   
-            return render(request, 'usuarios/perfil.html', {'user':user}) 
+            
+            return redirect("/usuarios/perfil")
+        else:   
+            return redirect("/usuarios/perfil")
     return render(request, 'usuarios/perfil.html', {'user':user}) 
+
+
+def ver_listado(request):
+    usuarios = User.objects.exclude(type_user=3)
+    print("aca abajo!!")
+    for usuario in usuarios:
+        print(usuario.name)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        user_email = request.POST.get('user_email')
+        user_solicitud = User.objects.get(email=user_email)
+        
+        if action == 'aceptar':
+
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 1  
+            user_solicitud.save()
+            messages.success(request, f'La verificación de {user_solicitud.name} ha sido aceptada.')
+            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted a sido verificado con exito',link=f'/usuarios/perfil')
+            noti.save()
+        elif action == 'rechazar':
+            # Lógica para rechazar la solicitud de verificación
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 0  
+            user_solicitud.save()
+            user_solicitud.verification_canceled = True
+            user_solicitud.save()
+            messages.success(request, f'La verificación de {user_solicitud.name} no ha sido aceptada.')
+            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted no a sido verificado',link=f'/usuarios/perfil')
+            noti.save()
+        elif action == 'eliminar':
+            # Lógica para rechazar la solicitud de verificación
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 0  
+            user_solicitud.save()
+            user_solicitud.verification_canceled = True
+            user_solicitud.save()
+            messages.success(request, f'Se elimino la verificacion de {user_solicitud.name}.')
+            noti = Notification(title='Se elimino su verificacion',user=user_solicitud,content=f'Usted deja de estar verificado',link=f'/usuarios/perfil')
+            noti.save()
+        if action == 'verificar':
+
+            user_solicitud.verification_requested = False
+            user_solicitud.save()
+            user_solicitud.type_user = 1  
+            user_solicitud.save()
+            user_solicitud.verification_canceled = False
+            user_solicitud.save()
+            messages.success(request, f'La verificación de {user_solicitud.name} ha sido realizada.')
+            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted a sido verificado',link=f'/usuarios/perfil')
+            noti.save()
+        usuarios = User.objects.exclude(type_user=3)
+        return redirect("/usuarios/listado")
+        #return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
+    else:
+        return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 
 def ver_publicaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
 
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts })
 
 def ver_notificaciones(request):
     notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
     return render(request, "usuarios/ver_notificaciones.html", {"todas_notificaciones": notificaciones})
 
+def leer_notificacion(request,id_notificacion):
+    notificacion = Notification.objects.get(id=id_notificacion)
+    notificacion.read = True
+    notificacion.save()
+    return redirect(notificacion.link)
+
 def ver_publicaciones_guardadas(request):
     usuario = User.objects.get(email=request.session.get('usuario')[0])
     publicaciones_guardadas = usuario.saved_posts.all
 
-    return render(request, "ver_publicaciones_guardadas.html", {"posts": publicaciones_guardadas, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_publicaciones_guardadas.html", {"posts": publicaciones_guardadas })
 
 def eliminar_publicacion(request, post_id):
 
@@ -104,19 +190,19 @@ def editar_publicacion(request, post_id):
     else:
         form = FormularioRegistrarPublicacion(instance=post, exclude_patent = True), 
 
-    return render(request, "editar_publicacion.html", {'post': form, 'usuario':  request.session.get('usuario')})
+    return render(request, "editar_publicacion.html", {'post': form})
 
 
 def ver_ofertas_recibidas(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
     ofertas_recibidas = Offer.objects.filter(post__in= user_posts)
     ofertas_recibidas_disponibles = ofertas_recibidas.filter(answer = 0)
-    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles})
 
 
 def ver_ofertas_realizadas(request):
     user_offers = Offer.objects.filter(user_id= request.session.get('usuario')[0])
-    return render(request, "ver_ofertas_realizadas.html", {"offers": user_offers, 'usuario': request.session.get('usuario')})
+    return render(request, "ver_ofertas_realizadas.html", {"offers": user_offers})
 
 
 def eliminar_oferta(request, offer_id):
@@ -153,4 +239,22 @@ def editar_oferta(request, offer_id):
     else:
         form = FormularioRegistrarOferta(instance=offer), 
 
-    return render(request, "editar_oferta.html", {'offer': form, 'usuario':  request.session.get('usuario')})
+    return render(request, "editar_oferta.html", {'offer': form})
+
+def aceptar_oferta(request, offer_id):
+
+    offer = get_object_or_404(Offer,id = offer_id)
+    offer.answer = 2
+    offer.post.state = 1
+    offer.save()
+    offer.post.save()
+    messages.success(request, "Oferta aceptada exitosamente")
+    return redirect("/usuarios/ofertasRecibidas")
+
+def rechazar_oferta(request, offer_id):
+
+    offer = get_object_or_404(Offer,id = offer_id)
+    offer.answer = 1
+    offer.save()
+    messages.success(request, "Oferta rechazada exitosamente")
+    return redirect("/usuarios/ofertasRecibidas")

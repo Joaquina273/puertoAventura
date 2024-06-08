@@ -5,9 +5,9 @@ from db.models import Offer,User
 
 def ver_oferta(request, offer_id):
     offer = Offer.objects.get(id=offer_id)
-    return render(request, "ver_oferta.html", {"offer": offer,'usuario':  request.session.get('usuario')})
+    return render(request, "ver_oferta.html", {"offer": offer})
 
 def ver_imagen(request, offer_id):
     offer = Offer.objects.get(id=offer_id)
-    return render(request, "ver_oferta.html", {"image": offer.image,'usuario':  request.session.get('usuario')})
+    return render(request, "ver_oferta.html", {"image": offer.image})
 

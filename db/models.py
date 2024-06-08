@@ -3,15 +3,18 @@ from django.utils import timezone
 import os
 # Create your models here.
 class User(models.Model):
+    
     types_users = {
         0 : "Usuario normal",
         1 : "Usuario con permisos para publicar",   # Creo que es mejor implementarlo de esta manera
-        2 : "Administrador",
+        2 : "Personal",
+        3 : "Administrador"
     }
     email = models.EmailField("Email", primary_key=True)
     password = models.CharField("Contraseña", max_length=20)
     name = models.CharField("Nombre", max_length=30)
     surname = models.CharField("Apellido", max_length=20)
+    avatar = models.ImageField("Avatar", upload_to='avatares/', blank=True, null=True)
     birthdate = models.DateField("Fecha de nacimiento")
     type_user = models.IntegerField("Tipo de usuario", default=0) # 0 es usuario normal
     phone_number = models.PositiveBigIntegerField("Número de teléfono")
@@ -20,6 +23,7 @@ class User(models.Model):
     verification_requested = models.BooleanField("Solicita verificacion", default=False)
     recovery_ID = models.IntegerField("Id de recuperacion",blank=True,null=True)
     tries_left = models.IntegerField("Intentos restantes",default=5)
+    verification_canceled = models.BooleanField("Verificacion anulada", default=False)
 
     def __str__(self):
         return self.name
@@ -158,17 +162,13 @@ class Notification(models.Model):
     content = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False, related_name='notifications')
-    offer = models.ForeignKey(Offer, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
-    post = models.ForeignKey(Post, on_delete= models.CASCADE, null= True, blank= True) # Es opcional esta relación
-    comment = models.ForeignKey(Comment, on_delete= models.CASCADE, null= True, blank= True) # En el diagrama esta como que un comentario puede tener muchas notificaciones, pero para mi un comentario va a recibir solo una notificacion
-    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= True, blank= True) # Depende como lo implementemos puede ser muchos a uno o uno a uno
     read = models.BooleanField("Leída",default=False)
+    link = models.CharField(max_length=50)
 
     class Meta:
         db_table = 'notifications'
         verbose_name = 'Notificacion'
         verbose_name_plural = 'Notificaciones'
-
 
 
 

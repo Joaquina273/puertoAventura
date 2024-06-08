@@ -34,6 +34,9 @@
             </button>
             <div class="collapse navbar-collapse" id="bsbNavbar">
               <ul class="navbar-nav bsb-dropdown-menu-responsive ms-auto align-items-center">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/publicaciones/">Publicaciones</a>
+                </li>
                 <!-- Escondo la barra de busqueda -->
                 <!--
                 <li class="nav-item dropdown">
@@ -115,6 +118,11 @@
                   </div>
                 </li>
                  -->
+                 {% if usuario.type_user  == 3 %}
+                 <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/usuarios/listado">Listado de usuarios</a>
+                </li>
+                    {% endif %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -135,7 +143,7 @@
                     </li>
                     {% if notificaciones %}
                     {% for notificacion in notificaciones %}
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                    <a href="/usuarios/notificaciones/leer/{{ notificacion.id }}" class="list-group-item list-group-item-action" aria-current="true">
                       <div class="row g-0 align-items-center">
                         <div class="col-10">
                           <div class="ps-3">
@@ -161,7 +169,7 @@
                     {% endif %}
                   </ul>
                 </li>
-                {% if usuario.2 == 1 %}
+                {% if usuario.type_user > 0 %}
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -172,11 +180,11 @@
                 {% endif %}
                 <li class="nav-item dropdown"> 
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{% static 'images/user_icon.png' %}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
+                    <img src="{{ usuario.avatar.url }}"} width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
                     <li>
-                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.1 }}</h6>
+                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.name }}</h6>
                     </li>
                     <li>
                       <hr class="dropdown-divider">
@@ -185,12 +193,12 @@
                       <a href="#" class="dropdown-item" aria-current="true">
                         <div class="row g-0 align-items-center">
                           <div class="col-3">
-                            <img src="{% static 'images/user_icon.png' %}" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
+                            <img src="{{ usuario.avatar.url }}" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
                           </div>
                           <div class="col-9">
                             <div class="ps-3">
-                              <div class="text-secondary mt-1 fs-7">Cuenta {{ usuario.1 }}</div>
-                              <div class="text-secondary mt-1 fs-7">{{ usuario.0 }}</div>
+                              <div class="text-secondary mt-1 fs-7">Cuenta {{ usuario.email }}</div>
+                              <div class="text-secondary mt-1 fs-7">{{ usuario.name }}</div>
                             </div>
                           </div>
                         </div>
@@ -207,7 +215,7 @@
                         </span>
                       </a>
                     </li>
-                    {% if usuario.2 == 1 %}
+                    {% if usuario.type_user  > 0 %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicaciones">
                         <span>
@@ -216,13 +224,28 @@
                         </span>
                       </a>
                     </li>
-                    
-                    {% endif %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicacionesGuardadas">
                         <span>
                           <i class="bi bi-map-fill me-2"></i>
                           <span class="fs-7">Mis publicaciones guardadas</span>
+                        </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/ofertasRecibidas">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Ofertas recibidas</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/ofertasRealizadas">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Ofertas realizadas</span>
                         </span>
                       </a>
                     </li>
@@ -271,12 +294,12 @@
                 {% else %}
                 <div class="col-7">
                   <div class="d-flex justify-content-between">
-                    <a href="/autenticacion/registro" class="link-primary text-decoration-none">Registrarse</a>
+                    <a href="/autenticacion/registro" class=" nav-link active">Registrarse</a>
                   </div>
                 </div>
                 <div class="col-7">
                   <div class="d-flex justify-content-between">
-                    <a href="/autenticacion/inicioSesion" class="link-primary text-decoration-none">Iniciar sesion</a>
+                    <a href="/autenticacion/inicioSesion" class="nav-link active">Iniciar sesion</a>
                   </div>
                 </div>
                 {% endif %}
