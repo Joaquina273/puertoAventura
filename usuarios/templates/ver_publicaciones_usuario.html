@@ -117,10 +117,18 @@
                         <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
                         <p class="card-text">Patente: {{ post.patent }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
+                        {% if post.state == 0 %}
                         <div class="button-container">
                             <a href="#" onclick="eliminarPublicacion({{ post.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar publicación</button></a>
-                            <a href="/usuarios/publicaciones/editarPublicacion/{{ post.id }}"><button type="button" class="edit-button">Editar publicación</button></a>
+                            {% if offers %}
+                            {% for offer in offers %}
+                                {% if post.id == offer.post_id %}
+                                <a href="/usuarios/publicaciones/editarPublicacion/{{ post.id }}"><button type="button" class="edit-button">Editar publicación</button></a>
+                                {% endif %}
+                            {% endfor %}
+                            {% endif %}
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

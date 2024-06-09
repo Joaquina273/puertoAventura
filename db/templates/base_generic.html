@@ -118,7 +118,7 @@
                   </div>
                 </li>
                  -->
-                 {% if usuario.2  == 3 %}
+                 {% if usuario.type_user  == 3 %}
                  <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/usuarios/listado/publicaciones">Listado de publicaciones</a>
                 </li>
@@ -173,7 +173,7 @@
                     {% endif %}
                   </ul>
                 </li>
-                {% if usuario.2 > 0 %}
+                {% if usuario.type_user > 0 %}
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -184,11 +184,11 @@
                 {% endif %}
                 <li class="nav-item dropdown"> 
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{{ usuario.3 }}"} width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
+                    <img src="{{ usuario.avatar.url }}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
                   </a>
                   <ul class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
                     <li>
-                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.1 }}</h6>
+                      <h6 class="dropdown-header fs-7 text-center">Bienvenido, {{ usuario.name }}</h6>
                     </li>
                     <li>
                       <hr class="dropdown-divider">
@@ -197,12 +197,12 @@
                       <a href="#" class="dropdown-item" aria-current="true">
                         <div class="row g-0 align-items-center">
                           <div class="col-3">
-                            <img src="{{ usuario.3 }}" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
+                            <img src="{{ usuario.avatar.url }}" width="55" height="55" class="img-fluid rounded-circle" alt="Luke Reeves">
                           </div>
                           <div class="col-9">
                             <div class="ps-3">
-                              <div class="text-secondary mt-1 fs-7">Cuenta {{ usuario.1 }}</div>
-                              <div class="text-secondary mt-1 fs-7">{{ usuario.0 }}</div>
+                              <div class="text-secondary mt-1 fs-7">Cuenta {{ usuario.email }}</div>
+                              <div class="text-secondary mt-1 fs-7">{{ usuario.name }}</div>
                             </div>
                           </div>
                         </div>
@@ -219,7 +219,7 @@
                         </span>
                       </a>
                     </li>
-                    {% if usuario.2  > 0 %}
+                    {% if usuario.type_user  > 0 %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicaciones">
                         <span>
@@ -229,10 +229,10 @@
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="/usuarios/ofertasRecibidas">
+                      <a class="dropdown-item" href="/usuarios/publicacionesGuardadas">
                         <span>
                           <i class="bi bi-map-fill me-2"></i>
-                          <span class="fs-7">Ofertas recibidas</span>
+                          <span class="fs-7">Mis publicaciones guardadas</span>
                         </span>
                       </a>
                     </li>

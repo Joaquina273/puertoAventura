@@ -18,4 +18,8 @@ urlpatterns = [
     # ex: /publicaciones/4/registrarOferta
     path("<int:post_id>/registrarOferta", views.registrar_oferta, name="registrar_oferta"),
 
+    path("<int:post_id>/eliminarComentario/<int:comment_id>", views.eliminar_comentario, name="eliminar_comentario"),
+
+    path("<int:post_id>/editarComentario/<int:comment_id>", views.editar_comentario, name="eliminar_comentario"),
+
 ]
