@@ -117,6 +117,15 @@
                         <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
                         <p class="card-text">Patente: {{ post.patent }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
+                        <div class=" d-flex flex-row my-3">
+                            {% if post.state == 0 %}
+                              <span class="text-success">Disponible</span>
+                            {% elif post.state == 1 %}
+                              <span class="text-warning ">Pendiente</span>
+                            {% else %}
+                              <span class="text-danger">Finalizada</span>
+                            {% endif %}
+                        </div >
                         {% if post.state == 0 %}
                         <div class="button-container">
                             <a href="#" onclick="eliminarPublicacion({{ post.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar publicación</button></a>

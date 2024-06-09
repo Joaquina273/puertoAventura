@@ -109,6 +109,15 @@
                         <p class="user-info">Email del dueño: {{ post.user.email }}</p>
                         <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
+                        <div class=" d-flex flex-row my-3">
+                            {% if post.state == 0 %}
+                              <span class="text-success">Disponible</span>
+                            {% elif post.state == 1 %}
+                              <span class="text-warning ">Pendiente</span>
+                            {% else %}
+                              <span class="text-danger">Finalizada</span>
+                            {% endif %}
+                        </div >
                     </div>
                 </div>
             </div>
