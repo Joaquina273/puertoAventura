@@ -76,17 +76,21 @@ def guardar_publicacion(request, post_id):
     return redirect ('/publicaciones/'+str(post_id))
 
 def registrar_oferta(request, post_id):
-    if request.method == 'POST':
-        form = FormularioRegistrarOferta(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            offer = form.save(commit=False)
-            offer.user = User.objects.get(email=request.session.get('usuario') [0]) # Assign the current user to the post
-            offer.post = Post.objects.get(id=post_id)
-            offer.save()
-            messages.success(request, "Oferta registrada exitosamente")
-            return redirect("/")
+    if(request.session.get('usuario') != None):
+        if request.method == 'POST':
+            form = FormularioRegistrarOferta(data=request.POST, files=request.FILES)
+            if form.is_valid():
+                offer = form.save(commit=False)
+                offer.user = User.objects.get(email=request.session.get('usuario') [0]) # Assign the current user to the post
+                offer.post = Post.objects.get(id=post_id)
+                offer.save()
+                messages.success(request, "Oferta registrada exitosamente")
+                return redirect("/")
+        else:
+            form = FormularioRegistrarOferta()
     else:
-        form = FormularioRegistrarOferta()
+        messages.error(request, "Debes iniciar sesion para poder ofertar")
+        return redirect("/autenticacion/inicioSesion")
     return render(request, 'registrar_oferta.html', {'form': form})
 
 def eliminar_comentario(request, post_id, comment_id):

@@ -134,6 +134,21 @@ def ver_listado(request):
     else:
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
+def ver_listado_publicaciones(request):
+    publicaciones = Post.objects.all()
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        id = request.POST.get('publicacion.id')
+        post = get_object_or_404(Post, id = id)
+        if action == 'aceptar':
+            post.state = 2  
+            post.save()
+            print("funciono")
+        elif action == 'rechazar':
+            post.state = 0  
+            post.save()
+        return redirect("/usuarios/listadoPublicaciones")
+    return render(request,'usuarios/listadoPublicaciones.html',{'publicaciones':publicaciones})
 
 def ver_publicaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
