@@ -4,45 +4,6 @@
 {% block content %}
 
 <style>
-
-    .guardar-button {
-      background-color: #E5E3E4; /* Color de fondo */
-      color: white; /* Color del texto */
-      border: none; /* Sin borde */
-      padding: 10px 20px; /* Espaciado interno */
-      font-size: 16px; /* Tamaño de la fuente */
-      font-weight: bold; /* Texto en negrita */
-      border-radius: 25px; /* Esquinas redondeadas */
-      cursor: pointer; /* Cambiar cursor al pasar el mouse */
-      flex: 1; /* Para que los botones tengan el mismo tamaño */
-      text-align: center; /* Centrar el texto */
-  }
-
-  .guardada-button {
-      background-color: #BBC6C8; /* Color de fondo */
-      color: white; /* Color del texto */
-      border: none; /* Sin borde */
-      padding: 10px 20px; /* Espaciado interno */
-      font-size: 16px; /* Tamaño de la fuente */
-      font-weight: bold; /* Texto en negrita */
-      border-radius: 25px; /* Esquinas redondeadas */
-      cursor: pointer; /* Cambiar cursor al pasar el mouse */
-      flex: 1; /* Para que los botones tengan el mismo tamaño */
-      text-align: center; /* Centrar el texto */
-  }
-
-  .compartir-button {
-      background-color: #469597; /* Color de fondo */
-      color: white; /* Color del texto */
-      border: none; /* Sin borde */
-      padding: 10px 20px; /* Espaciado interno */
-      font-size: 16px; /* Tamaño de la fuente */
-      font-weight: bold; /* Texto en negrita */
-      border-radius: 25px; /* Esquinas redondeadas */
-      cursor: pointer; /* Cambiar cursor al pasar el mouse */
-      flex: 1; /* Para que los botones tengan el mismo tamaño */
-      text-align: center; /* Centrar el texto */
-}
     .icon-hover:hover {
     border-color: #3b71ca !important;
     background-color: white !important;
@@ -82,25 +43,16 @@
 
               <dt class="col-3">Propietario:</dt>
               <dd class="col-9">{{ offer.post.user.name }} {{ offer.post.user.surname }}</dd>
-            </div>
-  
-            <hr />
-  
-            <a href="#" class="compartir-button" onclick="copyToClipboard()"> <i class="compartir-button"></i> Compartir </a>
-            {% if usuario %}
-              {% if saved == True %}
-                <a href="guardar" class="guardada-button"> <i class="guardada-button"></i> Guardada </a>
+
+              <dt class="col-3">Estado:</dt>
+              {% if offer.answer == 0 %}
+                <dd class="col-9">Sin respuesta</dd>
+              {% elif offer.answer == 1 %}
+                <dd class="col-9">Rechazada</dd>
               {% else %}
-                <a href="guardar" class="guardar-button"> <i class="guardar-button"></i> Guardar </a>
+                <dd class="col-9">Aceptada</dd>
               {% endif %}
-              <!-- Comento el botón de ofertar 
-              <a href="#" class="btn btn-warning shadow-0"> Ofertar </a>
-              -->
-            {% endif %}
-          </div>
-          <div id="copyAlert" class="alert alert-success" role="alert" style="display: none;">
-            Enlace copiado al portapapeles.
-        </div>
+            </div>
         </main>
       </div>
     </div>
@@ -111,24 +63,4 @@
 </ul>
 {% endif %}
 
-<script>
-  function copyToClipboard() {
-      // Crear un campo de texto temporal
-      var tempInput = document.createElement('input');
-      tempInput.value = window.location.href;
-      document.body.appendChild(tempInput);
-      // Seleccionar el contenido del campo de texto
-      tempInput.select();
-      // Copiar el texto seleccionado al portapapeles
-      document.execCommand("copy");
-      // Remover el campo de texto temporal
-      document.body.removeChild(tempInput);
-      var copyAlert = document.getElementById("copyAlert");
-            copyAlert.style.display = "block";
-            // Ocultar la alerta después de 3 segundos
-            setTimeout(function() {
-                copyAlert.style.display = "none";
-            }, 3000);
-    }
-</script>
 {% endblock %}
