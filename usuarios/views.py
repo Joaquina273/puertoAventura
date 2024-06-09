@@ -135,7 +135,7 @@ def ver_listado(request):
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 def ver_listado_publicaciones(request):
-    publicaciones = Post.objects.all()
+    publicaciones = Post.objects.filter(state=1)
     if request.method == 'POST':
         action = request.POST.get('action')
         id = request.POST.get('publicacion.id')
@@ -151,15 +151,16 @@ def ver_listado_publicaciones(request):
     return render(request,'usuarios/listadoPublicaciones.html',{'publicaciones':publicaciones})
 
 def ver_publicaciones(request):
-    user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
 
-    offers_posts_sin_respuesta = []
+    user_posts = Post.objects.filter(user_id=request.session.get('usuario')[0])
 
-    for post in user_posts:
-        offer_post_sin_respuesta = Offer.objects.filter(post_id = post.id, answer = 0)
-        offers_posts_sin_respuesta.append(offer_post_sin_respuesta)
-        
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, "offers": offers_posts_sin_respuesta})
+    # Obtener los ids de posts que tienen ofertas sin respuesta
+    post_ids_con_ofertas_sin_respuesta = Offer.objects.filter(answer=0).values_list('post_id', flat=True)
+
+    # Filtrar los user_posts para excluir los posts que tienen ofertas sin respuesta o que no tienen ofertas
+    posts_sin_ofertas_sin_respuesta = user_posts.exclude(id__in=post_ids_con_ofertas_sin_respuesta).values_list('id', flat=True)
+    
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, "postOK": posts_sin_ofertas_sin_respuesta})
 
 def ver_notificaciones(request):
     notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
