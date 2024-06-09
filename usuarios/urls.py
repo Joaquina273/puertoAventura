@@ -32,6 +32,8 @@ urlpatterns = [
     path('notificaciones/', views.ver_notificaciones, name='ver notificaciones'),
     # ex: usuarios/notificaciones/leer/1
     path('notificaciones/leer/<int:id_notificacion>/', views.leer_notificacion, name='leer notificación'),
+    # ex: usuarios/notificaciones/leer/1
+    path('notificaciones/ver/<int:id_notificacion>/', views.ver_notificacion, name='ver notificación'),
 
     path('listado/',views.ver_listado, name="ver_listado"),
 
