@@ -27,46 +27,52 @@
     .usuario-header form {
         display: flex;
         align-items: center;
-        margin-left: 20px;
     }
     .usuario-header .btn {
         margin-left: 10px;
     }
     .accordion-button {
-        display: none;
+        background-color: #f8f9fa;
+        border: none;
+        padding: 0;
+        width: auto;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
     }
 </style>
 
 <div class="container my-4">
     <div class="accordion" id="accordionPanelsStayOpenExample">
-        {% for usuario in usuarios %}
-        <div class="accordion-item">
+        {% for publicacion in publicaciones %}
+        <div class="">
             <div class="usuario-header">
                 <div>
-                    <label class="form-check-label" for="firstCheckbox">{{ usuario.name }} {{ usuario.surname }}</label>
-                    {% if usuario.type_user > 0 %}
-                    <p>Verificado</p>
+                    <label class="form-check-label" for="firstCheckbox">Titulo: {{ publicacion.title }} publicada por: {{ publicacion.user.name }} {{ publicacion.user.surname }} </label>
+                    {% if publicacion.state == 1 %}
+                    <p>Estado: Pendiente</p>
                     {% endif %}
-                    {% if usuario.verification_requested == True %}
-                    <p>Solicita verificación</p>
+                    {% if publicacion.state == 2 %}
+                    <p>Estado: Finalizada</p>
+                    {% endif %}
+                    {% if publicacion.state == 0 %}
+                    <p>Estado: Diponible</p>
                     {% endif %}
                 </div>
+                {% if publicacion.state == 1 %}
                 <form method="POST" action="">
                     {% csrf_token %}
-                    <input type="hidden" name="user_email" value="{{ usuario.email }}">
-                    {% if usuario.verification_requested == True %}
-                    <button type="submit" class="btn btn-success" name="action" value="aceptar">Aceptar</button>
-                    <button type="submit" class="btn btn-danger" name="action" value="rechazar">Rechazar</button>
-                    {% endif %}
-                    {% if usuario.type_user == 0 and usuario.verification_requested == False or usuario.verification_canceled %}
-                    <button type="submit" class="btn btn-success" name="action" value="verificar">Verificar usuario</button>
-                    {% endif %}
+                    <input type="hidden" name="publicacion.id" value="{{ publicacion.id }}">
+                    <button type="submit" class="btn btn-success" name="action" value="aceptar">Aceptar intercambio</button>
+                    <button type="submit" class="btn btn-danger" name="action" value="rechazar">Rechazar intercambio</button>
                 </form>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
+
 
 
 {% endblock %}

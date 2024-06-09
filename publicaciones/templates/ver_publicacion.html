@@ -35,7 +35,13 @@
             {{ post.title }}
           </h4>
           <div class="d-flex flex-row my-3">
-            <span class="text-success ms-2">Disponible</span>
+            {% if post.state == 0 %}
+              <span class="text-success ms-2">Disponible</span>
+            {% elif post.state == 1 %}
+              <span class="text-warning ms-2">Pendiente</span>
+            {% else %}
+              <span class="text-danger ms-2">Finalizada</span>
+            {% endif %}
           </div>
 
           <div class="mb-3">
@@ -101,8 +107,8 @@
                 {% for comment in post.get_comments %}
                 <div class="row">
                   <div class="col">
-                    <div class="d-flex flex-start">
-                    <img class="rounded-circle shadow-1-strong me-3" src="{{ usuario.avatar.url }}" alt="avatar"
+                    <div class="d-flex flex-start"  id="comentario{{ comment.id }}">
+                    <img class="rounded-circle shadow-1-strong me-3" src="{{ comment.user.avatar.url }}" alt="avatar"
                       width="60" height="60" />
                       <div class="flex-grow-1 flex-shrink-1" >
                         <div>

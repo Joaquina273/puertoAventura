@@ -34,4 +34,6 @@ urlpatterns = [
     path('notificaciones/leer/<int:id_notificacion>/', views.leer_notificacion, name='leer notificación'),
 
     path('listado/',views.ver_listado, name="ver_listado"),
+
+    path('listado/publicaciones',views.ver_listado_publicaciones,name="ver_listado_publicaciones"),
 ]

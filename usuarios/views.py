@@ -64,9 +64,10 @@ def ver_perfil(request):
                 return redirect("/usuarios/perfil") 
         if form_type == 'verificacion_form':
             print("pidio verificaion")
-            user.verification_requested=True
+            user.verification_requested= True
+            user.verification_canceled= False
             admin = User.objects.filter(type_user=3).first()
-            noti = Notification(title='Nueva solicitud de verificacion',user=admin,content=f'El usuario {user.name} pidio la verificacion',link=f'/usuarios/listado')
+            noti = Notification(title='Nueva solicitud de verificación',user=admin,content=f'El usuario {user.name} {user.surname} pidio ser verificado',link=f'/usuarios/listado')
             noti.save()
             user.save()
             
@@ -93,7 +94,7 @@ def ver_listado(request):
             user_solicitud.type_user = 1  
             user_solicitud.save()
             messages.success(request, f'La verificación de {user_solicitud.name} ha sido aceptada.')
-            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted a sido verificado con exito',link=f'/usuarios/perfil')
+            noti = Notification(title='Verificación aceptada',user=user_solicitud,content='Has sido verificado con éxito, ya podés realizar publicaciones.',link=f'/usuarios/perfil')
             noti.save()
         elif action == 'rechazar':
             # Lógica para rechazar la solicitud de verificación
@@ -104,7 +105,7 @@ def ver_listado(request):
             user_solicitud.verification_canceled = True
             user_solicitud.save()
             messages.success(request, f'La verificación de {user_solicitud.name} no ha sido aceptada.')
-            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted no a sido verificado',link=f'/usuarios/perfil')
+            noti = Notification(title='Verificación rechazada',user=user_solicitud,content=f'Tu solicitud de verificación ha sido rechazada, revisá tus datos e intentalo nuevamente.',link=f'/usuarios/perfil')
             noti.save()
         elif action == 'eliminar':
             # Lógica para rechazar la solicitud de verificación
@@ -117,8 +118,7 @@ def ver_listado(request):
             messages.success(request, f'Se elimino la verificacion de {user_solicitud.name}.')
             noti = Notification(title='Se elimino su verificacion',user=user_solicitud,content=f'Usted deja de estar verificado',link=f'/usuarios/perfil')
             noti.save()
-        if action == 'verificar':
-
+        elif action == 'verificar':
             user_solicitud.verification_requested = False
             user_solicitud.save()
             user_solicitud.type_user = 1  
@@ -126,7 +126,7 @@ def ver_listado(request):
             user_solicitud.verification_canceled = False
             user_solicitud.save()
             messages.success(request, f'La verificación de {user_solicitud.name} ha sido realizada.')
-            noti = Notification(title='Estado Verificacion',user=user_solicitud,content=f'Usted a sido verificado',link=f'/usuarios/perfil')
+            noti = Notification(title='Verificación aceptada',user=user_solicitud,content='Has sido verificado con éxito, ya podés realizar publicaciones.',link=f'/usuarios/perfil')
             noti.save()
         usuarios = User.objects.exclude(type_user=3)
         return redirect("/usuarios/listado")
@@ -134,6 +134,21 @@ def ver_listado(request):
     else:
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
+def ver_listado_publicaciones(request):
+    publicaciones = Post.objects.all()
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        id = request.POST.get('publicacion.id')
+        post = get_object_or_404(Post, id = id)
+        if action == 'aceptar':
+            post.state = 2  
+            post.save()
+            print("funciono")
+        elif action == 'rechazar':
+            post.state = 0  
+            post.save()
+        return redirect("/usuarios/listado/publicaciones")
+    return render(request,'usuarios/listadoPublicaciones.html',{'publicaciones':publicaciones})
 
 def ver_publicaciones(request):
 
