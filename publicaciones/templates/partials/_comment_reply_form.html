@@ -1,0 +1,13 @@
+
+        <form method="post" action='respuesta'>
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-row mb-2">
+                {{ field }}
+                <input type="hidden" value="{{comment}}" name="parent_id">
+            </div>
+            {% endfor %}
+            <div style="display: flex;justify-content: flex-end; gap: 10px;">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+              </div>
+        </form>
