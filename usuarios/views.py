@@ -147,7 +147,7 @@ def ver_listado_publicaciones(request):
         elif action == 'rechazar':
             post.state = 0  
             post.save()
-        return redirect("/usuarios/listadoPublicaciones")
+        return redirect("/usuarios/listado/publicaciones")
     return render(request,'usuarios/listadoPublicaciones.html',{'publicaciones':publicaciones})
 
 def ver_publicaciones(request):
