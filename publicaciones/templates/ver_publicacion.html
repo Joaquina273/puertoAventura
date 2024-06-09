@@ -122,7 +122,7 @@
                               {{comment.content}}
                             </p>
                         </div>
-                        {% if comment.user_id == usuario.email and not comment.answer%}
+                        {% if comment.user_id == usuario.email and not comment.answer and post.state == 0%}
                         <div id="edit-form-{{ comment.id }}" class="edit-form" style="display: none; ">
                           {% include 'partials/_comment_edit_form.html' with comment=comment.id %}
                         </div>
@@ -134,7 +134,7 @@
                             </form>
                         </div>
                         {%endif%}
-                        {% if post.user.email == usuario.email %}
+                        {% if post.user.email == usuario.email and post.state == 0%}
                           <div style="display: flex;justify-content: flex-end; gap: 10px;">
                             {% if not comment.answer%}
                               <button id="reply-button-{{ comment.id }} " onclick="showReplyForm({{ comment.id }}, this)"
@@ -161,7 +161,7 @@
                               </div>
                             </div>
                           </div>
-                          {% if post.user.email == usuario.email %}
+                          {% if post.user.email == usuario.email and post.state == 0 %}
                           <div id="edit-form-{{ comment.answer.id}}" class="edit-form" style="display: none;">
                             {% include 'partials/_comment_edit_form.html' with comment=comment.answer.id  avatar=usuario.avatar.url %}
                           </div>
@@ -178,7 +178,7 @@
                       </div>
                     </div>
                       {% endfor %}
-                      {% if post.user.email != usuario.email  %}
+                      {% if post.user.email != usuario.email and post.state == 0 %}
                         <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
                           <div class="d-flex flex-start w-100">
                             {% if usuario %}
