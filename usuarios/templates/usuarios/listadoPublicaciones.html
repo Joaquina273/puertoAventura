@@ -44,6 +44,9 @@
 
 <div class="container my-4">
     <div class="accordion" id="accordionPanelsStayOpenExample">
+        {% if not publicaciones %}
+    <div class="alert alert-danger">No hay publicaciones en estado pendiente</div> 
+{% endif %}
         {% for publicacion in publicaciones %}
         <div class="">
             <div class="usuario-header">
@@ -51,12 +54,6 @@
                     <label class="form-check-label" for="firstCheckbox">Titulo: {{ publicacion.title }} publicada por: {{ publicacion.user.name }} {{ publicacion.user.surname }} </label>
                     {% if publicacion.state == 1 %}
                     <p>Estado: Pendiente</p>
-                    {% endif %}
-                    {% if publicacion.state == 2 %}
-                    <p>Estado: Finalizada</p>
-                    {% endif %}
-                    {% if publicacion.state == 0 %}
-                    <p>Estado: Diponible</p>
                     {% endif %}
                 </div>
                 {% if publicacion.state == 1 %}

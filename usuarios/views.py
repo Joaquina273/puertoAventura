@@ -135,7 +135,7 @@ def ver_listado(request):
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 def ver_listado_publicaciones(request):
-    publicaciones = Post.objects.all()
+    publicaciones = Post.objects.filter(state=1)
     if request.method == 'POST':
         action = request.POST.get('action')
         id = request.POST.get('publicacion.id')
