@@ -48,12 +48,15 @@
         <div class="">
             <div class="usuario-header">
                 <div>
-                    <label class="form-check-label" for="firstCheckbox">{{ publicacion.title }} </label>
+                    <label class="form-check-label" for="firstCheckbox">Titulo: {{ publicacion.title }} publicada por: {{ publicacion.user.name }} {{ publicacion.user.surname }} </label>
                     {% if publicacion.state == 1 %}
-                    <p>Pendiente</p>
+                    <p>Estado: Pendiente</p>
                     {% endif %}
                     {% if publicacion.state == 2 %}
-                    <p>Finalizada</p>
+                    <p>Estado: Finalizada</p>
+                    {% endif %}
+                    {% if publicacion.state == 0 %}
+                    <p>Estado: Diponible</p>
                     {% endif %}
                 </div>
                 {% if publicacion.state == 1 %}
