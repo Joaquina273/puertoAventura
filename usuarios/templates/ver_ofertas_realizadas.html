@@ -24,18 +24,6 @@
     text-align: center; /* Centrar el texto */
 }
 
-.edit-button {
-            background-color: #EDC5AB; /* Color de fondo */
-            color: white; /* Color del texto */
-            border: none; /* Sin borde */
-            padding: 10px 20px; /* Espaciado interno */
-            font-size: 16px; /* Tamaño de la fuente */
-            font-weight: bold; /* Texto en negrita */
-            border-radius: 25px; /* Esquinas redondeadas */
-            width: 100%; /* Ancho completo */
-            cursor: pointer; /* Cambiar cursor al pasar el mouse */
-}
-
 .button-container {
     display: flex; /* Para alinear los botones en una fila */
     gap: 10px; /* Espacio entre los botones */
@@ -122,13 +110,20 @@
                         <hr>
                         <h6 class="card-subtitle">Descripcion: {{ offer.description }}</h6>
                         <hr>
+                        {% if offer.answer == 0 %}
+                            <h6 class="card-subtitle">Estado: Sin respuesta</h6>
+                        {% elif offer.answer == 1 %}
+                            <h6 class="card-subtitle">Estado: Rechazada</h6>
+                        {% else %}
+                            <h6 class="card-subtitle">Estado: Aceptada</h6>
+                        {% endif %}
+                        <hr>
                         <div class="titulo-publicacion">
                         <p> Publicación: <a href="/publicaciones/{{ offer.post_id }}">{{ offer.post.title }}</a> </p>
                         </div>
                         {% if offer.answer == 0 %}
                         <div class="button-container">
                             <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
-                            <a href="/usuarios/ofertasRecibidas/editarOferta/{{ offer.id }}"><button type="button" class="edit-button">Editar oferta</button></a>
                         </div>
                         {% endif %}
                     </div>
