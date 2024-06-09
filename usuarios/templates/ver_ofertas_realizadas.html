@@ -125,10 +125,12 @@
                         <div class="titulo-publicacion">
                         <p> Publicación: <a href="/publicaciones/{{ offer.post_id }}">{{ offer.post.title }}</a> </p>
                         </div>
+                        {% if offer.answer == 0 %}
                         <div class="button-container">
                             <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
                             <a href="/usuarios/ofertasRecibidas/editarOferta/{{ offer.id }}"><button type="button" class="edit-button">Editar oferta</button></a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
