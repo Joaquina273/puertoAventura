@@ -50,13 +50,13 @@ if (verificacionButton) {
         event.preventDefault(); // Prevenir el envío del formulario por defecto
         Swal.fire({
             title: "¿Estás seguro?",
-            text: "Una vez verificado no podrá cambiar la información de su perfil",
+            text: "Una vez verificado no podrás cambiar la información de tu perfil",
             icon: "question",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, solicitar',
-            cancelButtonText: 'No, cancelar'
+            confirmButtonColor: '#3085d6',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Solicitar'
         }).then((result) => {
             if (result.isConfirmed) {
                 verificacionButton.disabled = true; // Deshabilitar el botón de verificación
@@ -198,7 +198,7 @@ if (verificacionButton) {
                         
                             <div class=" mb-3 container d-flex justify-content-center align-items-center" >
                                 <div class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-1 shadow-sm">
-                                    Usted es un usuario verificado y no puede cambiar su información. Por algún problema, contáctese con soporte.
+                                    No se puede editar la información de tu perfil porque se encuentra verificado, ante cualquier problema contactate con soporte.
                                 </div>
                             </div>
                             {% else %}
@@ -216,7 +216,10 @@ if (verificacionButton) {
                         <input type="hidden" name="form_type" value="verificacion_form">
                         <div  class=" container text-center">
                             <div class="m-2 mb-3 container d-flex justify-content-center align-items-center alert alert-info" role="alert">
-                                <p>Usted no es un un usuario verificado, para poder publicar su embarcacion solicitelo aqui abajo</p>
+                                <div class="col">
+                                    <p>Solicitá la verificación para poder realizar tus propias publicaciones. </p>
+                                    <p>Nota: Solo serán verificados los dueños de las embarcaciones ubicadas en puertos de Puerto Aventura.</p>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-success" id="verificacionButton">Solicitar verificacion</button>
                         </div>
@@ -225,16 +228,22 @@ if (verificacionButton) {
                     {% if user.type_user == 0 and user.verification_requested == True  %}
                         <div  class=" container text-center">
                             <div class="m-2 mb-3 container d-flex justify-content-center align-items-center alert alert-info" role="alert">
-                                <p>Solicitud realizada, espere confirmación del personal</p>
+                                <p>Tu solicitud de verificación fue correctamente enviada, la misma será evaluada en la brevedad</p>
                             </div>
                         </div>
                     {% endif %}
                     {% if user.verification_canceled == True %}
-                    <div class=" mb-3 container text-center" >
-                        <div class="m-2 p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-1 shadow-sm">
-                            Su verificaion fue cancelada ante algun problema, contáctese con soporte.
+                    <form method="POST" action=""id="verificacion_form">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="verificacion_form">
+                        <div class=" mb-3 container text-center" >
+                            <div class="m-2 p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-1 shadow-sm">
+                                Tu solicitud de verificación fue rechazada, revisá la información de tu perfil e intentalo nuevamente.
+                            </div>
+                            <button type="submit" class="btn btn-success" id="verificacionButton">Solicitar verificacion</button>
                         </div>
-                    </div>
+                    </form>
+                    
                     {% endif %}
                 </div>
             </div>

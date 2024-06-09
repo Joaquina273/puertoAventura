@@ -148,7 +148,7 @@
                         <div class="col-10">
                           <div class="ps-3">
                             <div class="text-dark">{{ notificacion.title }}</div>
-                            <div class="text-secondary mt-1 fs-7">{{ notificacion.content }}.</div>
+                            <div class="text-secondary mt-1 fs-7">{{ notificacion.content }}</div>
                             <div class="text-secondary mt-1 fs-7" id="notification-time-{{ forloop.counter0 }}" data-created-at="{{ notificacion.date|date:"Y-m-dTH:i:s" }}"></div>
                           </div>
                         </div>
@@ -197,8 +197,8 @@
                           </div>
                           <div class="col-9">
                             <div class="ps-3">
-                              <div class="text-secondary mt-1 fs-7">Cuenta {{ usuario.email }}</div>
-                              <div class="text-secondary mt-1 fs-7">{{ usuario.name }}</div>
+                              <div class="text-secondary mt-1 fs-7">Cuenta</div>
+                              <div class="text-secondary mt-1 fs-7">{{ usuario.email }}</div>
                             </div>
                           </div>
                         </div>
@@ -217,6 +217,14 @@
                     </li>
                     {% if usuario.type_user  > 0 %}
                     <li>
+                      <a class="dropdown-item" href="/usuarios/ofertasRecibidas">
+                        <span>
+                          <i class="bi bi-map-fill me-2"></i>
+                          <span class="fs-7">Ofertas recibidas</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
                       <a class="dropdown-item" href="/usuarios/publicaciones">
                         <span>
                           <i class="bi bi-map-fill me-2"></i>
@@ -224,20 +232,12 @@
                         </span>
                       </a>
                     </li>
+                    {% endif %}
                     <li>
                       <a class="dropdown-item" href="/usuarios/publicacionesGuardadas">
                         <span>
                           <i class="bi bi-map-fill me-2"></i>
                           <span class="fs-7">Mis publicaciones guardadas</span>
-                        </span>
-                      </a>
-                    </li>
-                    {% endif %}
-                    <li>
-                      <a class="dropdown-item" href="/usuarios/ofertasRecibidas">
-                        <span>
-                          <i class="bi bi-map-fill me-2"></i>
-                          <span class="fs-7">Ofertas recibidas</span>
                         </span>
                       </a>
                     </li>
@@ -249,6 +249,7 @@
                         </span>
                       </a>
                     </li>
+                    
                     <!-- Escondo configuracion y centro de ayuda -->
                     <!--
                     <li>
