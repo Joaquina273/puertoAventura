@@ -78,6 +78,17 @@ def ver_perfil(request):
 
 
 def ver_listado(request):
+    session_usuario = request.session.get('usuario')
+    if session_usuario is None or len(session_usuario) == 0:
+        return redirect("/")
+    
+    try:
+        user = User.objects.get(email=session_usuario[0])
+    except ObjectDoesNotExist:
+        return redirect("/")
+    
+    if user.type_user is None or user.type_user < 3:
+        return redirect("/")
     usuarios = User.objects.exclude(type_user=3)
     print("aca abajo!!")
     for usuario in usuarios:
@@ -135,6 +146,17 @@ def ver_listado(request):
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 def ver_listado_publicaciones(request):
+    session_usuario = request.session.get('usuario')
+    if session_usuario is None or len(session_usuario) == 0:
+        return redirect("/")
+    
+    try:
+        user = User.objects.get(email=session_usuario[0])
+    except ObjectDoesNotExist:
+        return redirect("/")
+    
+    if user.type_user is None or user.type_user < 3:
+        return redirect("/")
     publicaciones = Post.objects.filter(state=1)
     if request.method == 'POST':
         action = request.POST.get('action')
