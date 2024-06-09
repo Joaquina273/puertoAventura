@@ -122,6 +122,14 @@
                         <hr>
                         <h6 class="card-subtitle">Descripcion: {{ offer.description }}</h6>
                         <hr>
+                        {% if offer.answer == 0 %}
+                            <h6 class="card-subtitle">Estado: Sin respuesta</h6>
+                        {% elif offer.answer == 1 %}
+                            <h6 class="card-subtitle">Estado: Rechazada</h6>
+                        {% else %}
+                            <h6 class="card-subtitle">Estado: Aceptada</h6>
+                        {% endif %}
+                        <hr>
                         <div class="titulo-publicacion">
                         <p> Publicación: <a href="/publicaciones/{{offer.post.id }}">{{ offer.post.title }}</a> </p>
                         </div>
