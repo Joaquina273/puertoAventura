@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrarUsuario, cambiar_contrasenia_form
-from db.models import User
+from db.models import User, Notification
 from django.core.mail import EmailMessage
 from django.contrib import messages
 import random
@@ -31,6 +31,13 @@ def registro(request):
                 to=[form.cleaned_data['email']],
                 )
             email.send(fail_silently=True)
+            noti = Notification(title='¡Bienvenido a Puerto Aventura!',
+                                user=User.objects.get(email=form.cleaned_data['email']),
+                                content='Estamos muy contentos de que te hayas animado a vivir esta aventura juntos. Esperamos que tengas una buena experiencia utilizando nuestra página. Cualquier duda no dudes en contactarte con nuestro equipo. Saludos aventurero.',
+                                link='/notificaciones/ver/<int:id_notificacion>/')
+            noti.save()
+            noti.link = f'/usuarios/notificaciones/ver/{noti.id}/'
+            noti.save()
             messages.success(request,"¡Usuario registrado exitosamente!")
             #request.session['mensaje_exito'] = "¡Usuario registrado exitosamente!"
             return redirect('/autenticacion/inicioSesion')

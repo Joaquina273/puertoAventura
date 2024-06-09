@@ -171,6 +171,10 @@ def leer_notificacion(request,id_notificacion):
     notificacion.save()
     return redirect(notificacion.link)
 
+def ver_notificacion(request,id_notificacion):
+    notificacion = Notification.objects.get(id=id_notificacion)
+    return render(request, "usuarios/ver_notificacion.html", {'notificacion' : notificacion})
+
 def ver_publicaciones_guardadas(request):
     usuario = User.objects.get(email=request.session.get('usuario')[0])
     publicaciones_guardadas = usuario.saved_posts.all
