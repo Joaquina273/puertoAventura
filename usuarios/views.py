@@ -138,7 +138,13 @@ def ver_listado(request):
 def ver_publicaciones(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
 
-    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts })
+    offers_posts_sin_respuesta = []
+
+    for post in user_posts:
+        offer_post_sin_respuesta = Offer.objects.filter(post_id = post.id, answer = 0)
+        offers_posts_sin_respuesta.append(offer_post_sin_respuesta)
+        
+    return render(request, "ver_publicaciones_usuario.html", {"posts": user_posts, "offers": offers_posts_sin_respuesta})
 
 def ver_notificaciones(request):
     notificaciones = Notification.objects.order_by("-date").filter(user=request.session.get('usuario')[0])
