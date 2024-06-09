@@ -40,15 +40,19 @@ def ver_publicacion(request, post_id):
     return render(request, "ver_publicacion.html", {'form': form, "post": post,'saved': saved})
 
 def crear_comentario(request, post_id):
-    if request.method == 'POST':
-        form = CommentForm(request.POST, post_id=post_id, request=request)
-        if form.is_valid():
-            comentario = form.save()
-            post = Post.objects.get(id=post_id)
-            noti = Notification(title='Nuevo comentario',user=post.user,content=f'Has recibido un nuevo comentario en la publicación {post.title}',link=f'/publicaciones/{post_id}#comentario{comentario.id}')
-            noti.save()
-    form = CommentForm()
-    return ver_publicacion(request,post_id)
+    if (request.session.get('usuario') != None):
+        if request.method == 'POST':
+            form = CommentForm(request.POST, post_id=post_id, request=request)
+            if form.is_valid():
+                comentario = form.save()
+                post = Post.objects.get(id=post_id)
+                noti = Notification(title='Nuevo comentario',user=post.user,content=f'Has recibido un nuevo comentario en la publicación {post.title}',link=f'/publicaciones/{post_id}#comentario{comentario.id}')
+                noti.save()
+        form = CommentForm()
+    else: 
+        messages.error(request, "¡Debe iniciar sesión para poder comentar!")
+        return redirect ('/autenticacion/inicioSesion')
+    return redirect ('/publicaciones/'+str(post_id))
 
 def crear_respuesta(request, post_id):
     if request.method == 'POST':
@@ -57,7 +61,7 @@ def crear_respuesta(request, post_id):
             form.save()
     else:
         form = CommentForm()
-    return ver_publicacion(request,post_id)
+    return redirect ('/publicaciones/'+str(post_id))
 
 def ver_imagen(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -70,7 +74,6 @@ def guardar_publicacion(request, post_id):
     else:
         post.saved_by.add(User.objects.get(email=request.session.get('usuario')[0]))
     return redirect ('/publicaciones/'+str(post_id))
-
 
 def registrar_oferta(request, post_id):
     if request.method == 'POST':
@@ -85,3 +88,21 @@ def registrar_oferta(request, post_id):
     else:
         form = FormularioRegistrarOferta()
     return render(request, 'registrar_oferta.html', {'form': form})
+
+def eliminar_comentario(request, post_id, comment_id):
+    comment = get_object_or_404(Comment, id = comment_id)
+    comment.delete()
+    messages.success(request, "Comentario eliminado exitosamente")
+    return redirect ('/publicaciones/'+str(post_id))
+
+def editar_comentario(request, post_id, comment_id):
+    comment = get_object_or_404(Comment, id = comment_id)
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST, post_id=post_id, instance=comment, request=request)
+        if form.is_valid():
+            comentario = form.save()
+            post = Post.objects.get(id=post_id)
+            noti = Notification(title='Nuevo comentario',user=post.user,content=f'Has recibido un nuevo comentario en la publicación {post.title}',link=f'/publicaciones/{post_id}#comentario{comentario.id}')
+            noti.save()
+    form = CommentForm()
+    return redirect ('/publicaciones/'+str(post_id))
