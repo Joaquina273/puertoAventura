@@ -181,8 +181,10 @@
                       {% if post.user.email != usuario.email  %}
                         <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
                           <div class="d-flex flex-start w-100">
-                            <img class="rounded-circle shadow-1-strong me-3" src="{{ usuario.avatar.url }}" alt="avatar"
+                            {% if usuario %}
+                              <img class="rounded-circle shadow-1-strong me-3" src="{{ usuario.avatar.url }}" alt="avatar"
                               width="40" height="40" />
+                            {% endif %}
                             <div data-mdb-input-init class="form-outline w-100">
                               <form method="POST" action='comentario'>
                                 {% csrf_token %}

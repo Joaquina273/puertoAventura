@@ -135,7 +135,7 @@ def ver_listado(request):
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 def ver_listado_publicaciones(request):
-    publicaciones = Post.objects.all()
+    publicaciones = Post.objects.filter(state=1)
     if request.method == 'POST':
         action = request.POST.get('action')
         id = request.POST.get('publicacion.id')
@@ -171,6 +171,10 @@ def leer_notificacion(request,id_notificacion):
     notificacion.read = True
     notificacion.save()
     return redirect(notificacion.link)
+
+def ver_notificacion(request,id_notificacion):
+    notificacion = Notification.objects.get(id=id_notificacion)
+    return render(request, "usuarios/ver_notificacion.html", {'notificacion' : notificacion})
 
 def ver_publicaciones_guardadas(request):
     usuario = User.objects.get(email=request.session.get('usuario')[0])
