@@ -1,0 +1,75 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block body_class %}pagina-especial{% endblock %}
+
+{% block content %}
+<style>
+    .usuario-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .usuario-header div {
+        display: flex;
+        align-items: center;
+    }
+    .usuario-header p {
+        margin-left: 20px;
+        margin-bottom: 0;
+    }
+    .usuario-header form {
+        display: flex;
+        align-items: center;
+    }
+    .usuario-header .btn {
+        margin-left: 10px;
+    }
+    .accordion-button {
+        background-color: #f8f9fa;
+        border: none;
+        padding: 0;
+        width: auto;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+</style>
+
+<div class="container my-4">
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+        {% for publicacion in publicaciones %}
+        <div class="">
+            <div class="usuario-header">
+                <div>
+                    <label class="form-check-label" for="firstCheckbox">{{ publicacion.title }} </label>
+                    {% if publicacion.state == 1 %}
+                    <p>Pendiente</p>
+                    {% endif %}
+                    {% if publicacion.state == 2 %}
+                    <p>Finalizada</p>
+                    {% endif %}
+                </div>
+                {% if publicacion.state == 1 %}
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="publicacion.id" value="{{ publicacion.id }}">
+                    <button type="submit" class="btn btn-success" name="action" value="aceptar">Aceptar intercambio</button>
+                    <button type="submit" class="btn btn-danger" name="action" value="rechazar">Rechazar intercambio</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}
