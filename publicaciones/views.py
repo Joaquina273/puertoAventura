@@ -21,8 +21,8 @@ def registrar_publicacion(request):
         else:
             form = FormularioRegistrarPublicacion()
     else:
-        messages.error(request, "Debes tener permisos para poder publicar")
-        return redirect("/")
+        messages.error(request, "Necesitas que tu perfil esté verificado para poder publicar")
+        return redirect("/usuarios/perfil")
     return render(request, 'registrar_publicacion.html', {'form': form, 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):
@@ -78,12 +78,16 @@ def ver_imagen(request, post_id):
     return render(request, "ver_publicacion.html", {"image": post.image})
 
 def guardar_publicacion(request, post_id):
-    post = Post.objects.get(id=post_id)
-    if (post.saved_by.filter(email=request.session.get('usuario')[0]).exists()):
-        post.saved_by.remove(User.objects.get(email=request.session.get('usuario')[0]))
+    if (request.session.get('usuario') != None):
+        post = Post.objects.get(id=post_id)
+        if (post.saved_by.filter(email=request.session.get('usuario')[0]).exists()):
+            post.saved_by.remove(User.objects.get(email=request.session.get('usuario')[0]))
+        else:
+            post.saved_by.add(User.objects.get(email=request.session.get('usuario')[0]))
+        return redirect ('/publicaciones/'+str(post_id))
     else:
-        post.saved_by.add(User.objects.get(email=request.session.get('usuario')[0]))
-    return redirect ('/publicaciones/'+str(post_id))
+        messages.error(request, "Debes iniciar sesion para guardarte una publicación")
+        return redirect("/autenticacion/inicioSesion")
 
 def registrar_oferta(request, post_id):
     if(request.session.get('usuario') != None):

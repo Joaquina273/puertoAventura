@@ -174,7 +174,6 @@
                     {% endif %}
                   </ul>
                 </li>
-                {% if usuario.type_user > 0 %}
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -182,7 +181,6 @@
                     </span>
                   </a>
                 </li>
-                {% endif %}
                 <li class="nav-item dropdown"> 
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{{ usuario.avatar.url }}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
