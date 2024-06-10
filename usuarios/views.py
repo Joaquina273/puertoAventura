@@ -155,7 +155,7 @@ def ver_listado_publicaciones(request):
     except ObjectDoesNotExist:
         return redirect("/")
     
-    if user.type_user is None or user.type_user < 3:
+    if user.type_user is None or user.type_user < 2:
         return redirect("/")
     ofertas = Offer.objects.filter(answer=2, post__state=1)
         
