@@ -299,8 +299,7 @@ def editar_publicacion(request, post_id):
 def ver_ofertas_recibidas(request):
     user_posts = Post.objects.filter(user_id= request.session.get('usuario')[0])
     ofertas_recibidas = Offer.objects.filter(post__in= user_posts)
-    ofertas_recibidas_disponibles = ofertas_recibidas.filter(answer = 0)
-    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas_disponibles})
+    return render(request, "ver_ofertas_recibidas.html", {"offers": ofertas_recibidas})
 
 
 def ver_ofertas_realizadas(request):
