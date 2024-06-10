@@ -7,18 +7,22 @@ from db.models import Post,User,Comment, Notification
 # Create your views here.
 
 def registrar_publicacion(request):
-    if request.method == 'POST':
-        form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user = User.objects.get(email=request.session.get('usuario') [0]) # Assign the current user to the post
-            post.save()
-            messages.success(request, "Publicacion registrada exitosamente")
-            return redirect("/")
+    if(request.session.get('usuario') != None and request.session.get('usuario') [2] > 0):
+        if request.method == 'POST':
+            form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.user = User.objects.get(email=request.session.get('usuario') [0]) # Assign the current user to the post
+                post.save()
+                messages.success(request, "Publicacion registrada exitosamente")
+                return redirect("/")
+            else:
+                messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
         else:
-            messages.error(request, "Ya existe una publicacion registrada en el sistema con esa patente")
+            form = FormularioRegistrarPublicacion()
     else:
-        form = FormularioRegistrarPublicacion()
+        messages.error(request, "Debes tener permisos para poder publicar")
+        return redirect("/")
     return render(request, 'registrar_publicacion.html', {'form': form, 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):

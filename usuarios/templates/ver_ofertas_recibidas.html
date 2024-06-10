@@ -11,37 +11,6 @@
         text-decoration: none;  /* Quitar el subrayado */
     }
 
-.aceptar-button {
-    background-color: green; /* Color de fondo */
-    color: white; /* Color del texto */
-    border: none; /* Sin borde */
-    padding: 10px 20px; /* Espaciado interno */
-    font-size: 16px; /* Tamaño de la fuente */
-    font-weight: bold; /* Texto en negrita */
-    border-radius: 25px; /* Esquinas redondeadas */
-    cursor: pointer; /* Cambiar cursor al pasar el mouse */
-    flex: 1; /* Para que los botones tengan el mismo tamaño */
-    text-align: center; /* Centrar el texto */
-}
-
-.rechazar-button {
-            background-color: red; /* Color de fondo */
-            color: white; /* Color del texto */
-            border: none; /* Sin borde */
-            padding: 10px 20px; /* Espaciado interno */
-            font-size: 16px; /* Tamaño de la fuente */
-            font-weight: bold; /* Texto en negrita */
-            border-radius: 25px; /* Esquinas redondeadas */
-            width: 100%; /* Ancho completo */
-            cursor: pointer; /* Cambiar cursor al pasar el mouse */
-}
-
-.button-container {
-    display: flex; /* Para alinear los botones en una fila */
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 10px; /* Espacio superior para separar los botones del contenido anterior */
-}
-
 /* Estilos generales */
 .card {
     margin-bottom: 20px; /* Espacio entre tarjetas */
@@ -133,12 +102,6 @@
                         <div class="titulo-publicacion">
                         <p> Publicación: <a href="/publicaciones/{{offer.post.id }}">{{ offer.post.title }}</a> </p>
                         </div>
-                        {% if offer.answer == 0 %}
-                        <div class="button-container">
-                            <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 1)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="aceptar-button">Aceptar oferta</button></a>
-                            <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 2)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="rechazar-button">Rechazar oferta</button></a>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -151,36 +114,5 @@
     <div class="alert alert-danger">No hay ofertas recibidas</div> 
 {% endif %}
 
-
-{% block js %}
-
-<script>
-    function confirmarEstadoOferta(id, respuesta){
-    Swal.fire({
-        title: "¿Estas seguro?",
-        text: "Esta accion no se puede deshacer",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Aceptar",
-        reverseButtons: true,
-        confirmButtonColor: "#cde7f6"
-    })
-    .then(function(result){
-        if(result.isConfirmed && respuesta == 1){
-        window.location.href = "ofertasRecibidas/aceptarOferta/"+id
-    }
-       else{
-            if(result.isConfirmed && respuesta == 2){
-            window.location.href = "ofertasRecibidas/rechazarOferta/"+id
-       }
-    }
-    })
-
-
-}
-</script>
-
-{% endblock %}
 
 {% endblock %}

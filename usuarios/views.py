@@ -78,6 +78,17 @@ def ver_perfil(request):
 
 
 def ver_listado(request):
+    session_usuario = request.session.get('usuario')
+    if session_usuario is None or len(session_usuario) == 0:
+        return redirect("/")
+    
+    try:
+        user = User.objects.get(email=session_usuario[0])
+    except ObjectDoesNotExist:
+        return redirect("/")
+    
+    if user.type_user is None or user.type_user < 3:
+        return redirect("/")
     usuarios = User.objects.exclude(type_user=3)
     print("aca abajo!!")
     for usuario in usuarios:
@@ -135,10 +146,23 @@ def ver_listado(request):
         return render(request, 'usuarios/listado.html', {'usuarios': usuarios})
 
 def ver_listado_publicaciones(request):
-    publicaciones = Post.objects.filter(state=1)
+    session_usuario = request.session.get('usuario')
+    if session_usuario is None or len(session_usuario) == 0:
+        return redirect("/")
+    
+    try:
+        user = User.objects.get(email=session_usuario[0])
+    except ObjectDoesNotExist:
+        return redirect("/")
+    
+    if user.type_user is None or user.type_user < 3:
+        return redirect("/")
+    ofertas = Offer.objects.filter(answer=2, post__state=1)
+        
     if request.method == 'POST':
         action = request.POST.get('action')
         id = request.POST.get('publicacion.id')
+        ofertaId = request.POST.get('oferta.id')
         post = get_object_or_404(Post, id = id)
         if action == 'aceptar':
             post.state = 2  
@@ -151,11 +175,15 @@ def ver_listado_publicaciones(request):
             noti.link = f'/usuarios/notificaciones/ver/{noti.id}/'
             noti.save()
             print("funciono")
+            ofertas = Offer.objects.filter(answer=2)
         elif action == 'rechazar':
+            oferta = Offer.objects.get(id=ofertaId)
+            oferta.delete()
             post.state = 0  
             post.save()
+            ofertas = Offer.objects.filter(answer=2)
         return redirect("/usuarios/listado/publicaciones")
-    return render(request,'usuarios/listadoPublicaciones.html',{'publicaciones':publicaciones})
+    return render(request,'usuarios/listadoPublicaciones.html',{'ofertas':ofertas,})
 
 def ver_publicaciones(request):
 
