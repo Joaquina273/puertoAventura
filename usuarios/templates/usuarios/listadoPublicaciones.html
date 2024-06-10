@@ -61,7 +61,7 @@
     .form-inline {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 5px;
     }
     .btn {
         white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
@@ -69,7 +69,7 @@
 </style>
 {% if not ofertas %}
             <div class="alert alert-danger">
-                <p>No hay publicaciones en estado pendiente</p></div>
+                <p>No hay intercambios pendientes</p></div>
         {% endif %}
 <div class="container my-4">
     <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -80,9 +80,8 @@
                     <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
                         <div class="usuario-header">
                             <div class="usuario-info">
-                                <p>Título: {{ offer.post.title }}</p>
-                                <p>Publicada por: {{ offer.post.user.name }} {{ offer.post.user.surname }}</p>
-                                <p>Estado: Pendiente</p>
+                                <p>Publicación: {{ offer.post.title }}</p>
+                                <p>Oferta: {{ offer.title }}</p>
                             </div>
                             <div class="button-container">
                                 <form method="POST" action="" class="form-inline">
@@ -106,27 +105,39 @@
                                     <img class="card-img-top" height="250" src="{{ offer.post.image.url }}" alt="{{ offer.post.title }}">
                                 </a>
                                 <div class="card-body">
+                                    <h5 class="card-title">Publicación:</h5>
                                     <h5 class="card-title">{{ offer.post.title }}</h5>
                                     <hr>
-                                    <h6 class="card-subtitle">Valor: {{ offer.post.value }}</h6>
+                                    <p class="card-text">Valor: {{ offer.post.value }}</p>
                                     <p class="card-text">Tipo de embarcación: {{ offer.post.ship_type }}</p>
                                     <p class="card-text">Patente: {{ offer.post.patent }}</p>
                                     <p class="card-text">Puerto: {{ offer.post.port.name }}</p>
+                                    <hr>
+                                    <h6 class="card-subtitle">Datos del dueño de la embarcación</h6>
+                                    <p class="card-text">Nombre: {{ offer.post.user.name }}</p>
+                                    <p class="card-text">Apellido: {{ offer.post.user.surname }}</p>
+                                    <p class="card-text">Telefono: {{ offer.post.user.phone_number }}</p>
+                                    <p class="card-text">Email: {{ offer.post.user.email }}</p>
+                                    <p class="card-text">Fecha de nacimiento: {{ offer.post.user.birthdate }}</p>
                                 </div>
                             </div>
                             <!-- Oferta Card -->
                             <div class="card">
                                 <a href="/ofertas/{{offer.id}}">
-                                    <img class="card-img-top" height="180" src="{{ offer.image.url }}" alt="{{ offer.title }}">
+                                    <img class="card-img-top" height="250" src="{{ offer.image.url }}" alt="{{ offer.title }}">
                                 </a>
                                 <div class="card-body">
+                                    <h5 class="card-title">Oferta:</h5>
                                     <h5 class="card-title">{{ offer.title }}</h5>
                                     <hr>
                                     <h6 class="card-subtitle">Descripción: {{ offer.description }}</h6>
                                     <hr>
-                                    <div class="titulo-publicacion">
-                                        <p>Publicación: <a href="/publicaciones/{{offer.post.id }}">{{ offer.post.title }}</a></p>
-                                    </div>
+                                    <h6 class="card-subtitle">Datos del ofertador</h6>
+                                    <p class="card-text">Nombre: {{ offer.user.name }}</p>
+                                    <p class="card-text">Apellido: {{ offer.user.surname }}</p>
+                                    <p class="card-text">Telefono: {{ offer.user.phone_number }}</p>
+                                    <p class="card-text">Email: {{ offer.user.email }}</p>
+                                    <p class="card-text">Fecha de nacimiento: {{ offer.user.birthdate }}</p>
                                 </div>
                             </div>
                         </div>

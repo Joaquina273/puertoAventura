@@ -7,7 +7,8 @@ from db.models import Post,User,Comment, Notification
 # Create your views here.
 
 def registrar_publicacion(request):
-    if(request.session.get('usuario') != None and request.session.get('usuario') [2] > 0):
+    usuarioConectado=User.objects.get(email=request.session.get('usuario') [0])
+    if(request.session.get('usuario') != None and usuarioConectado.type_user > 0):
         if request.method == 'POST':
             form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
             if form.is_valid():
@@ -21,8 +22,8 @@ def registrar_publicacion(request):
         else:
             form = FormularioRegistrarPublicacion()
     else:
-        messages.error(request, "Debes tener permisos para poder publicar")
-        return redirect("/")
+        messages.error(request, "Necesitas que tu perfil esté verificado para poder publicar")
+        return redirect("/usuarios/perfil")
     return render(request, 'registrar_publicacion.html', {'form': form, 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):
@@ -50,7 +51,7 @@ def crear_comentario(request, post_id):
             if form.is_valid():
                 comentario = form.save()
                 post = Post.objects.get(id=post_id)
-                noti = Notification(title='Nuevo comentario',user=post.user,content=f'Has recibido un nuevo comentario en la publicación {post.title}',link=f'/publicaciones/{post_id}#comentario{comentario.id}')
+                noti = Notification(title='Nuevo comentario',user=post.user,content=f'Has recibido un nuevo comentario en la publicación "{post.title}"',link=f'/publicaciones/{post_id}#comentario{comentario.id}')
                 noti.save()
         form = CommentForm()
     else: 
@@ -63,6 +64,12 @@ def crear_respuesta(request, post_id):
         form = CommentForm(request.POST, post_id=post_id, request=request, parent_id = request.POST["parent_id"])
         if form.is_valid():
             form.save()
+            padre = Comment.objects.get(id= request.POST["parent_id"])
+            noti = Notification(title='Nueva respuesta a tu comentario',
+                                user=padre.user,
+                                content=f'Tu comentario de la publicación "{Post.objects.get(id=post_id).title}" ha sido respondido',
+                                link=f'/publicaciones/{post_id}#comentario{request.POST["parent_id"]}')
+            noti.save()
     else:
         form = CommentForm()
     return redirect ('/publicaciones/'+str(post_id))
@@ -72,12 +79,16 @@ def ver_imagen(request, post_id):
     return render(request, "ver_publicacion.html", {"image": post.image})
 
 def guardar_publicacion(request, post_id):
-    post = Post.objects.get(id=post_id)
-    if (post.saved_by.filter(email=request.session.get('usuario')[0]).exists()):
-        post.saved_by.remove(User.objects.get(email=request.session.get('usuario')[0]))
+    if (request.session.get('usuario') != None):
+        post = Post.objects.get(id=post_id)
+        if (post.saved_by.filter(email=request.session.get('usuario')[0]).exists()):
+            post.saved_by.remove(User.objects.get(email=request.session.get('usuario')[0]))
+        else:
+            post.saved_by.add(User.objects.get(email=request.session.get('usuario')[0]))
+        return redirect ('/publicaciones/'+str(post_id))
     else:
-        post.saved_by.add(User.objects.get(email=request.session.get('usuario')[0]))
-    return redirect ('/publicaciones/'+str(post_id))
+        messages.error(request, "Debes iniciar sesion para guardarte una publicación")
+        return redirect("/autenticacion/inicioSesion")
 
 def registrar_oferta(request, post_id):
     if(request.session.get('usuario') != None):
@@ -88,6 +99,12 @@ def registrar_oferta(request, post_id):
                 offer.user = User.objects.get(email=request.session.get('usuario') [0]) # Assign the current user to the post
                 offer.post = Post.objects.get(id=post_id)
                 offer.save()
+                post = Post.objects.get(id=post_id)
+                noti = Notification(title='Nueva oferta recibida',
+                                user=post.user,
+                                content=f'Has recibido una oferta en tu publicación "{post.title}"',
+                                link=f'/ofertas/{offer.id}')
+                noti.save()
                 messages.success(request, "Oferta registrada exitosamente")
                 return redirect("/")
         else:
@@ -99,6 +116,15 @@ def registrar_oferta(request, post_id):
 
 def eliminar_comentario(request, post_id, comment_id):
     comment = get_object_or_404(Comment, id = comment_id)
+    notis = Notification.objects.filter(user=Post.objects.get(id=post_id).user.email,link=f'/publicaciones/{post_id}#comentario{comment_id}')
+    for noti in notis:
+        noti.link = '/usuarios/notificaciones/ver/0/'
+        noti.save()
+    if comment.parent:
+        notis = Notification.objects.filter(user=comment.parent.user.email,link=f'/publicaciones/{post_id}#comentario{comment.parent.id}')
+        for noti in notis:
+            noti.link = '/usuarios/notificaciones/ver/0/'
+            noti.save()
     comment.delete()
     messages.success(request, "Comentario eliminado exitosamente")
     return redirect ('/publicaciones/'+str(post_id))
@@ -110,7 +136,16 @@ def editar_comentario(request, post_id, comment_id):
         if form.is_valid():
             comentario = form.save()
             post = Post.objects.get(id=post_id)
-            noti = Notification(title='Nuevo comentario',user=post.user,content=f'Has recibido un nuevo comentario en la publicación {post.title}',link=f'/publicaciones/{post_id}#comentario{comentario.id}')
+            if post.user.email == request.session.get('usuario')[0]:
+                noti = Notification(title='Comentario editado',
+                                    user=comment.parent.user,
+                                    content=f'Una respuesta en tu comentario de {post.title} ha sido editada.',
+                                    link=f'/publicaciones/{post_id}#comentario{comment.parent.id}')
+            else:
+                noti = Notification(title='Comentario editado',
+                                    user=post.user,
+                                    content=f'Un comentario realizado en tu publicación {post.title} ha sido editado',
+                                    link=f'/publicaciones/{post_id}#comentario{comentario.id}')
             noti.save()
     form = CommentForm()
     return redirect ('/publicaciones/'+str(post_id))
