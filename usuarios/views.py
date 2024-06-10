@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from db.models import Post,User,Offer, Notification
+from db.models import Post,User,Offer, Notification, Comment
 from publicaciones.forms import FormularioRegistrarPublicacion
 from ofertas.forms import FormularioRegistrarOferta
 
@@ -245,6 +245,18 @@ def ver_publicaciones_guardadas(request):
 def eliminar_publicacion(request, post_id):
 
     post = get_object_or_404(Post,id = post_id)
+    offers = Offer.objects.filter(post=post)
+    for offer in offers:
+        notificaciones = Notification.objects.filter(link=f'/ofertas/{offer.id}')
+        for noti in notificaciones:
+            noti.link = '/usuarios/notificaciones/ver/0/'
+            noti.save()
+    comentarios = Comment.objects.filter(post=post)
+    for comment in comentarios:
+        notificaciones = Notification.objects.filter(link=f'/publicaciones/{post_id}#comentario{comment.id}')
+        for noti in notificaciones:
+            noti.link = '/usuarios/notificaciones/ver/0/'
+            noti.save()
     post.delete()
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # Construye la ruta relativa desde el directorio base del proyecto
