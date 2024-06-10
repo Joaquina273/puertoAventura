@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     No se puede editar la información de tu perfil porque se encuentra verificado, ante cualquier problema contactate con soporte.
                                 </div>
                             </div>
-                            {% else %}
+                            {% elif user.verification_requested == False %}
                             <button type="button" id="editButton" class="btn btn-primary">Editar perfil</button>
                             {% endif %}
                             <button type="submit" class="btn btn-success" style="display: none;" id="saveButton">Guardar cambios</button>
@@ -231,7 +231,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     {% if user.type_user == 0 and user.verification_requested == True  %}
                         <div  class="container text-center">
                             <div class="m-2 mb-3 container d-flex justify-content-center align-items-center alert alert-info" role="alert">
-                                <p>Tu solicitud de verificación fue correctamente enviada, la misma será evaluada en la brevedad</p>
+                                <div class="col">
+                                <p>Tu solicitud de verificación fue correctamente enviada, la misma será evaluada en la brevedad.</p>
+                                <p>No podrás editar la información de tu perfil mientras se procesa la solicitud.</p>
+                                </div>
                             </div>
                         </div>
                     {% endif %}

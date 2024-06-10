@@ -45,7 +45,11 @@
                 <div>
                     <label class="form-check-label" for="firstCheckbox">{{ usuario.name }} {{ usuario.surname }}</label>
                     {% if usuario.type_user > 0 %}
-                    <p>Verificado</p>
+                        {% if usuario.type_user == 2 %}
+                            <p>Personal del puerto</p>
+                        {% else %}
+                            <p>Verificado</p>
+                        {% endif %}
                     {% endif %}
                     {% if usuario.verification_requested == True %}
                     <p>Solicita verificación</p>
