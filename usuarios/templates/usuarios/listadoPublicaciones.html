@@ -16,60 +16,125 @@
         margin-bottom: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .usuario-header div {
+    .usuario-info {
         display: flex;
         align-items: center;
+        font-size: 0.85rem; /* Tamaño de letra reducido */
     }
-    .usuario-header p {
-        margin-left: 20px;
-        margin-bottom: 0;
+    .usuario-info p {
+        margin: 0 15px 0 0;
     }
-    .usuario-header form {
+    .button-container {
         display: flex;
         align-items: center;
-    }
-    .usuario-header .btn {
-        margin-left: 10px;
+        gap: 10px;
     }
     .accordion-button {
-        background-color: #f8f9fa;
-        border: none;
-        padding: 0;
-        width: auto;
+        background-color: #e9ecef; /* Color de fondo sutil */
+        border: 1px solid #ced4da; /* Contorno sutil */
+        padding: 5px 10px;
+        font-size: 0.85rem; /* Tamaño de letra reducido */
+        border-radius: 0.25rem;
     }
     .accordion-button:focus {
         box-shadow: none;
     }
+    .accordion-body {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        background-color: #f8f9fa; /* Fondo sutil */
+        border: 1px solid #ced4da; /* Contorno */
+        border-radius: 0.25rem;
+        padding: 10px;
+    }
+    .card {
+        flex: 1;
+        max-width: 40%; /* Achicado un poco más */
+    }
+    .card .card-title {
+        font-size: 1rem; /* Tamaño de letra reducido */
+    }
+    .card .card-subtitle, .card .card-text {
+        font-size: 0.85rem; /* Tamaño de letra reducido */
+    }
+    .form-inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .btn {
+        white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+    }
 </style>
-
+{% if not ofertas %}
+            <div class="alert alert-danger">
+                <p>No hay publicaciones en estado pendiente</p></div>
+        {% endif %}
 <div class="container my-4">
-    <div class="accordion" id="accordionPanelsStayOpenExample">
-        {% if not publicaciones %}
-    <div class="alert alert-danger">No hay publicaciones en estado pendiente</div> 
-{% endif %}
-        {% for publicacion in publicaciones %}
-        <div class="">
-            <div class="usuario-header">
-                <div>
-                    <label class="form-check-label" for="firstCheckbox">Titulo: {{ publicacion.title }}. Publicada por: {{ publicacion.user.name }} {{ publicacion.user.surname }} </label>
-                    {% if publicacion.state == 1 %}
-                    <p>Estado: Pendiente</p>
-                    {% endif %}
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        
+        {% for offer in ofertas %}
+            {% if offer.post.state == 1 %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
+                        <div class="usuario-header">
+                            <div class="usuario-info">
+                                <p>Título: {{ offer.post.title }}</p>
+                                <p>Publicada por: {{ offer.post.user.name }} {{ offer.post.user.surname }}</p>
+                                <p>Estado: Pendiente</p>
+                            </div>
+                            <div class="button-container">
+                                <form method="POST" action="" class="form-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="publicacion.id" value="{{ offer.post.id }}">
+                                    <input type="hidden" name="oferta.id" value="{{ offer.id }}">
+                                    <button type="submit" class="btn btn-success btn-sm" name="action" value="aceptar">Aceptar intercambio</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" name="action" value="rechazar">Rechazar intercambio</button>
+                                </form>
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="flush-collapse{{ forloop.counter }}">
+                                    Detalles
+                                </button>
+                            </div>
+                        </div>
+                    </h2>
+                    <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ forloop.counter }}" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <!-- Publicación Card -->
+                            <div class="card">
+                                <a href="/publicaciones/{{offer.post.id}}">
+                                    <img class="card-img-top" height="250" src="{{ offer.post.image.url }}" alt="{{ offer.post.title }}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ offer.post.title }}</h5>
+                                    <hr>
+                                    <h6 class="card-subtitle">Valor: {{ offer.post.value }}</h6>
+                                    <p class="card-text">Tipo de embarcación: {{ offer.post.ship_type }}</p>
+                                    <p class="card-text">Patente: {{ offer.post.patent }}</p>
+                                    <p class="card-text">Puerto: {{ offer.post.port.name }}</p>
+                                </div>
+                            </div>
+                            <!-- Oferta Card -->
+                            <div class="card">
+                                <a href="/ofertas/{{offer.id}}">
+                                    <img class="card-img-top" height="180" src="{{ offer.image.url }}" alt="{{ offer.title }}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ offer.title }}</h5>
+                                    <hr>
+                                    <h6 class="card-subtitle">Descripción: {{ offer.description }}</h6>
+                                    <hr>
+                                    <div class="titulo-publicacion">
+                                        <p>Publicación: <a href="/publicaciones/{{offer.post.id }}">{{ offer.post.title }}</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {% if publicacion.state == 1 %}
-                <form method="POST" action="">
-                    {% csrf_token %}
-                    <input type="hidden" name="publicacion.id" value="{{ publicacion.id }}">
-                    <button type="submit" class="btn btn-success" name="action" value="aceptar">Aceptar intercambio</button>
-                    <button type="submit" class="btn btn-danger" name="action" value="rechazar">Rechazar intercambio</button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>
-
-
 
 {% endblock %}

@@ -7,7 +7,7 @@ from db.models import Post,User,Comment, Notification
 # Create your views here.
 
 def registrar_publicacion(request):
-    if(request.session.get('usuario') != None and request.session.get('usuario') [2] != 0):
+    if(request.session.get('usuario') != None and request.session.get('usuario') [2] > 0):
         if request.method == 'POST':
             form = FormularioRegistrarPublicacion(data=request.POST, files=request.FILES)
             if form.is_valid():

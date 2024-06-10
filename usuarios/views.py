@@ -157,20 +157,26 @@ def ver_listado_publicaciones(request):
     
     if user.type_user is None or user.type_user < 3:
         return redirect("/")
-    publicaciones = Post.objects.filter(state=1)
+    ofertas = Offer.objects.filter(answer=2, post__state=1)
+        
     if request.method == 'POST':
         action = request.POST.get('action')
         id = request.POST.get('publicacion.id')
+        ofertaId = request.POST.get('oferta.id')
         post = get_object_or_404(Post, id = id)
         if action == 'aceptar':
             post.state = 2  
             post.save()
             print("funciono")
+            ofertas = Offer.objects.filter(answer=2)
         elif action == 'rechazar':
+            oferta = Offer.objects.get(id=ofertaId)
+            oferta.delete()
             post.state = 0  
             post.save()
+            ofertas = Offer.objects.filter(answer=2)
         return redirect("/usuarios/listado/publicaciones")
-    return render(request,'usuarios/listadoPublicaciones.html',{'publicaciones':publicaciones})
+    return render(request,'usuarios/listadoPublicaciones.html',{'ofertas':ofertas,})
 
 def ver_publicaciones(request):
 
