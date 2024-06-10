@@ -66,29 +66,33 @@
             </h4>
   
             <p>
-                Una breve descripción
+              {{ offer.description }}
             </p>
   
             <div class="row">
-              <dt class="col-3">Descripcion:</dt>
-              <dd class="col-9">{{ offer.description }}</dd>
-
-              <dt class="col-3">Propietario:</dt>
-              <dd class="col-9">{{ offer.post.user.name }} {{ offer.post.user.surname }}</dd>
+              <dt class="col-3">Ofertador:</dt>
+              <dd class="col-9">{{ offer.user.name }} {{ offer.user.surname }}</dd>
 
               <dt class="col-3">Estado:</dt>
               {% if offer.answer == 0 %}
-                <dd class="col-9">Sin respuesta</dd>
+                <dd class="text-warning col-9">Sin respuesta</dd>
               {% elif offer.answer == 1 %}
-                <dd class="col-9">Rechazada</dd>
+                <dd class="text-danger col-9">Rechazada</dd>
               {% else %}
-                <dd class="col-9">Aceptada</dd>
+                <dd class="text-success col-9">Aceptada</dd>
               {% endif %}
+
+              <dt class="col-3">Publicación:</dt>
+              <dd class="col-9"><a href="/publicaciones/{{ offer.post_id }}">{{ offer.post.title }}</a></dd>
 
               {% if offer.answer == 0 %}
               <div class="button-container">
+                {% if usuario.email != offer.user.email %}
                   <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 1)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="aceptar-button">Aceptar oferta</button></a>
                   <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 2)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="rechazar-button">Rechazar oferta</button></a>
+                {% else %}
+                  <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
+                {% endif %}
               </div>
               {% endif %}
 
@@ -129,6 +133,23 @@
     })
 
 
+}
+    function eliminarOferta(id){
+    Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Esta accion no se puede deshacer",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
+        reverseButtons: true,
+        confirmButtonColor: "#cde7f6"
+    })
+    .then(function(result){
+        if(result.isConfirmed){
+        window.location.href = "/usuarios/ofertasRecibidas/eliminarOferta/"+id
+    }
+    })
 }
 </script>
 
