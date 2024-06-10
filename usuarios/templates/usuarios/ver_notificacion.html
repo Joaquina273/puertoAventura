@@ -5,6 +5,7 @@
 <body>
     <div class="bg-light py-3 py-md-5">
         <div class="container1">
+          {% if notificacion %}
             <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
               <div class="bg-white p-4 p-md-5 rounded shadow-sm">
                 <div class="row">
@@ -17,6 +18,20 @@
                 </div>
               </div>
             </div>
+          {% else %}
+            <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+              <div class="alert alert-danger" role="alert">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="mb-5">
+                      <h2 class="h3">Contenido eliminado</h2>
+                      <h3 class="fs-6 fw-normal text-secondary m-0"> <p>El contenido al que pertenece la notificación ha sido eliminado. Lamentamos las molestias.</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
 </body>

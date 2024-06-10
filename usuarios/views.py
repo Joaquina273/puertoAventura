@@ -143,6 +143,13 @@ def ver_listado_publicaciones(request):
         if action == 'aceptar':
             post.state = 2  
             post.save()
+            noti = Notification(title='Intercambio finalizado',
+                                user=post.user,
+                                content=f'El intercambio de tu publicación {post.title} ha sido registrado como finalizado y tu publicación fue terminada. Si este no es el caso, por favor contactate con soporte.',
+                                link=f'')
+            noti.save()
+            noti.link = f'/usuarios/notificaciones/ver/{noti.id}/'
+            noti.save()
             print("funciono")
         elif action == 'rechazar':
             post.state = 0  
@@ -173,7 +180,10 @@ def leer_notificacion(request,id_notificacion):
     return redirect(notificacion.link)
 
 def ver_notificacion(request,id_notificacion):
-    notificacion = Notification.objects.get(id=id_notificacion)
+    if id_notificacion != 0:
+        notificacion = Notification.objects.get(id=id_notificacion)
+    else:
+        notificacion = None
     return render(request, "usuarios/ver_notificacion.html", {'notificacion' : notificacion})
 
 def ver_publicaciones_guardadas(request):
@@ -242,6 +252,9 @@ def eliminar_oferta(request, offer_id):
     relative_path = os.path.normpath(relative_path)
     print(relative_path)
     shutil.rmtree(relative_path)
+    noti = Notification.objects.get(link=f'/ofertas/{offer.id}')
+    noti.link = '/usuarios/notificaciones/ver/0/'
+    noti.save()
     messages.success(request, "Oferta eliminada exitosamente")
     return redirect("/usuarios/ofertasRealizadas")
 
@@ -274,6 +287,20 @@ def aceptar_oferta(request, offer_id):
     offer.post.state = 1
     offer.save()
     offer.post.save()
+    noti = Notification(title='Oferta aceptada',
+                        user=offer.user.email,
+                        content=f'Tu oferta "{offer.title}" de la publicación "{offer.post.title}" ha sido aceptada. Ahora deberás esperar la comunicación del personal del puerto para llevar el intercambio adelante.',
+                        link=f'')
+    noti.save()
+    noti.link = f'/usuarios/notificaciones/ver/{noti.id}/'
+    noti.save()
+    personal = User.objects.filter(type_user=2)
+    for persona in personal:
+        noti = Notification(title='Oferta aceptada',
+                        user=persona.email,
+                        content=f'Se ha aceptado la oferta "{offer.title}" de la publicación "{offer.post.title}".',
+                        link=f'/usuarios/listado/publicaciones')
+        noti.save()
     messages.success(request, "Oferta aceptada exitosamente")
     return redirect("/usuarios/ofertasRecibidas")
 
@@ -282,5 +309,10 @@ def rechazar_oferta(request, offer_id):
     offer = get_object_or_404(Offer,id = offer_id)
     offer.answer = 1
     offer.save()
+    noti = Notification(title='Oferta rechazada',
+                        user=offer.user.email,
+                        content=f'Tu oferta "{offer.title}" de la publicación "{offer.post.title}" ha sido rechazada.',
+                        link=f'/ofertas/{offer.id}')
+    noti.save()
     messages.success(request, "Oferta rechazada exitosamente")
     return redirect("/usuarios/ofertasRecibidas")
