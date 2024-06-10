@@ -168,6 +168,11 @@ def ver_listado_publicaciones(request):
         if action == 'aceptar':
             post.state = 2  
             post.save()
+            offers = Offer.objects.filter(post=post)
+            for offer in offers:
+                if (offer.answer == 0):
+                    offer.answer = 1
+                    offer.save()
             noti = Notification(title='Intercambio finalizado',
                                 user=post.user,
                                 content=f'El intercambio entre tu publicación "{post.title}" y la oferta "{oferta.title}" ha sido registrado como finalizado y tu publicación fue terminada. Si este no es el caso, por favor contactate con soporte.',
