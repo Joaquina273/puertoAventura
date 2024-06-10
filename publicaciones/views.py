@@ -115,10 +115,11 @@ def eliminar_comentario(request, post_id, comment_id):
     for noti in notis:
         noti.link = '/usuarios/notificaciones/ver/0/'
         noti.save()
-    notis = Notification.objects.filter(user=Comment.objects.get(id=comment.parent.id).user.email,link=f'/publicaciones/{post_id}#comentario{comment.parent.id}')
-    for noti in notis:
-        noti.link = '/usuarios/notificaciones/ver/0/'
-        noti.save()
+    if comment.parent:
+        notis = Notification.objects.filter(user=comment.parent.user.email,link=f'/publicaciones/{post_id}#comentario{comment.parent.id}')
+        for noti in notis:
+            noti.link = '/usuarios/notificaciones/ver/0/'
+            noti.save()
     comment.delete()
     messages.success(request, "Comentario eliminado exitosamente")
     return redirect ('/publicaciones/'+str(post_id))
