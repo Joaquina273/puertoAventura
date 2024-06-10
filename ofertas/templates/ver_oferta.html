@@ -5,6 +5,18 @@
 
 <style>
 
+      .delete-button {
+          background-color: #469597; /* Color de fondo */
+          color: white; /* Color del texto */
+          border: none; /* Sin borde */
+          padding: 10px 20px; /* Espaciado interno */
+          font-size: 16px; /* Tamaño de la fuente */
+          font-weight: bold; /* Texto en negrita */
+          border-radius: 25px; /* Esquinas redondeadas */
+          cursor: pointer; /* Cambiar cursor al pasar el mouse */
+          flex: 1; /* Para que los botones tengan el mismo tamaño */
+          text-align: center; /* Centrar el texto */
+      }
       .aceptar-button {
           background-color: green; /* Color de fondo */
           color: white; /* Color del texto */
@@ -88,8 +100,10 @@
               {% if offer.answer == 0 %}
               <div class="button-container">
                 {% if usuario.email != offer.user.email %}
-                  <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 1)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="aceptar-button">Aceptar oferta</button></a>
-                  <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 2)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="rechazar-button">Rechazar oferta</button></a>
+                  {% if offer.post.state == 0 %}
+                    <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 1)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="aceptar-button">Aceptar oferta</button></a>
+                    <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 2)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="rechazar-button">Rechazar oferta</button></a>
+                  {% endif %}
                 {% else %}
                   <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
                 {% endif %}
