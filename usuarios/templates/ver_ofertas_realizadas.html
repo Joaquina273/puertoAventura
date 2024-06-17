@@ -101,9 +101,9 @@
     <div class="row">
         {% for offer in offers %}
             <div class="col-4">
-                <div class="card">
+                <div class="card" style="width: 30rem">
                     <a href="/ofertas/{{offer.id}}">
-                        <img class="card-img-top" height="180" src="{{ offer.image.url }}" alt="{{ offer.title }}">
+                        <img class="card-img-top" height="250" src="{{ offer.image.url }}" alt="{{ offer.title }}">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ offer.title }}</h5>
@@ -111,11 +111,11 @@
                         <h6 class="card-subtitle">Descripcion: {{ offer.description }}</h6>
                         <hr>
                         {% if offer.answer == 0 %}
-                            <h6 class="card-subtitle">Estado: Sin respuesta</h6>
+                            <h6 class="card-subtitle text-warning">Estado: Sin respuesta</h6>
                         {% elif offer.answer == 1 %}
-                            <h6 class="card-subtitle">Estado: Rechazada</h6>
+                            <h6 class="text-danger card-subtitle">Estado: Rechazada</h6>
                         {% else %}
-                            <h6 class="card-subtitle">Estado: Aceptada</h6>
+                            <h6 class="card-subtitle text-success">Estado: Aceptada</h6>
                         {% endif %}
                         <hr>
                         <div class="titulo-publicacion">

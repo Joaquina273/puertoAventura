@@ -38,7 +38,7 @@
                   <a class="nav-link active" aria-current="page" href="/publicaciones/">Publicaciones</a>
                 </li>
                 <!-- Escondo la barra de busqueda -->
-                <!--
+                
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -58,10 +58,10 @@
                     </form>
                   </div>
                 </li>
-                -->
+                
                 {% if usuario != nil %}
                 <!-- Escondo los chats -->
-                <!--
+                
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -117,16 +117,17 @@
                     </div>
                   </div>
                 </li>
-                 -->
-                 {% if usuario.type_user  == 3 %}
+                
+                 {% if usuario.type_user  > 1 %}
                  <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/usuarios/listado/publicaciones">Listado de publicaciones</a>
+                  <a class="nav-link active" aria-current="page" href="/usuarios/listado/publicaciones">Intercambios pendientes</a>
                 </li>
+                {% if usuario.type_user == 3 %}
                  <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/usuarios/listado">Listado de usuarios</a>
+                  <a class="nav-link active" aria-current="page" href="/usuarios/listado">Lista de usuarios</a>
                 </li>
-
-                    {% endif %}
+                {% endif %}
+                {% endif %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -173,7 +174,6 @@
                     {% endif %}
                   </ul>
                 </li>
-                {% if usuario.type_user > 0 %}
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
@@ -181,7 +181,6 @@
                     </span>
                   </a>
                 </li>
-                {% endif %}
                 <li class="nav-item dropdown"> 
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{{ usuario.avatar.url }}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
@@ -255,7 +254,7 @@
                     </li>
                     
                     <!-- Escondo configuracion y centro de ayuda -->
-                    <!--
+                    
                     <li>
                       <a class="dropdown-item" href="#!">
                         <span>
@@ -283,7 +282,7 @@
                         </span>
                       </a>
                     </li>
-                    -->
+                    
                     <li>
                       <hr class="dropdown-divider">
                     </li>

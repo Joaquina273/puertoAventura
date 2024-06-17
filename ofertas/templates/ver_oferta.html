@@ -4,6 +4,50 @@
 {% block content %}
 
 <style>
+
+      .delete-button {
+          background-color: #469597; /* Color de fondo */
+          color: white; /* Color del texto */
+          border: none; /* Sin borde */
+          padding: 10px 20px; /* Espaciado interno */
+          font-size: 16px; /* Tamaño de la fuente */
+          font-weight: bold; /* Texto en negrita */
+          border-radius: 25px; /* Esquinas redondeadas */
+          cursor: pointer; /* Cambiar cursor al pasar el mouse */
+          flex: 1; /* Para que los botones tengan el mismo tamaño */
+          text-align: center; /* Centrar el texto */
+      }
+      .aceptar-button {
+          background-color: green; /* Color de fondo */
+          color: white; /* Color del texto */
+          border: none; /* Sin borde */
+          padding: 10px 20px; /* Espaciado interno */
+          font-size: 16px; /* Tamaño de la fuente */
+          font-weight: bold; /* Texto en negrita */
+          border-radius: 25px; /* Esquinas redondeadas */
+          cursor: pointer; /* Cambiar cursor al pasar el mouse */
+          flex: 1; /* Para que los botones tengan el mismo tamaño */
+          text-align: center; /* Centrar el texto */
+      }
+
+      .rechazar-button {
+                  background-color: red; /* Color de fondo */
+                  color: white; /* Color del texto */
+                  border: none; /* Sin borde */
+                  padding: 10px 20px; /* Espaciado interno */
+                  font-size: 16px; /* Tamaño de la fuente */
+                  font-weight: bold; /* Texto en negrita */
+                  border-radius: 25px; /* Esquinas redondeadas */
+                  width: 100%; /* Ancho completo */
+                  cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      }
+
+      .button-container {
+          display: flex; /* Para alinear los botones en una fila */
+          gap: 10px; /* Espacio entre los botones */
+          margin-top: 10px; /* Espacio superior para separar los botones del contenido anterior */
+      }
+
     .icon-hover:hover {
     border-color: #3b71ca !important;
     background-color: white !important;
@@ -34,24 +78,38 @@
             </h4>
   
             <p>
-                Una breve descripción
+              {{ offer.description }}
             </p>
   
             <div class="row">
-              <dt class="col-3">Descripcion:</dt>
-              <dd class="col-9">{{ offer.description }}</dd>
-
-              <dt class="col-3">Propietario:</dt>
-              <dd class="col-9">{{ offer.post.user.name }} {{ offer.post.user.surname }}</dd>
+              <dt class="col-3">Ofertador:</dt>
+              <dd class="col-9">{{ offer.user.name }} {{ offer.user.surname }}</dd>
 
               <dt class="col-3">Estado:</dt>
               {% if offer.answer == 0 %}
-                <dd class="col-9">Sin respuesta</dd>
+                <dd class="text-warning col-9">Sin respuesta</dd>
               {% elif offer.answer == 1 %}
-                <dd class="col-9">Rechazada</dd>
+                <dd class="text-danger col-9">Rechazada</dd>
               {% else %}
-                <dd class="col-9">Aceptada</dd>
+                <dd class="text-success col-9">Aceptada</dd>
               {% endif %}
+
+              <dt class="col-3">Publicación:</dt>
+              <dd class="col-9"><a href="/publicaciones/{{ offer.post_id }}">{{ offer.post.title }}</a></dd>
+
+              {% if offer.answer == 0 %}
+              <div class="button-container">
+                {% if usuario.email != offer.user.email %}
+                  {% if offer.post.state == 0 %}
+                    <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 1)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="aceptar-button">Aceptar oferta</button></a>
+                    <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 2)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="rechazar-button">Rechazar oferta</button></a>
+                  {% endif %}
+                {% else %}
+                  <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
+                {% endif %}
+              </div>
+              {% endif %}
+
             </div>
         </main>
       </div>
@@ -62,5 +120,54 @@
     <li><img src="{{ image.url }}" alt="Imagen"></li>
 </ul>
 {% endif %}
+
+{% block js %}
+
+<script>
+    function confirmarEstadoOferta(id, respuesta){
+    Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Esta accion no se puede deshacer",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Aceptar",
+        reverseButtons: true,
+        confirmButtonColor: "#cde7f6"
+    })
+    .then(function(result){
+        if(result.isConfirmed && respuesta == 1){
+        window.location.href = "/usuarios/ofertasRecibidas/aceptarOferta/" + id;
+    }
+       else{
+            if(result.isConfirmed && respuesta == 2){
+            window.location.href = "/usuarios/ofertasRecibidas/rechazarOferta/" + id;
+       }
+    }
+    })
+
+
+}
+    function eliminarOferta(id){
+    Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Esta accion no se puede deshacer",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Eliminar",
+        reverseButtons: true,
+        confirmButtonColor: "#cde7f6"
+    })
+    .then(function(result){
+        if(result.isConfirmed){
+        window.location.href = "/usuarios/ofertasRecibidas/eliminarOferta/"+id
+    }
+    })
+}
+</script>
+
+{% endblock %}
+
 
 {% endblock %}
