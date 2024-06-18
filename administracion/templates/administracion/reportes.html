@@ -1,0 +1,52 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+
+{% block content %}
+<table class="table align-middle mb-0 bg-white">
+    <thead class="bg-light">
+      <tr>
+        <th>Nombre</th>
+        <th>Causa reporte</th>
+        <th>Vinculo reporte</th>
+        <th>Rol</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+        {%for usuario in usuarios %}
+            {% if usuario.is_reported %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center">
+            <img
+                src="{{ usuario.avatar.url }}"
+                alt=""
+                style="width: 45px; height: 45px"
+                class="rounded-circle"
+                />
+            <div class="ms-3">
+              <p class="fw-bold mb-1">{{usuario.name}}</p>
+              <p class="text-muted mb-0">{{usuario.email}}</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">Software engineer</p>
+          <p class="text-muted mb-0">IT department</p>
+        </td>
+        <td>
+          <span class="badge badge-success rounded-pill d-inline">Active</span>
+        </td>
+        <td>{{usuario.type_user}}</td>
+        <td>
+          <button type="button" class="btn btn-link btn-sm btn-rounded">
+            bloquear
+          </button>
+        </td>
+      </tr>
+      {%endif%}
+      {%endfor%}
+    </tbody>
+  </table>
+{% endblock %}

@@ -121,9 +121,10 @@
                           <div class="d-flex justify-content-between align-items-center">
                             <h6 class="fw-bold text-primary mb-1">{{comment.user.name}}</h6>
                             <p class="text-muted small mb-0"> - {{comment.date}} </p>
+                            
                           </div>
                             <p class="small mb-0" id="comment-content-{{ comment.id }}">
-                              {{comment.content}}
+                              {{comment.content}}<a href="/" class="link-offset-2 link-underline link-underline-opacity-0"> Reportar </a>
                             </p>
                         </div>
                         {% if comment.user_id == usuario.email and not comment.answer and post.state == 0%}
