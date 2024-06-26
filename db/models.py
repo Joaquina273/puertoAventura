@@ -73,7 +73,7 @@ class Post(models.Model):
     ship_type = models.CharField("Tipo de embarcación", choices= types_ships, max_length=11) # quizas va blank = True
     model = models.CharField("Modelo", max_length= 20)
     state = models.IntegerField(default = 0, verbose_name="Estado") # 0 --> disponible 1 --> pendiente 2--> Finalizada
-    post_date = models.DateField(auto_now_add=timezone.now, verbose_name="Fecha de publicacion")
+    post_date = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de publicacion")
     end_date = models.DateField(blank = True, null=True, verbose_name="Fecha de finalizacion")
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
     port = models.ForeignKey(Port, on_delete= models.CASCADE, null = False, blank= False,verbose_name="Puerto")
