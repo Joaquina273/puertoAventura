@@ -26,7 +26,7 @@ class User(models.Model):
     verification_canceled = models.BooleanField("Verificacion anulada", default=False)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} {self.surname}'
 
     class Meta:
         db_table = 'users'
@@ -147,9 +147,8 @@ class Conversation(models.Model): # Analizar y definir bien
 
 class Message(models.Model):
     content = models.CharField(max_length=200)
-    sent_at = models.DateTimeField(auto_now_add= False)
+    sent_at = models.DateTimeField(auto_now_add= True)
     sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_messages")
-    recipient = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "received_messages")
     conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False)
 
     class Meta:
