@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "usuarios",
     "ofertas",
     "administracion"
+    "conversaciones"
 ]
 
 MIDDLEWARE = [
