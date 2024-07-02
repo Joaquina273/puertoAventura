@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 import os
 # Create your models here.
 class User(models.Model):
@@ -24,7 +26,6 @@ class User(models.Model):
     recovery_ID = models.IntegerField("Id de recuperacion",blank=True,null=True)
     tries_left = models.IntegerField("Intentos restantes",default=5)
     verification_canceled = models.BooleanField("Verificacion anulada", default=False)
-    is_reported = models.BooleanField("Está reportado", default=False)
 
     def __str__(self):
         return self.name
@@ -171,7 +172,17 @@ class Notification(models.Model):
         verbose_name = 'Notificacion'
         verbose_name_plural = 'Notificaciones'
 
+class Report(models.Model):
+    reason = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name='reports')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    url = models.URLField(max_length = 200, null=True) 
 
+    def __str__(self):
+        return f'Reporte al usuario {self.user} con motivo: {self.reason} '
+    
 
 
 

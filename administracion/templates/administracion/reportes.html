@@ -3,50 +3,58 @@
 
 
 {% block content %}
+{% if usuario.type_user == 3 %}
 <table class="table align-middle mb-0 bg-white">
-    <thead class="bg-light">
-      <tr>
-        <th>Nombre</th>
-        <th>Causa reporte</th>
-        <th>Vinculo reporte</th>
-        <th>Rol</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-        {%for usuario in usuarios %}
-            {% if usuario.is_reported %}
-      <tr>
-        <td>
-          <div class="d-flex align-items-center">
-            <img
-                src="{{ usuario.avatar.url }}"
-                alt=""
-                style="width: 45px; height: 45px"
-                class="rounded-circle"
-                />
-            <div class="ms-3">
-              <p class="fw-bold mb-1">{{usuario.name}}</p>
-              <p class="text-muted mb-0">{{usuario.email}}</p>
+  <thead class="bg-light">
+    <tr>
+      <th>Nombre</th>
+      <th>Causa reporte</th>
+      <th>Vinculo reporte</th>
+      <th>Rol</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for reporte in reportes %}
+    <tr>
+      <td>
+        <div class="d-flex align-items-center">
+          <img src="{{ reporte.user.avatar.url }}" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+          <div class="ms-3">
+            <p class="fw-bold mb-1">{{reporte.user.name}}</p>
+            <p class="text-muted mb-0">{{reporte.user.email}}</p>
+          </div>
+        </div>
+      </td>
+      <td>
+        <p class="fw-normal mb-1">{{reporte.reason}}</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1">{{reporte.url}}</p>
+      </td>
+      <td>{{reporte.user.type_user}}</td>
+    </tr>
+    <tr>
+      <td colspan="5">
+        <div class="accordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false"
+                aria-controls="collapse{{ forloop.counter }}">
+                Detalle del reporte
+              </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                Hola aca va el detalle
+              </div>
             </div>
           </div>
-        </td>
-        <td>
-          <p class="fw-normal mb-1">Software engineer</p>
-          <p class="text-muted mb-0">IT department</p>
-        </td>
-        <td>
-          <span class="badge badge-success rounded-pill d-inline">Active</span>
-        </td>
-        <td>{{usuario.type_user}}</td>
-        <td>
-          <button type="button" class="btn btn-link btn-sm btn-rounded">
-            bloquear
-          </button>
-        </td>
-      </tr>
-      {%endif%}
-      {%endfor%}
-    </tbody>
-  </table>
+        </div>
+      </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+{%endif%}
 {% endblock %}
