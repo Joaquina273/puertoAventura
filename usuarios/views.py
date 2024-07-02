@@ -412,4 +412,4 @@ def motivo_reporte(request):
         url = id_url
     )
     reporte.save()
-    return render(request, "home.html")
+    return redirect("/")

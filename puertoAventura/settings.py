@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "publicaciones",
     "usuarios",
     "ofertas",
-    "administracion"
+    "administracion",
     "conversaciones"
 ]
 
