@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "landing_page",
     "publicaciones",
     "usuarios",
-    "ofertas"
+    "ofertas",
+    "conversaciones"
 ]
 
 MIDDLEWARE = [
