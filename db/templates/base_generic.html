@@ -44,10 +44,10 @@
                     </span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
-                    <form class="row g-1 px-3 py-2 align-items-center">
+                    <form class="row g-1 px-3 py-2 align-items-center" method="GET" action="{% url 'publicaciones:ver_publicaciones' %}">
                       <div class="col-8">
                         <label class="visually-hidden" for="inputSearchNavbar">Buscar</label>
-                        <input type="text" class="form-control" id="inputSearchNavbar">
+                        <input type="text" name="q" class="form-control" id="inputSearchNavbar">
                       </div>
                       <div class="col-4">
                         <button type="submit" class="btn btn-primary">Buscar</button>

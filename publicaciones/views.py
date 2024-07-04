@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .forms import FormularioRegistrarPublicacion, CommentForm
 from ofertas.forms import FormularioRegistrarOferta
 from django.contrib import messages
-from db.models import Post,User,Comment, Notification
+from db.models import Post,User,Comment, Notification,Port
 
 # Create your views here.
 
@@ -27,8 +27,16 @@ def registrar_publicacion(request):
     return render(request, 'registrar_publicacion.html', {'form': form, 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):
-    posts = Post.objects.all().order_by("-post_date").filter(state=0)
-    return render(request, "ver_publicaciones.html", {"posts": posts})
+    query = request.GET.get('q')
+    print(query)
+    puertos = Port.objects.all()
+    ship_types = Post.types_ships
+    ship_types_list = list(ship_types.values())
+    if query:
+       posts = Post.objects.filter(title__icontains=query, state=0).order_by("-post_date")
+    else:
+        posts = Post.objects.all().order_by("-post_date").filter(state=0)
+    return render(request, "ver_publicaciones.html", {"posts": posts,"puertos":puertos,"tipos":ship_types_list})
 
 def ver_publicaciones_finalizadas(request):
     posts = Post.objects.all().order_by("-post_date").filter(state=2)

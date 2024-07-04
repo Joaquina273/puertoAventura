@@ -90,43 +90,84 @@
 }
 
 </style>
-
-{% if posts %}
+<script>
+</script>
+<div class="container-fluid">
     <div class="row">
-        {% for post in posts %}
-            <div class="col-4">
-                <div class="card" style="width: 30rem">
-                    <a href="{{ post.id }}">
-                        <img class="card-img-top" height="250" src="{{ post.image.url }}" alt="{{ post.title }}">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <hr>
-                        <h6 class="card-subtitle">Valor: {{ post.value }}</h6>
-                        <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
-                        <p class="card-text">Patente: {{ post.patent }}</p>
-                        <p class="user-info">Nombre del dueño: {{ post.user.name }}</p>
-                        <p class="user-info">Email del dueño: {{ post.user.email }}</p>
-                        <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
-                        <p class="card-text">Puerto: {{ post.port.name }}</p>
-                        <div class=" d-flex flex-row my-3">
-                            {% if post.state == 0 %}
-                              <span class="text-success">Disponible</span>
-                            {% elif post.state == 1 %}
-                              <span class="text-warning ">Pendiente</span>
-                            {% else %}
-                              <span class="text-danger">Finalizada</span>
-                            {% endif %}
-                        </div >
-                    </div>
+        <!-- Filtros -->
+        <div class="col-lg-3">
+            <form action="" method="GET" id="filter-form">
+                <!-- Dropdown para tipo de embarcación -->
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="tipo-embarcacion" name="tipo-embarcacion">
+                        <option value="">Tipo de embarcación</option>
+                        {% for tipo in tipos %} 
+                        <option value="{{ tipo }}">{{ tipo }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-            </div>
-            {% if forloop.counter|divisibleby:3 and not forloop.last %}
-                </div><div class="row">
+        
+                <!-- Dropdown para valor -->
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="valor" name="valor">
+                        <option value="">Valor</option>
+                        <option value="Menor a $50,000">Menor a $50,000</option>
+                        <option value="$50,000 - $100,000">$50,000 - $100,000</option>
+                        <option value="Mayor a $100,000">Mayor a $100,000</option>
+                    </select>
+                </div>
+        
+                <!-- Dropdown para puerto -->
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="puerto" name="puerto">
+                        <option value="">Puerto</option>
+                        {% for puerto in puertos %}
+                        <option value="{{ puerto.name }}">{{ puerto.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <!-- Dropdown para tamaño de eslora -->
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="tamano-eslora" name="tamano-eslora">
+                        <option value="">Tamaño de eslora</option>
+                        <option value="Menor a 5 metros">Menor a 5 metros</option>
+                        <option value="Entre 6 y 15 metros">Entre 6 y 15 metros</option>
+                        <option value="Más de 15 metros">Más de 15 metros</option>
+                    </select>
+                </div>
+        
+                <!-- Botón de filtrar -->
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </form>
+        </div>
+
+        <!-- Listado de publicaciones -->
+        <div class="col-lg-9">
+            {% if posts %}
+                <div class="row">
+                    {% for post in posts %}
+                        <div class="col-4 mb-4">
+                            <div class="card" style="width: 18rem;">
+                                <a href="{{ post.id }}">
+                                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ post.title }}</h5>
+                                    <p class="card-text">Valor: {{ post.value }}</p>
+                                    <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
+                                    <p class="card-text">Puerto: {{ post.port.name }}</p>
+                                    <!-- Agregar más detalles según sea necesario -->
+                                    <a href="#" class="btn btn-primary">Ver detalles</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-danger">No hay publicaciones disponibles</div>
             {% endif %}
-        {% endfor %}
+        </div>
     </div>
-{% else %}
-    <div class="alert alert-danger">No hay publicaciones disponibles</div> 
-{% endif %}
+</div>
 {% endblock %}
