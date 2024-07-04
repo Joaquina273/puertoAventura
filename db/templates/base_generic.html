@@ -348,10 +348,16 @@
           const days = Math.floor(hours / 24);
   
           let timeString = '';
-          if (days > 0) {
+          if (days == 1) {
+              timeString = `${days} día`;
+          } else if (days > 0) {
               timeString = `${days} días`;
+          } else if (hours == 1) {
+              timeString = `${hours} hora`;
           } else if (hours > 0) {
               timeString = `${hours} horas`;
+          } else if (minutes == 1) {
+              timeString = `${minutes} minuto`;
           } else if (minutes > 0) {
               timeString = `${minutes} minutos`;
           } else {
