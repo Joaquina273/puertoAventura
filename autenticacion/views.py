@@ -77,25 +77,31 @@ def inicio_de_sesion (request):
         if(User.objects.filter(email=mail).exists()):
             usuario = User.objects.get(email=mail)
             contrasenia = request.POST['password']
-            if ((usuario.password == contrasenia) and (usuario.tries_left > 1)):
-                usuario.tries_left = 5
-                usuario.save()
-                avatar_url = usuario.avatar.url
-                request.session['usuario'] = mail, usuario.name, usuario.type_user, avatar_url
-                return redirect("/")
-            else:
-                if (usuario.tries_left > 1):
-                    usuario.tries_left -= 1
+            if(usuario.is_blocked):
+                messages.error(request, "Tu cuenta se encuentra bloqueada por comportamiento inapropiado. Comuniquese con un administrador para desbloquearla")
+                return render (request, "autenticacion/inicio_sesion.html", {
+                    "mensaje_error" : "Tu cuenta se encuentra bloqueada por comportamiento inapropiado. Comuniquese con un administrador para desbloquearla"  
+                })
+            else: 
+                if ((usuario.password == contrasenia) and (usuario.tries_left > 1)):
+                    usuario.tries_left = 5
                     usuario.save()
-                    messages.error(request, f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos.")
-                    return render (request, "autenticacion/inicio_sesion.html", {
-                    "mensaje_error" : f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos."  
-                })
+                    avatar_url = usuario.avatar.url
+                    request.session['usuario'] = mail, usuario.name, usuario.type_user, avatar_url
+                    return redirect("/")
                 else:
-                    messages.error(request, "Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar.")
-                    return render (request, "autenticacion/inicio_sesion.html", {
-                    "mensaje_error" : "Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar."  
-                })
+                    if (usuario.tries_left > 1):
+                        usuario.tries_left -= 1
+                        usuario.save()
+                        messages.error(request, f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos.")
+                        return render (request, "autenticacion/inicio_sesion.html", {
+                        "mensaje_error" : f"La contraseña ingresada es incorrecta. Te quedan {usuario.tries_left} intentos."  
+                    })
+                    else:
+                        messages.error(request, "Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar.")
+                        return render (request, "autenticacion/inicio_sesion.html", {
+                        "mensaje_error" : "Tu cuenta se encuentra bloqueada. Debes recuperar la contraseña para volver a ingresar."  
+                    })
         else:
             messages.error(request, "El email ingresado no se encuentra registrado.")
             return render (request, "autenticacion/inicio_sesion.html", {

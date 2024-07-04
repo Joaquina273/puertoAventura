@@ -10,11 +10,12 @@
       <th>Nombre</th>
       <th>Causa reporte</th>
       <th>Vinculo reporte</th>
-      <th>Rol</th>
+      <th>Origen</th>
     </tr>
   </thead>
   <tbody>
     {%for reporte in reportes %}
+    {%if reporte.is_resolved != True and reporte.user.is_blocked == False %}
     <tr>
       <td>
         <div class="d-flex align-items-center">
@@ -29,30 +30,47 @@
         <p class="fw-normal mb-1">{{reporte.reason}}</p>
       </td>
       <td>
-        <p class="fw-normal mb-1">{{reporte.url}}</p>
+        <a href="{{reporte.url}}" class="fw-normal mb-1">{{reporte.url}}</a>
       </td>
-      <td>{{reporte.user.type_user}}</td>
+      <td>{{reporte.content_type}}</td>
     </tr>
     <tr>
       <td colspan="5">
-        <div class="accordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
+        <div class="accordion" style="width:70%">
+          <div class="accordion-item" >
+            <h2 class="accordion-header" >
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false"
-                aria-controls="collapse{{ forloop.counter }}">
+                aria-controls="collapse{{ forloop.counter }}" >
                 Detalle del reporte
               </button>
             </h2>
             <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse">
               <div class="accordion-body">
-                Hola aca va el detalle
+                {%if reporte.content_type.model == "post" %}
+                {% include 'administracion/partials/_card_publicaciones.html' with post=reporte.content_object %}
+                {%endif%}
+                {%if reporte.content_type.model == "offer" %}
+                {% include 'administracion/partials/_card_ofertas.html' with offer=reporte.content_object %}
+                {%endif%}
+                {%if reporte.content_type.model == "comment" %}
+                {% include 'administracion/partials/_card_comentarios.html' with comment=reporte.content_object %}
+                {%endif%}
+                <div style="padding: 10px">
+                  <form action="/administracion/reportes/bloqueo/" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{reporte.id}}" name="reporte">
+                    <button class="btn btn-success" type="submit" value="rechazar" name="action">rechazar</button>
+                    <button class="btn btn-danger" type="submit" value="bloquear" name="action">bloquear</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </td>
     </tr>
+    {%endif%}
     {%endfor%}
   </tbody>
 </table>

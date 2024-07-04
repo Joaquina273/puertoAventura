@@ -1,0 +1,18 @@
+<div class="card" style="width:50%">
+    <a href="/ofertas/{{offer.id}}">
+        <img class="card-img-top" height="250" src="{{ offer.image.url }}" alt="{{ offer.title }}">
+    </a>
+    <div class="card-body" >
+        <h5 class="card-title">Oferta:</h5>
+        <h5 class="card-title">{{ offer.title }}</h5>
+        <hr>
+        <h6 class="card-subtitle">Descripción: {{ offer.description }}</h6>
+        <hr>
+        <h6 class="card-subtitle">Datos del ofertador</h6>
+        <p class="card-text">Nombre: {{ offer.user.name }}</p>
+        <p class="card-text">Apellido: {{ offer.user.surname }}</p>
+        <p class="card-text">Telefono: {{ offer.user.phone_number }}</p>
+        <p class="card-text">Email: {{ offer.user.email }}</p>
+        <p class="card-text">Fecha de nacimiento: {{ offer.user.birthdate }}</p>
+    </div>
+</div>

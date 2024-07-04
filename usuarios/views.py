@@ -412,4 +412,5 @@ def motivo_reporte(request):
         url = id_url
     )
     reporte.save()
+    messages.success(request, "Reporte realizado exitosamente")
     return redirect("/")

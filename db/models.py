@@ -178,6 +178,7 @@ class Report(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     url = models.URLField(max_length = 200, null=True) 
+    is_resolved = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Reporte al usuario {self.user} con motivo: {self.reason} '

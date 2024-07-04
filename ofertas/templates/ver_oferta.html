@@ -103,6 +103,13 @@
                   {% if offer.post.state == 0 %}
                     <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 1)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="aceptar-button">Aceptar oferta</button></a>
                     <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 2)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="rechazar-button">Rechazar oferta</button></a>
+                    <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+                      {% csrf_token %}
+                      <input type="hidden" name="url" id="id_url">
+                      <input type="hidden" value="Offer" name="content_type">
+                      <input type="hidden" value="{{offer.id}}" name="id">
+                      <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
+                    </form>
                   {% endif %}
                 {% else %}
                   <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
@@ -165,6 +172,7 @@
     }
     })
 }
+document.getElementById('id_url').value = window.location.href;
 </script>
 
 {% endblock %}

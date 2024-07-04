@@ -95,17 +95,19 @@
               <a href="registrarOferta" class="btn btn-warning shadow-0"> Ofertar </a>
             {% endif %}
           {% endif %}
-        </div>
-        <div id="copyAlert" class="alert alert-success" role="alert" style="display: none;">
-          Enlace copiado al portapapeles.
-        </div>
+          {% if post.user.email != usuario.email and post.state == 0 and usuario.email != null%}
         <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
           {% csrf_token %}
           <input type="hidden" name="url" id="id_url">
           <input type="hidden" value="Post" name="content_type">
           <input type="hidden" value="{{post.id}}" name="id">
-          <button type="submit" >Reportar</button>
+          <button type="submit" class="btn btn-danger" >Reportar</button>
         </form>
+        {%endif%}
+        </div>
+        <div id="copyAlert" class="alert alert-success" role="alert" style="display: none;">
+          Enlace copiado al portapapeles.
+        </div>
       </main>
     </div>
   </div>
@@ -128,20 +130,21 @@
                           <div class="d-flex justify-content-between align-items-center">
                             <h6 class="fw-bold text-primary mb-1">{{comment.user.name}}</h6>
                             <p class="text-muted small mb-0"> - {{comment.date}} </p>
-                            
                           </div>
                             <p class="small mb-0" id="comment-content-{{ comment.id }}">
                               {{comment.content}}
-                              <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="url" id="id_url_comment">
-                                <input type="hidden" value="Comment" name="content_type">
-                                <input type="hidden" value="{{comment.id}}" name="id">
-                                <button type="submit" >Reportar</button>
-                              </form>
+                              {% if comment.user.email != usuario.email and post.state == 0 and usuario.email != null%}
+                                <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="url" id="id_url_comment">
+                                  <input type="hidden" value="Comment" name="content_type">
+                                  <input type="hidden" value="{{comment.id}}" name="id">
+                                  <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
+                                </form>
+                              {%endif%}
                             </p>
                         </div>
-                        {% if comment.user_id == usuario.email and not comment.answer and post.state == 0%}
+                        {% if comment.user_id == usuario.email and not comment.answer and post.state == 0 %}
                         <div id="edit-form-{{ comment.id }}" class="edit-form" style="display: none; ">
                           {% include 'partials/_comment_edit_form.html' with comment=comment.id %}
                         </div>
