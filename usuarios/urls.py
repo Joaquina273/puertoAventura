@@ -38,4 +38,9 @@ urlpatterns = [
     path('listado/',views.ver_listado, name="ver_listado"),
 
     path('listado/publicaciones',views.ver_listado_publicaciones,name="ver_listado_publicaciones"),
+
+    path('motivoReporte/',views.crear_reporte, name="crear_reporte"),
+
+    path('motivoReporte/ultimoPaso',views.motivo_reporte, name="motivo_reporte"),
+
 ]
