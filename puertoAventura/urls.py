@@ -28,5 +28,6 @@ urlpatterns = [
     path('ofertas/', include("ofertas.urls")),
     path('administracion/', include("administracion.urls")),
     path('conversaciones/', include("conversaciones.urls")),
-    path('ofertas/', include("ofertas.urls"))
+    path('ofertas/', include("ofertas.urls")),
+    path('db/', include("db.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

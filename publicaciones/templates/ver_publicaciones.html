@@ -178,27 +178,36 @@
         </div>
         <div class="col-lg-9">
             {% if posts %}
-                <div class="row">
-                    {% for post in posts %}
-                        <div class="col-4 mb-4">
-                            <div class="card">
-                                <a href="{{ post.id }}">
-                                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
-                                </a>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ post.title }}</h5>
-                                    <p class="card-text">Valor: {{ post.value }}</p>
-                                    <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
-                                    <p class="card-text">Puerto: {{ post.port.name }}</p>
-                                    <a href="#" class="btn btn-primary">Ver detalles</a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-4">
+                <div class="card" style="width: 30rem">
+                    <a href="{{ post.id }}">
+                        <img class="card-img-top" height="250" src="{{ post.image.url }}" alt="{{ post.title }}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <hr>
+                        <h6 class="card-subtitle">Valor: {{ post.value }}</h6>
+                        <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
+                        <p class="user-info">Dueño: {{ post.user.name }} {{ post.user.surname }}</p>
+                        <p class="card-text">Puerto: {{ post.port.name }}</p>
+                        <div class=" d-flex flex-row my-3">
+                            {% if post.state == 0 %}
+                              <span class="text-success">Disponible</span>
+                            {% elif post.state == 1 %}
+                              <span class="text-warning ">Pendiente</span>
+                            {% else %}
+                              <span class="text-danger">Finalizada</span>
+                            {% endif %}
+                        </div >
+                    </div>
                 </div>
-            {% else %}
-                <div class="alert alert-danger">No hay publicaciones disponibles</div>
+            </div>
+            {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                </div><div class="row">
             {% endif %}
+        {% endfor %}
         </div>
     </div>
 </div>

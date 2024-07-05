@@ -1,0 +1,21 @@
+<div class="card" style="width:50%">
+    <a href="/publicaciones/{{post.id}}">
+        <img class="card-img-top" height="250" src="{{ post.image.url }}" alt="{{ post.title }}">
+    </a>
+    <div class="card-body">
+        <h5 class="card-title">Publicación:</h5>
+        <h5 class="card-title">{{ post.title }}</h5>
+        <hr>
+        <p class="card-text">Valor: {{ post.value }}</p>
+        <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
+        <p class="card-text">Patente: {{ post.patent }}</p>
+        <p class="card-text">Puerto: {{ post.port.name }}</p>
+        <hr>
+        <h6 class="card-subtitle">Datos del dueño de la embarcación</h6>
+        <p class="card-text">Nombre: {{ post.user.name }}</p>
+        <p class="card-text">Apellido: {{ post.user.surname }}</p>
+        <p class="card-text">Telefono: {{ post.user.phone_number }}</p>
+        <p class="card-text">Email: {{ post.user.email }}</p>
+        <p class="card-text">Fecha de nacimiento: {{ post.user.birthdate }}</p>
+    </div>
+</div>

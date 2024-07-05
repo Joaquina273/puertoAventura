@@ -1,0 +1,18 @@
+<div class="card" style="width: 50%; padding:20px" >
+
+<div class="d-flex flex-start"  id="comentario{{ comment.id }}" >
+    <img class="rounded-circle shadow-1-strong me-3" src="{{ comment.user.avatar.url }}" alt="avatar"
+      width="60" height="60" />
+      <div class="flex-grow-1 flex-shrink-1" >
+        <div>
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold text-primary mb-1">{{comment.user.name}}</h6>
+            <p class="text-muted small mb-0"> - {{comment.date}} </p>
+          </div>
+            <p class="small mb-0" id="comment-content-{{ comment.id }}">
+              {{comment.content}}
+            </p>
+        </div>
+    </div>
+</div>
+</div>

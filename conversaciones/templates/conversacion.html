@@ -7,18 +7,28 @@
         display: flex;
         justify-content: center;
     }
+    
+    .scroll-bar{
+      height: 50vh;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .container1 {
+        display: flex;
+        align-items: center; /* Centra verticalmente */
+        justify-content: center; /* Centra horizontalmente */
+    }
 
 .contenedor {
-  border: 2px solid #dedede;
-  background-color: #f1f1f1;
   border-radius: 5px;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 7px;
+  margin: 7px 0;
 }
 
 .darker {
-  border-color: #ccc;
-  background-color: #ddd;
+  border-color: #b9deb2;
+  background-color: #d9fdd3;
 }
 
 .contenedor::after {
@@ -52,33 +62,62 @@
 }
 </style>
 
-
-<h2>{{room}} - DjChat</h2>
+<div class="bg-light py-3 py-md-5">
+  <div class="container1">
+  <div class="col-15 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+{% if conversacion.recipient.email == username %}
+<h2>Chat con {{ conversacion.sender }}</h2>
+{% else %}
+<h2>Chat con {{ conversacion.recipient }}</h2>
+{% endif %}
+<div>
+  <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+    {% csrf_token %}
+    <input type="hidden" name="url" id="id_url">
+    <input type="hidden" value="Offer" name="content_type">
+    <input type="hidden" value="{{offer.id}}" name="id">
+    <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
+  </form>
+  </div>
+<div class="scroll-bar" id="scroll-bar">
 <div id="display">
-
 <!-- <div class="container darker">
   <b>Tom</b><p>Hello Everyone, How Are You Guys Doing?</p>
   <span class="time-left">20th, April 2021</span>
 </div> -->
 
 </div>
+</div>
 <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 <script>
 $(document).ready(function(){
-
+  var cantidadMensajesAntes = 0;
 setInterval(function(){
     $.ajax({
         type: 'GET',
-        url : "/conversaciones/conseguir_mensajes/{{room}}/",
+        url : "/conversaciones/conseguir_mensajes/{{conversacion.id}}/",
         success: function(response){
             console.log(response);
+            var cantidadMensajesDespues = response.messages.length;
+
             $("#display").empty();
             for (var key in response.messages)
             {
                 var sender = response.messages[key].sender;
-                var temp="<div class='container contenedor darker'><b>"+sender+"</b><p>"+response.messages[key].content+"</p><span class='time-left'>"+response.messages[key].sent_at+"</span></div>";
+                var avatar = response.messages[key].avatar;
+                var temp="<div class='container contenedor darker' id='mensaje"+response.messages[key].id+"'><img src='"+avatar+"';width='35' height='35' class='img-fluid rounded-circle' alt='Icono usuario'><b>"+sender
+                  +"</b><p>"+response.messages[key].content
+                    +"</p><span class='time-right' id='notification-time-{{ forloop.counter0 }}' data-created-at='"+response.messages[key].sent_at+"'></span></div>";
                 $("#display").append(temp);
             }
+            updateNotificationTimes();
+            if (cantidadMensajesDespues > cantidadMensajesAntes) {
+              const elemento = document.getElementById("scroll-bar");
+              const alturaScroll = elemento.scrollHeight;
+              elemento.scrollTop = alturaScroll;
+            }
+
+            cantidadMensajesAntes = cantidadMensajesDespues;
         },
         error: function(response){
             alert('Ocurrió un error')
@@ -92,7 +131,7 @@ setInterval(function(){
 <div class="container contenedor">
     <style>
     input[type=text], select {
-    width: 100%;
+    width: 80%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
@@ -101,9 +140,9 @@ setInterval(function(){
     box-sizing: border-box;
     }
 
-    input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
+    button[type=submit] {
+    width: 20%;
+    background-color: #3c7dce;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -112,7 +151,7 @@ setInterval(function(){
     cursor: pointer;
     }
 
-    input[type=submit]:hover {
+    button[type=submit]:hover {
     background-color: #45a049;
     }
     </style>
@@ -120,12 +159,17 @@ setInterval(function(){
     <form id="post-form">
         {% csrf_token %}
         <input type="hidden" name="username" id="username" value="{{username}}"/>
-        <input type="hidden" name="room_id" id="room_id" value="{{room_details.id}}"/>
-        <input type="text" name="message" id="message" width="100px" />
-        <input type="submit" value="Enviar">
+        <input type="hidden" name="room_id" id="room_id" value="{{conversacion.id}}"/>
+        <div class="row">
+        <input type="text" name="message" id="message" width="20px">
+        
+        <button type="submit"><i class="bi bi-cursor"></i></button>
+        </div>
     </form>
 </div>
-
+</div>
+</div>
+  </div>
 <script type="text/javascript">
   $(document).on('submit','#post-form',function(e){
     e.preventDefault();

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Post, Offer, Port, Comment, Notification, Report, Conversation, Message
+from .models import User, Post, Offer, Port, Comment, Notification, Report, Conversation, Message, Rating
 # Register your models here.
 
 admin.site.register(User)
@@ -11,3 +11,4 @@ admin.site.register(Notification)
 admin.site.register(Report)
 admin.site.register(Conversation)
 admin.site.register(Message)
+admin.site.register(Rating)

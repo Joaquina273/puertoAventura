@@ -129,7 +129,7 @@ class Comment(models.Model):  # Un comentario puede tener otro comentario
 
 class Rating(models.Model):
     score = models.DecimalField(max_digits=2, decimal_places=1) # Porque el puntaje puede ser un numero entero, como por ejemplo 10, o un decimal, tipo 4,5 (No considero más decimales)
-    user = models.OneToOneField(User, on_delete= models.CASCADE, null = False, blank= False) # Es de uno a uno, porque un usuario puede calificar una sola vez la página
+    user = models.OneToOneField(User, on_delete= models.CASCADE, null = False, blank= False, related_name='rating') # Es de uno a uno, porque un usuario puede calificar una sola vez la página
 
     class Meta:
         db_table = 'rating'
@@ -151,7 +151,8 @@ class Message(models.Model):
     content = models.CharField(max_length=200)
     sent_at = models.DateTimeField(auto_now_add= True)
     sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_messages")
-    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False)
+    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False,related_name="messages")
+    read = models.BooleanField("Leída",default=False)
 
     class Meta:
         db_table = 'messages'
@@ -178,6 +179,7 @@ class Report(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     url = models.URLField(max_length = 200, null=True) 
+    is_resolved = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Reporte al usuario {self.user} con motivo: {self.reason} '
