@@ -99,6 +99,13 @@
         <div id="copyAlert" class="alert alert-success" role="alert" style="display: none;">
           Enlace copiado al portapapeles.
         </div>
+        <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="url" id="id_url">
+          <input type="hidden" value="Post" name="content_type">
+          <input type="hidden" value="{{post.id}}" name="id">
+          <button type="submit" >Reportar</button>
+        </form>
       </main>
     </div>
   </div>
@@ -121,9 +128,17 @@
                           <div class="d-flex justify-content-between align-items-center">
                             <h6 class="fw-bold text-primary mb-1">{{comment.user.name}}</h6>
                             <p class="text-muted small mb-0"> - {{comment.date}} </p>
+                            
                           </div>
                             <p class="small mb-0" id="comment-content-{{ comment.id }}">
                               {{comment.content}}
+                              <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="url" id="id_url_comment">
+                                <input type="hidden" value="Comment" name="content_type">
+                                <input type="hidden" value="{{comment.id}}" name="id">
+                                <button type="submit" >Reportar</button>
+                              </form>
                             </p>
                         </div>
                         {% if comment.user_id == usuario.email and not comment.answer and post.state == 0%}
@@ -278,6 +293,9 @@
       content.style.display = 'none'
     }
   }
+
+  document.getElementById('id_url').value = window.location.href;
+  document.getElementById('id_url_comment').value = window.location.href;
 
 </script>
 {% endblock %}

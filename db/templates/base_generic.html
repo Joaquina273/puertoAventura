@@ -34,9 +34,6 @@
             </button>
             <div class="collapse navbar-collapse" id="bsbNavbar">
               <ul class="navbar-nav bsb-dropdown-menu-responsive ms-auto align-items-center">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/publicaciones/">Publicaciones</a>
-                </li>
                 <!-- Escondo la barra de busqueda -->
                 
                 <li class="nav-item dropdown">
@@ -67,47 +64,49 @@
                     <span class="position-relative pt-1">
                       <i class="bi bi-chat-left"></i>
                       <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-                        0
+                        {{mensajes_sin_leer}}
                         <span class="visually-hidden">Chats nuevos</span>
                       </span>
                     </span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
                     <div>
-                      <h6 class="dropdown-header fs-7 text-center">Mensajes nuevos</h6>
+                      <h6 class="dropdown-header fs-7 text-center">Mensajes</h6>
                     </div>
                     <div>
                       <hr class="dropdown-divider mb-0">
                     </div>
                     <div class="list-group list-group-flush">
-                      <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                      {% if chats %}
+                      {% for chat in chats %}
+                      <a href="/conversaciones/{{chat.content.id}}" class="list-group-item list-group-item-action" aria-current="true">
                         <div class="row g-0 align-items-center">
                           <div class="col-2">
-                            <img src="" class="img-fluid rounded-circle" alt="Luna John">
+                            {% if usuario.email == chat.content.sender.email %}
+                              <img src="{{chat.content.recipient.avatar.url}}" class="img-fluid rounded-circle" alt="Icono usuario">
+                            {% else %}
+                              <img src="{{chat.content.sender.avatar.url}}" class="img-fluid rounded-circle" alt="Icono usuario">
+                            {% endif %}
                           </div>
-                          <div class="col-10">
+                          <div class="col-8">
                             <div class="ps-3">
-                              <div class="text-dark">Luna John</div>
-                              <div class="text-secondary mt-1 fs-7">Hola estoy teniendo problemas con mi cuenta.</div>
-                              <div class="text-secondary mt-1 fs-7">Hace 15m</div>
+                              {% if usuario.email == chat.content.sender.email %}
+                              <div class="text-dark">{{chat.content.recipient.name}} {{chat.content.recipient.surname}}</div>
+                              {% else %}
+                              <div class="text-dark">{{chat.content.sender.name}} {{chat.content.sender.surname}}</div>
+                              {% endif %}
+                              <div class="text-secondary mt-1 fs-7"></div>
+                              <div class="text-secondary mt-1 fs-7" id="notification-time-{{ forloop.counter0 }}" data-created-at="{{ chat.content.updated_at|date:"Y-m-dTH:i:s" }}"></div>
                             </div>
                           </div>
+                          {% if chat.read == False %}
+                          <div class="col-2 text-center">
+                            <span class="p-1 rounded-circle bg-primary position-absolute top-20 translate-middle" style="font-size: 50px;">
+                          </div>
+                          {% endif %}
                         </div>
                       </a>
-                      <a href="#" class="list-group-item list-group-item-action">
-                        <div class="row g-0 align-items-center">
-                          <div class="col-2">
-                            <img src="" class="img-fluid rounded-circle" alt="Mark Smith">
-                          </div>
-                          <div class="col-10">
-                            <div class="ps-3">
-                              <div class="text-dark">Mark Smith</div>
-                              <div class="text-secondary mt-1 fs-7">Hola, no puedo cambiar mi contraseña</div>
-                              <div class="text-secondary mt-1 fs-7">Hace 23m</div>
-                            </div>
-                          </div>
-                        </div>
-                      </a>
+                      {% endfor %}
                     </div>
                     <div>
                       <hr class="dropdown-divider mt-0">
@@ -115,6 +114,9 @@
                     <div>
                       <a class="dropdown-item fs-7 text-center" href="#">Ver todos los mensajes</a>
                     </div>
+                    {% else %}
+                        <h6 class="dropdown-header fs-7 text-center">No tenés ningun chat.</h6>
+                    {% endif %}
                   </div>
                 </li>
                 
@@ -129,6 +131,11 @@
                  <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/usuarios/estadisticas">Listado de estadisticas</a>
                  </li>
+                  <a class="nav-link active" aria-current="page" href="/usuarios/listado">Lista de usuarios</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/administracion/reportes">Lista de reportes</a>
+                </li>
                 {% endif %}
                 {% endif %}
                 <li class="nav-item dropdown">
@@ -299,15 +306,11 @@
                   </ul>
                 </li>
                 {% else %}
-                <div class="col-7">
-                  <div class="d-flex justify-content-between">
+                <div class="col-5">
                     <a href="/autenticacion/registro" class=" nav-link active">Registrarse</a>
-                  </div>
                 </div>
-                <div class="col-7">
-                  <div class="d-flex justify-content-between">
+                <div class="col-6">
                     <a href="/autenticacion/inicioSesion" class="nav-link active">Iniciar sesion</a>
-                  </div>
                 </div>
                 {% endif %}
               </ul>
@@ -358,10 +361,16 @@
           const days = Math.floor(hours / 24);
   
           let timeString = '';
-          if (days > 0) {
+          if (days == 1) {
+              timeString = `${days} día`;
+          } else if (days > 0) {
               timeString = `${days} días`;
+          } else if (hours == 1) {
+              timeString = `${hours} hora`;
           } else if (hours > 0) {
               timeString = `${hours} horas`;
+          } else if (minutes == 1) {
+              timeString = `${minutes} minuto`;
           } else if (minutes > 0) {
               timeString = `${minutes} minutos`;
           } else {

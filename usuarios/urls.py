@@ -44,5 +44,8 @@ urlpatterns = [
     path('estadisticas/usuarios', views.ver_estadisticas_usuarios, name = 'ver_estadisticas_usuarios'),
     path('estadisticas/intercambios', views.ver_estadisticas_intercambios, name = 'ver_estadisticas_intercambios'),
     path('estadisticas/ofertas', views.ver_estadisticas_ofertas, name = 'ver_estadisticas_ofertas'),
+    path('motivoReporte/',views.crear_reporte, name="crear_reporte"),
+
+    path('motivoReporte/ultimoPaso',views.motivo_reporte, name="motivo_reporte"),
 
 ]

@@ -5,6 +5,8 @@ app_name = "publicaciones"
 urlpatterns = [
     # ex: /publicaciones/
     path("", views.ver_publicaciones, name="ver_publicaciones"),
+    # ex: /publicaciones/finalizadas/
+    path("finalizadas/", views.ver_publicaciones_finalizadas, name="ver publicaciones finalizadas"),
     # ex: /publicaciones/registrarPublicacion
     path("registrarPublicacion/", views.registrar_publicacion, name="registrar_publicacion"),
     # ex: /publicaciones/4
@@ -20,6 +22,6 @@ urlpatterns = [
 
     path("<int:post_id>/eliminarComentario/<int:comment_id>", views.eliminar_comentario, name="eliminar_comentario"),
 
-    path("<int:post_id>/editarComentario/<int:comment_id>", views.editar_comentario, name="eliminar_comentario"),
+    path("<int:post_id>/editarComentario/<int:comment_id>", views.editar_comentario, name="editar_comentario"),
 
 ]

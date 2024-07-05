@@ -1,0 +1,185 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .display{
+        display: flex;
+        justify-content: center;
+    }
+    
+    .scroll-bar{
+      height: 50vh;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .container1 {
+        display: flex;
+        align-items: center; /* Centra verticalmente */
+        justify-content: center; /* Centra horizontalmente */
+    }
+
+.contenedor {
+  border-radius: 5px;
+  padding: 7px;
+  margin: 7px 0;
+}
+
+.darker {
+  border-color: #b9deb2;
+  background-color: #d9fdd3;
+}
+
+.contenedor::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.contenedor img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.contenedor img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+</style>
+
+<div class="bg-light py-3 py-md-5">
+  <div class="container1">
+  <div class="col-15 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+{% if conversacion.recipient.email == username %}
+<h2>Chat con {{ conversacion.sender }}</h2>
+{% else %}
+<h2>Chat con {{ conversacion.recipient }}</h2>
+{% endif %}
+<div class="scroll-bar" id="scroll-bar">
+<div id="display">
+
+<!-- <div class="container darker">
+  <b>Tom</b><p>Hello Everyone, How Are You Guys Doing?</p>
+  <span class="time-left">20th, April 2021</span>
+</div> -->
+
+</div>
+</div>
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+  var cantidadMensajesAntes = 0;
+setInterval(function(){
+    $.ajax({
+        type: 'GET',
+        url : "/conversaciones/conseguir_mensajes/{{conversacion.id}}/",
+        success: function(response){
+            console.log(response);
+            var cantidadMensajesDespues = response.messages.length;
+
+            $("#display").empty();
+            for (var key in response.messages)
+            {
+                var sender = response.messages[key].sender;
+                var avatar = response.messages[key].avatar;
+                var temp="<div class='container contenedor darker' id='mensaje"+response.messages[key].id+"'><img src='"+avatar+"';width='35' height='35' class='img-fluid rounded-circle' alt='Icono usuario'><b>"+sender
+                  +"</b><p>"+response.messages[key].content
+                    +"</p><span class='time-right' id='notification-time-{{ forloop.counter0 }}' data-created-at='"+response.messages[key].sent_at+"'></span></div>";
+                $("#display").append(temp);
+            }
+            updateNotificationTimes();
+            if (cantidadMensajesDespues > cantidadMensajesAntes) {
+              const elemento = document.getElementById("scroll-bar");
+              const alturaScroll = elemento.scrollHeight;
+              elemento.scrollTop = alturaScroll;
+            }
+
+            cantidadMensajesAntes = cantidadMensajesDespues;
+        },
+        error: function(response){
+            alert('Ocurrió un error')
+        }
+    });
+},1000);
+})
+</script>
+
+
+<div class="container contenedor">
+    <style>
+    input[type=text], select {
+    width: 80%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+
+    button[type=submit] {
+    width: 20%;
+    background-color: #3c7dce;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    button[type=submit]:hover {
+    background-color: #45a049;
+    }
+    </style>
+
+    <form id="post-form">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="username" value="{{username}}"/>
+        <input type="hidden" name="room_id" id="room_id" value="{{conversacion.id}}"/>
+        <div class="row">
+        <input type="text" name="message" id="message" width="20px">
+        
+        <button type="submit"><i class="bi bi-cursor"></i></button>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+  </div>
+<script type="text/javascript">
+  $(document).on('submit','#post-form',function(e){
+    e.preventDefault();
+
+    $.ajax({
+      type:'POST',
+      url:'/conversaciones/enviar',
+      data:{
+          username:$('#username').val(),
+          room_id:$('#room_id').val(),
+          message:$('#message').val(),
+        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(data){
+         //alert(data)
+      }
+    });
+    document.getElementById('message').value = ''
+  });
+</script>
+{% endblock %}

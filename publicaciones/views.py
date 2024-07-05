@@ -27,13 +27,12 @@ def registrar_publicacion(request):
     return render(request, 'registrar_publicacion.html', {'form': form, 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):
-    posts = Post.objects.all()
-    if (None == request.session.get('usuario')):
-        user_email = None
-    else:
-        user_email = request.session.get('usuario')[0]
-    print(user_email)
-    return render(request, "ver_publicaciones.html", {"posts": posts, 'user_email': user_email})
+    posts = Post.objects.all().order_by("-post_date").filter(state=0)
+    return render(request, "ver_publicaciones.html", {"posts": posts})
+
+def ver_publicaciones_finalizadas(request):
+    posts = Post.objects.all().order_by("-post_date").filter(state=2)
+    return render(request, "ver_publicaciones.html", {"posts": posts})
 
 def ver_publicacion(request, post_id):
     post = Post.objects.get(id=post_id)

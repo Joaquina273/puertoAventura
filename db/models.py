@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 import os
 # Create your models here.
 class User(models.Model):
@@ -26,7 +28,7 @@ class User(models.Model):
     verification_canceled = models.BooleanField("Verificacion anulada", default=False)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} {self.surname}'
 
     class Meta:
         db_table = 'users'
@@ -73,7 +75,7 @@ class Post(models.Model):
     ship_type = models.CharField("Tipo de embarcación", choices= types_ships, max_length=11) # quizas va blank = True
     model = models.CharField("Modelo", max_length= 20)
     state = models.IntegerField(default = 0, verbose_name="Estado") # 0 --> disponible 1 --> pendiente 2--> Finalizada
-    post_date = models.DateField(auto_now_add=timezone.now, verbose_name="Fecha de publicacion")
+    post_date = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de publicacion")
     end_date = models.DateField(blank = True, null=True, verbose_name="Fecha de finalizacion")
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
     port = models.ForeignKey(Port, on_delete= models.CASCADE, null = False, blank= False,verbose_name="Puerto")
@@ -147,10 +149,10 @@ class Conversation(models.Model): # Analizar y definir bien
 
 class Message(models.Model):
     content = models.CharField(max_length=200)
-    sent_at = models.DateTimeField(auto_now_add= False)
+    sent_at = models.DateTimeField(auto_now_add= True)
     sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_messages")
-    recipient = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "received_messages")
-    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False)
+    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False,related_name="messages")
+    read = models.BooleanField("Leída",default=False)
 
     class Meta:
         db_table = 'messages'
@@ -170,7 +172,17 @@ class Notification(models.Model):
         verbose_name = 'Notificacion'
         verbose_name_plural = 'Notificaciones'
 
+class Report(models.Model):
+    reason = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name='reports')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    url = models.URLField(max_length = 200, null=True) 
 
+    def __str__(self):
+        return f'Reporte al usuario {self.user} con motivo: {self.reason} '
+    
 
 
 

@@ -4,9 +4,9 @@ import shutil
 from datetime import datetime
 from django.conf import settings
 from django.core.files.storage import default_storage
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.db.models import Q
 from db.models import Post,User,Offer, Notification, Comment
 from publicaciones.forms import FormularioRegistrarPublicacion
 from ofertas.forms import FormularioRegistrarOferta
@@ -848,3 +848,33 @@ def configure_plot(fig):
         # Configuración para desactivar la barra de herramientas
         modebar={'orientation': 'v', 'bgcolor': 'rgba(0,0,0,0)', 'activecolor': 'rgba(0,0,0,0)'}
     )
+
+def crear_reporte(request):
+    if (request.session.get('usuario') != None):
+        content_type = request.POST["content_type"]
+        id = request.POST["id"]
+        id_url = request.POST["url"]
+        print(id_url)
+    else: 
+        messages.error(request, "¡Debe iniciar sesión para poder reportar!")
+        return redirect ('/autenticacion/inicioSesion')
+    return render(request, "usuarios/motivoReporte.html", {'id': id, 'content_type': content_type, 'id_url': id_url})
+
+def motivo_reporte(request):
+    content_type = request.POST["content_type"]
+    id = request.POST["id"]
+    elemento = get_object_or_404(eval(content_type), id=id)
+    id_url = request.POST["id_url"]
+    reported_user = elemento.user
+    report_reason = request.POST["motivoReporte"]
+    reported_user.is_reported = True;
+    reported_user.save()
+    reporte = Report(
+        user=reported_user,
+        reason=report_reason,
+        content_type=ContentType.objects.get_for_model(elemento),
+        object_id=elemento.id,
+        url = id_url
+    )
+    reporte.save()
+    return redirect("/")
