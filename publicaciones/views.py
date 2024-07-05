@@ -27,20 +27,58 @@ def registrar_publicacion(request):
     return render(request, 'registrar_publicacion.html', {'form': form, 'mensaje_error': form.errors})
 
 def ver_publicaciones(request):
-    query = request.GET.get('q')
-    print(query)
-    puertos = Port.objects.all()
-    ship_types = Post.types_ships
-    ship_types_list = list(ship_types.values())
-    if query:
-       posts = Post.objects.filter(title__icontains=query, state=0).order_by("-post_date")
-    else:
-        posts = Post.objects.all().order_by("-post_date").filter(state=0)
-    return render(request, "ver_publicaciones.html", {"posts": posts,"puertos":puertos,"tipos":ship_types_list})
+    estado = request.GET.get('state', 0)  # Por defecto, mostrar publicaciones disponibles (state=0)
+    posts = Post.objects.filter(state=estado)
+    if request.method == 'GET':
+        form_type = request.GET.get('form_type')
+        if form_type == 'buscador_form':
+            estado = None 
+            palabra = request.GET.get('q')
+            posts=Post.objects.all()
+            posts = posts.filter(title__icontains=palabra).order_by("-post_date")
+            return render(request, "ver_publicaciones.html", {"posts": posts, "puertos": Port.objects.all(), "tipos": list(Post.types_ships.values()), 'palabra': palabra, 'state': estado})
+        
+        if form_type == 'filtrador_form':
+            tipo = request.GET.get('tipo-embarcacion')
+            valor = request.GET.get('valor')
+            puerto = request.GET.get('puerto')
+            eslora = request.GET.get('tamano-eslora')
+            palabra = request.GET.get('palabra')
+            estado = request.GET.get('state') 
+            
+            if estado!=None:
+                posts = posts.filter(state=estado)
+            else:
+                estado=None
+            if palabra:
+                posts = posts.filter(title__icontains=palabra)
+            if tipo:
+                posts = posts.filter(ship_type=tipo)
+            if valor:
+                if valor == "99":
+                    posts = posts.filter(value__lt=1000000)  
+                elif valor == "1000001":
+                    posts = posts.filter(value__gte=1000000, value__lte=10000000)  
+                elif valor == "10000001":
+                    posts = posts.filter(value__gt=10000000)
+            if puerto:
+                puerto_obj = Port.objects.get(name=puerto)
+                posts = posts.filter(port=puerto_obj)
+            if eslora:
+                if eslora == "4":
+                    posts = posts.filter(eslora__lt=5)  
+                elif eslora == "10":
+                    posts = posts.filter(eslora__gte=5, eslora__lte=15) 
+                elif eslora == "15":
+                    posts = posts.filter(eslora__gt=15)
+            
+            return render(request, "ver_publicaciones.html", {"posts": posts, "puertos": Port.objects.all(), "tipos": list(Post.types_ships.values()), 'palabra': palabra, 'state': estado})
+    
+    return render(request, "ver_publicaciones.html", {"posts": posts, "puertos": Port.objects.all(), "tipos": list(Post.types_ships.values()), "state": estado})
 
 def ver_publicaciones_finalizadas(request):
-    posts = Post.objects.all().order_by("-post_date").filter(state=2)
-    return render(request, "ver_publicaciones.html", {"posts": posts})
+    posts = Post.objects.filter(state=2).order_by("-post_date")
+    return render(request, "ver_publicaciones.html", {"posts": posts, "state": 2, "puertos": Port.objects.all(), "tipos": list(Post.types_ships.values())})
 
 def ver_publicacion(request, post_id):
     post = Post.objects.get(id=post_id)
