@@ -2,96 +2,182 @@
 {% load static %}
 
 {% block content %}
-
 <style>
+    body {
+        background-color: #93d2f0; /* Fondo celeste */
+    }
 
+    .offer-button {
+        background-color: #EDC5AB;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 25px;
+        width: 100%;
+        cursor: pointer;
+    }
 
-.offer-button {
-            background-color: #EDC5AB; /* Color de fondo */
-            color: white; /* Color del texto */
-            border: none; /* Sin borde */
-            padding: 10px 20px; /* Espaciado interno */
-            font-size: 16px; /* Tamaño de la fuente */
-            font-weight: bold; /* Texto en negrita */
-            border-radius: 25px; /* Esquinas redondeadas */
-            width: 100%; /* Ancho completo */
-            cursor: pointer; /* Cambiar cursor al pasar el mouse */
-}
+    .button-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
 
-.button-container {
-    display: flex; /* Para alinear los botones en una fila */
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 10px; /* Espacio superior para separar los botones del contenido anterior */
-}
+    .card {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: white; /* Fondo blanco para las tarjetas */
+        max-width: 18rem; /* Máximo ancho de la tarjeta */
+    }
 
+    .card:hover {
+        box-shadow: 0 0 11px rgba(33,33,33,.2);
+    }
 
-/* Estilos generales */
-.card {
-    margin-bottom: 20px; /* Espacio entre tarjetas */
-    border: 1px solid #ddd; /* Borde de tarjeta */
-    border-radius: 8px; /* Bordes redondeados */
-}
+    .card-img-top {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
 
-.card:hover {
-    box-shadow: 0 0 11px rgba(33,33,33,.2); /* Sombra al pasar el mouse */
-}
+    .card-body {
+        padding: 20px;
+    }
 
-.card-img-top {
-    border-top-left-radius: 8px; /* Bordes redondeados en la esquina superior izquierda */
-    border-top-right-radius: 8px; /* Bordes redondeados en la esquina superior derecha */
-}
+    .card-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
 
-.card-body {
-    padding: 20px; /* Espacio interno del cuerpo de la tarjeta */
-}
+    .card-subtitle {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 10px;
+    }
 
-.card-title {
-    font-size: 20px; /* Tamaño de fuente del título */
-    margin-bottom: 10px; /* Espacio entre el título y otros elementos */
-}
+    .user-info {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 5px;
+    }
 
-.card-subtitle {
-    font-size: 16px; /* Tamaño de fuente del subtítulo */
-    color: #666; /* Color del subtítulo */
-    margin-bottom: 10px; /* Espacio entre subtítulo y otros elementos */
-}
+    .card-text {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
 
-.user-info {
-    font-size: 14px; /* Tamaño de fuente de la información del usuario */
-    color: #777; /* Color de la información del usuario */
-    margin-bottom: 5px; /* Espacio entre información del usuario y otros elementos */
-}
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Centrar las tarjetas */
+        margin-left: -10px;
+        margin-right: -10px;
+    }
 
-.card-text {
-    font-size: 16px; /* Tamaño de fuente del texto de la tarjeta */
-    margin-bottom: 15px; /* Espacio entre texto de la tarjeta y otros elementos */
-}
+    .col-4 {
+        padding-left: 10px;
+        padding-right: 10px;
+        display: flex;
+        justify-content: center; /* Centrar el contenido de la columna */
+    }
 
-.row {
-    margin-left: -10px; /* Compensar el padding de la fila */
-    margin-right: -10px; /* Compensar el padding de la fila */
-}
+    .alert {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+    }
 
-.col-4 {
-    padding-left: 10px; /* Espaciado izquierdo de la columna */
-    padding-right: 10px; /* Espaciado derecho de la columna */
-}
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+    }
 
-.alert {
-    margin-top: 20px; /* Espacio superior de la alerta */
-    padding: 15px; /* Espaciado interno de la alerta */
-    border-radius: 8px; /* Bordes redondeados de la alerta */
-}
+    h2 {
+        text-align: center; /* Centrar el texto del encabezado */
+        background-color: #f9f9f9;
+        padding: 10px;
+        margin: 10px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
 
-.alert-danger {
-    color: #721c24; /* Color del texto de la alerta de peligro */
-    background-color: #f8d7da; /* Color de fondo de la alerta de peligro */
-    border: 1px solid #f5c6cb; /* Borde de la alerta de peligro */
-}
+    .container-fluid {
+        padding: 20px; /* Añadir algo de espacio interno al contenedor */
+    }
 
+    .form-container {
+        background-color: #f9f9f9; /* Fondo blanco o cremita */
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        height: 350px;
+    }
+
+    .content-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
 </style>
 
-{% if posts %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-center">
+        {% if state == None %}
+            <h2>Todas las Publicaciones</h2>
+        {% elif state == "0" %}
+            <h2>Publicaciones Disponibles</h2>
+        {% elif state == "2" %}
+            <h2>Publicaciones Finalizadas</h2>
+        {% endif %}
+    </div>
+    <div class="row content-container">
+        <div class="col-lg-3 form-container">
+            <form action="{% url 'publicaciones:ver_publicaciones' %}" method="GET" id="">
+                {% if state %}
+                <input type="hidden" name="state" value="{{ state }}" />
+                {% endif %}
+                {% if palabra %}
+                <input type="hidden" name="palabra" value="{{ palabra }}">
+                {% endif %}
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="tipo-embarcacion" name="tipo-embarcacion">
+                        <option value="">Tipo de embarcación</option>
+                        {% for t in tipos %} 
+                        <option value="{{ t }}" {% if tipo == t %} selected=true {% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="valor" name="valor">
+                        <option value="">Valor</option>
+                        <option value="99" {% if valor == "99" %} selected=true {% endif %}>Menor a $1.000.000</option>
+                        <option value="1000001" {% if valor == "1000001" %} selected=true {% endif %}>$1.000.000 - $10.000.000</option>
+                        <option value="10000001" {% if valor == "10000001" %} selected=true {% endif %}>Mayor a $10.000.000</option>
+                    </select>
+                </div>
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="puerto" name="puerto">
+                        <option value="">Puerto</option>
+                        {% for p in puertos %}
+                        <option value="{{ p.name }}" {% if puerto == p.name %} selected=true {% endif %}>{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="dropdown mb-3">
+                    <select class="form-select" id="tamano-eslora" name="tamano-eslora">
+                        <option value="">Tamaño de eslora</option>
+                        <option value="4" {% if eslora == "4" %} selected=true {% endif %}>Menor a 5 metros</option>
+                        <option value="10" {% if eslora == "10" %} selected=true {% endif %}>Entre 6 y 15 metros</option>
+                        <option value="15" {% if eslora == "15" %} selected=true {% endif %}>Más de 15 metros</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </form>
+        </div>
+        <div class="col-lg-9">
+            {% if posts %}
     <div class="row">
         {% for post in posts %}
             <div class="col-4">
@@ -120,10 +206,12 @@
             </div>
             {% if forloop.counter|divisibleby:3 and not forloop.last %}
                 </div><div class="row">
+            {% endif %}                                                         
+        {% endfor %}                                                        
+        </div>
+        {% else %}
+                <div class="alert alert-danger">No hay publicaciones disponibles</div>
             {% endif %}
-        {% endfor %}
     </div>
-{% else %}
-    <div class="alert alert-danger">No hay publicaciones disponibles</div> 
-{% endif %}
+</div>
 {% endblock %}
