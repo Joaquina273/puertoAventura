@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from db.models import Conversation, Message, User
+from db.models import Conversation, Message, User, Offer
 from django.utils import timezone
 
 def conversacion(request, conversacion):
@@ -36,3 +36,9 @@ def conseguir_mensajes(request, conversacion):
         mensaje['sender'] = f'{usuario.name} {usuario.surname}'
         mensaje['avatar'] = usuario.avatar.url
     return JsonResponse({"messages":mensajes})
+
+def crear_conversacion(request, id_oferta):
+    oferta = Offer.objects.get(id=id_oferta)
+    conversacion = Conversation(sender=oferta.post.user,recipient=oferta.user)
+    conversacion.save()
+    return redirect(f'/conversaciones/{conversacion.id}/')

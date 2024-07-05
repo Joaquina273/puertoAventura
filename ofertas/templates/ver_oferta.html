@@ -42,6 +42,18 @@
                   cursor: pointer; /* Cambiar cursor al pasar el mouse */
       }
 
+      .chat-button {
+                  background-color: rgb(230, 128, 4); /* Color de fondo */
+                  color: white; /* Color del texto */
+                  border: none; /* Sin borde */
+                  padding: 10px 20px; /* Espaciado interno */
+                  font-size: 16px; /* Tamaño de la fuente */
+                  font-weight: bold; /* Texto en negrita */
+                  border-radius: 25px; /* Esquinas redondeadas */
+                  width: 100%; /* Ancho completo */
+                  cursor: pointer; /* Cambiar cursor al pasar el mouse */
+      }
+
       .button-container {
           display: flex; /* Para alinear los botones en una fila */
           gap: 10px; /* Espacio entre los botones */
@@ -103,6 +115,11 @@
                   {% if offer.post.state == 0 %}
                     <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 1)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="aceptar-button">Aceptar oferta</button></a>
                     <a href="#" onclick="confirmarEstadoOferta({{ offer.id }}, 2)" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="rechazar-button">Rechazar oferta</button></a>
+                    {% if chat %}
+                      <a href="/conversaciones/{{chat.id}}"><button type="button" class="chat-button">Ir al chat</button></a>
+                    {% else %}
+                      <a href="#" onclick="habilitarChat({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="chat-button">Habilitar chat</button></a>
+                    {% endif %}
                   {% endif %}
                 {% else %}
                   <a href="#" onclick="eliminarOferta({{ offer.id }})" data-post-id="{{ post.id }}" data-csrf-token='{% csrf_token %}'><button type="button" class="delete-button">Eliminar oferta</button></a>
@@ -162,6 +179,23 @@
     .then(function(result){
         if(result.isConfirmed){
         window.location.href = "/usuarios/ofertasRecibidas/eliminarOferta/"+id
+    }
+    })
+}
+function habilitarChat(id){
+    Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Esta accion no se puede deshacer",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Habilitar",
+        reverseButtons: true,
+        confirmButtonColor: "#cde7f6"
+    })
+    .then(function(result){
+        if(result.isConfirmed){
+        window.location.href = "/conversaciones/crearConversacion/"+id
     }
     })
 }
