@@ -339,6 +339,7 @@
           <!-- default content text (typically empty) -->
         {% endblock %}
     </body>
+      {% include 'partials/_footer.html' with usuario=usuario rate=rate%}
     <script>
       function getElapsedTime(createdAt) {
           const now = new Date();

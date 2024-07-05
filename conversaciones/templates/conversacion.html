@@ -70,9 +70,17 @@
 {% else %}
 <h2>Chat con {{ conversacion.recipient }}</h2>
 {% endif %}
+<div>
+  <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+    {% csrf_token %}
+    <input type="hidden" name="url" id="id_url">
+    <input type="hidden" value="Offer" name="content_type">
+    <input type="hidden" value="{{offer.id}}" name="id">
+    <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
+  </form>
+  </div>
 <div class="scroll-bar" id="scroll-bar">
 <div id="display">
-
 <!-- <div class="container darker">
   <b>Tom</b><p>Hello Everyone, How Are You Guys Doing?</p>
   <span class="time-left">20th, April 2021</span>

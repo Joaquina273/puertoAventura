@@ -129,7 +129,7 @@ class Comment(models.Model):  # Un comentario puede tener otro comentario
 
 class Rating(models.Model):
     score = models.DecimalField(max_digits=2, decimal_places=1) # Porque el puntaje puede ser un numero entero, como por ejemplo 10, o un decimal, tipo 4,5 (No considero más decimales)
-    user = models.OneToOneField(User, on_delete= models.CASCADE, null = False, blank= False) # Es de uno a uno, porque un usuario puede calificar una sola vez la página
+    user = models.OneToOneField(User, on_delete= models.CASCADE, null = False, blank= False, related_name='rating') # Es de uno a uno, porque un usuario puede calificar una sola vez la página
 
     class Meta:
         db_table = 'rating'

@@ -1,0 +1,94 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Valoración</h3>
+            </div>
+            <div class="modal-body">
+                <div class="container p-0 pb-0">
+                    <div class="row">
+                        <div class="valoracion-container">
+                            <h4>¡Puntúa nuestro sitio!</h4>
+                            <div class="estrellas">
+                                <span class="estrella" data-value="1">&#9733;</span>
+                                <span class="estrella" data-value="2">&#9733;</span>
+                                <span class="estrella" data-value="3">&#9733;</span>
+                                <span class="estrella" data-value="4">&#9733;</span>
+                                <span class="estrella" data-value="5">&#9733;</span>
+                            </div>
+                            <form method="POST" action="/db/rating" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="url" id="id_url">
+                                <input type="hidden" name="rating" id="rating-input" value="0">
+                                <button type="submit" class="btn btn-primary mt-3">Confirmar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-body-tertiary text-center text-lg-start fixed-bottom" style="margin-top:10px">
+    {%if usuario != nil and not usuario.rating%}
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+    <button type="button" class="btn btn-outline-dark btn-rounded" data-toggle="modal" data-target="#exampleModal">
+        ¡Valoranos!
+    </button>
+    </div>
+    {%endif%}
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2024 Copyright:
+        <a class="text-body">Arachnotech</a>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.estrella').on('click', function () {
+            var valor = $(this).data('value');
+            var ratingInput = $('#rating-input')
+            ratingInput.val(valor)
+            $('.estrella').each(function () {
+                if ($(this).data('value') <= valor) {
+                    $(this).addClass('selected');
+                } else {
+                    $(this).removeClass('selected');
+                }
+            });
+        });
+    });
+
+    document.getElementById('id_url').value = window.location.href;
+</script>
+
+<style>
+    .valoracion-container {
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 400px;
+    }
+
+    .estrellas {
+        font-size: 2em;
+        color: #ddd;
+        cursor: pointer;
+    }
+
+    .estrella:hover,
+    .estrella.selected {
+        color: #ffc107;
+    }
+</style>

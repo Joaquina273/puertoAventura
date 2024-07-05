@@ -1,5 +1,5 @@
 from db.models import Notification, Conversation
-from db.models import User
+from db.models import User, Rating
 
 def navbar_variables (request):
     if (request.session.get('usuario') != None):
@@ -8,7 +8,7 @@ def navbar_variables (request):
             if (len(noti.content) > 75):
                 noti.content = f'{" ".join(noti.content.split()[0:9])}...'
         sin_leer = Notification.objects.filter(user=request.session.get('usuario')[0]).filter(read=False)
-        user=User.objects.filter(email=request.session.get('usuario')[0]).first
+        user=User.objects.get(email=request.session.get('usuario')[0])
         chats = None
         #chats = Conversation.objects.order_by("-updated_at").filter(sender=request.session.get('usuario')[0] or recipient=request.session.get('usuario')[0])
     else:
