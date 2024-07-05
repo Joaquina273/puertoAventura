@@ -174,18 +174,25 @@ def ver_estadisticas_usuarios(request):
         usuarios_bloqueados = User.objects.filter(is_blocked=True).count()
         usuarios_no_bloqueados = User.objects.filter(is_blocked=False).count()
 
+        print(usuarios_no_bloqueados)
+
         # Crear los datos para el gráfico
         data = {
             "Estado": ["Bloqueados", "No Bloqueados"],
             "Cantidad": [usuarios_bloqueados, usuarios_no_bloqueados]
         }
 
+        # Definir los colores para cada estado
+        colors = ['red', 'green']
+
         # Crear el gráfico de barras
         fig = go.Figure(data=[go.Bar(
             x=data["Estado"],
             y=data["Cantidad"],
             text=data["Cantidad"],
-            textposition='auto'
+            textposition='auto',
+            hovertemplate='Usuarios %{x}: %{y}<extra></extra>',
+            marker_color=colors  # Asignar colores
         )])
 
         # Actualizar el diseño del gráfico
@@ -198,7 +205,13 @@ def ver_estadisticas_usuarios(request):
                 'y': 0.9
             },
             xaxis=dict(title="Estado"),
-            yaxis=dict(title="Cantidad de Usuarios"),
+            yaxis=dict(
+                title="Cantidad de Usuarios",
+                tickmode='linear',
+                dtick=5,  # Intervalo de 5 en 5
+                tick0=0,  # Valor inicial del tick
+                range=[0, usuarios_no_bloqueados + 5]
+            ),
             bargap=0.2,
             bargroupgap=0.1
         )

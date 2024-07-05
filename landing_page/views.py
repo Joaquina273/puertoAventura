@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from db.models import Post,User
+from db.models import Post, User
 
 # Create your views here.
 
