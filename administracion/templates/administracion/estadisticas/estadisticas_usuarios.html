@@ -46,13 +46,13 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="text-center">Estadísticas de Ofertas</h1>
+    <h1 class="text-center">Estadísticas de Usuarios</h1>
     <div class="accordion" id="accordionExample">
       <div class="card">
         <div class="card-header" id="headingOne">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Distribución de ofertas realizadas por mes
+              Distribución de usuarios por tipo 
               <i class="fas fa-chevron-down"></i>
             </button>
           </h2>
@@ -60,9 +60,29 @@
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
           <div class="card-body chart-wrapper">
             {% if has_data %}
-              <div id="pie_chart">{{ fig_bar|safe }}</div>
+              <div id="pie_chart">{{ fig_pie |safe }}</div>
             {% else %}
               <p>No hay publicaciones registradas en el sistema</p>
+            <div id="pie_chart">{{ fig_pie |safe }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Cantidad de usuarios según el estado
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+          <div class="card-body chart-wrapper">
+            {% if has_data %}
+              <div id="bar_chart">{{ fig |safe }}</div>
+            {% else %}
+              <p>No hay usuarios registrados en el sistema</p>
             {% endif %}
           </div>
         </div>

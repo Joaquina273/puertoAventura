@@ -34,18 +34,13 @@ urlpatterns = [
     path('notificaciones/leer/<int:id_notificacion>/', views.leer_notificacion, name='leer notificación'),
     # ex: usuarios/notificaciones/leer/1
     path('notificaciones/ver/<int:id_notificacion>/', views.ver_notificacion, name='ver notificación'),
-
+    # ex: usuarios/listado
     path('listado/',views.ver_listado, name="ver_listado"),
-
+    # ex: usuarios/listado/publicaciones
     path('listado/publicaciones',views.ver_listado_publicaciones,name="ver_listado_publicaciones"),
-
-    path('estadisticas/', views.ver_estadisticas, name = 'ver_estadisticas'),
-    path('estadisticas/publicaciones', views.ver_estadisticas_publicaciones, name = 'ver_estadisticas_publicaciones'),
-    path('estadisticas/usuarios', views.ver_estadisticas_usuarios, name = 'ver_estadisticas_usuarios'),
-    path('estadisticas/intercambios', views.ver_estadisticas_intercambios, name = 'ver_estadisticas_intercambios'),
-    path('estadisticas/ofertas', views.ver_estadisticas_ofertas, name = 'ver_estadisticas_ofertas'),
+    
     path('motivoReporte/',views.crear_reporte, name="crear_reporte"),
-
+   
     path('motivoReporte/ultimoPaso',views.motivo_reporte, name="motivo_reporte"),
 
 ]
