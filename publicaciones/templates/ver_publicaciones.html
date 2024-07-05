@@ -206,9 +206,12 @@
             </div>
             {% if forloop.counter|divisibleby:3 and not forloop.last %}
                 </div><div class="row">
-            {% endif %}
-        {% endfor %}
+            {% endif %}                                                         
+        {% endfor %}                                                        
         </div>
+        {% else %}
+                <div class="alert alert-danger">No hay publicaciones disponibles</div>
+            {% endif %}
     </div>
 </div>
 {% endblock %}
