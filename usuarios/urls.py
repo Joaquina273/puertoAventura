@@ -34,13 +34,13 @@ urlpatterns = [
     path('notificaciones/leer/<int:id_notificacion>/', views.leer_notificacion, name='leer notificación'),
     # ex: usuarios/notificaciones/leer/1
     path('notificaciones/ver/<int:id_notificacion>/', views.ver_notificacion, name='ver notificación'),
-
+    # ex: usuarios/listado
     path('listado/',views.ver_listado, name="ver_listado"),
-
+    # ex: usuarios/listado/publicaciones
     path('listado/publicaciones',views.ver_listado_publicaciones,name="ver_listado_publicaciones"),
-
+    
     path('motivoReporte/',views.crear_reporte, name="crear_reporte"),
-
+   
     path('motivoReporte/ultimoPaso',views.motivo_reporte, name="motivo_reporte"),
 
 ]

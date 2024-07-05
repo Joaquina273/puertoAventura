@@ -104,10 +104,7 @@
                         <hr>
                         <h6 class="card-subtitle">Valor: {{ post.value }}</h6>
                         <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
-                        <p class="card-text">Patente: {{ post.patent }}</p>
-                        <p class="user-info">Nombre del dueño: {{ post.user.name }}</p>
-                        <p class="user-info">Email del dueño: {{ post.user.email }}</p>
-                        <p class="user-info">Teléfono del dueño: {{ post.user.phone_number }}</p>
+                        <p class="user-info">Dueño: {{ post.user.name }} {{ post.user.surname }}</p>
                         <p class="card-text">Puerto: {{ post.port.name }}</p>
                         <div class=" d-flex flex-row my-3">
                             {% if post.state == 0 %}

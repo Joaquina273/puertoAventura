@@ -151,7 +151,8 @@ class Message(models.Model):
     content = models.CharField(max_length=200)
     sent_at = models.DateTimeField(auto_now_add= True)
     sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_messages")
-    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False)
+    conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False,related_name="messages")
+    read = models.BooleanField("Leída",default=False)
 
     class Meta:
         db_table = 'messages'
