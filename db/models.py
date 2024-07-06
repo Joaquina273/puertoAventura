@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 import os
+from django.core.validators import FileExtensionValidator
+
 # Create your models here.
 class User(models.Model):
     
@@ -148,11 +150,18 @@ class Conversation(models.Model): # Analizar y definir bien
         verbose_name_plural = 'Conversaciones'
 
 class Message(models.Model):
+    def get_image_upload_path(instance, filename):
+        return os.path.join('mensajes','imagenes', str(instance.id), filename)
+    def get_file_upload_path(instance, filename):
+        return os.path.join('mensajes','archivos', str(instance.id), filename)
+
     content = models.CharField(max_length=200)
     sent_at = models.DateTimeField(auto_now_add= True)
     sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_messages")
     conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False,related_name="messages")
     read = models.BooleanField("Leída",default=False)
+    image = models.ImageField("Imagen", upload_to=os.path.join('mensajes','imagenes'), null=True, blank=True)
+    file = models.FileField("Archivo",upload_to=get_file_upload_path, null=True, blank=True)
 
     class Meta:
         db_table = 'messages'

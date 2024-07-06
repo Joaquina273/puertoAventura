@@ -37,7 +37,7 @@
   display: table;
 }
 
-.contenedor img {
+.contenedor img.avatar {
   float: left;
   max-width: 60px;
   width: 100%;
@@ -49,6 +49,11 @@
   float: right;
   margin-left: 20px;
   margin-right:0;
+}
+.contenedor img.imagen{
+  max-width: 70%; 
+  max-height: 40vh; 
+  margin-left: 100px;
 }
 
 .time-right {
@@ -105,9 +110,17 @@ setInterval(function(){
             {
                 var sender = response.messages[key].sender;
                 var avatar = response.messages[key].avatar;
-                var temp="<div class='container contenedor darker' id='mensaje"+response.messages[key].id+"'><img src='"+avatar+"';width='35' height='35' class='img-fluid rounded-circle' alt='Icono usuario'><b>"+sender
+                if (response.messages[key].image){
+                  var temp="<div class='container contenedor darker' id='mensaje"+response.messages[key].id+
+                  "'><img src='"+avatar+"';width='35' height='35' class='img-fluid rounded-circle avatar' alt='Icono usuario'><b>"+sender
+                  +"</b><div class'col-2''><p>"+response.messages[key].content
+                    +"</p><img class='rounded-4 fit imagen' src='/media/"+response.messages[key].image+
+                    "'; alt='Imagen perdida'></div><span class='time-right' id='notification-time-{{ forloop.counter0 }}' data-created-at='"+response.messages[key].sent_at+"'></span></div>";
+                }else{
+                  var temp="<div class='container contenedor darker' id='mensaje"+response.messages[key].id+"'><img src='"+avatar+"';width='35' height='35' class='img-fluid rounded-circle avatar' alt='Icono usuario'><b>"+sender
                   +"</b><p>"+response.messages[key].content
                     +"</p><span class='time-right' id='notification-time-{{ forloop.counter0 }}' data-created-at='"+response.messages[key].sent_at+"'></span></div>";
+                }
                 $("#display").append(temp);
             }
             updateNotificationTimes();
@@ -130,10 +143,26 @@ setInterval(function(){
 
 <div class="container contenedor">
     <style>
+    
+    input[type=file]{
+      display: none;
+    }
+
+    .custom-file-upload {
+    width: 10%;
+    background-color: #3c7dce;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 4px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    }
+
     input[type=text], select {
-    width: 80%;
+    width: 70%;
     padding: 12px 20px;
-    margin: 8px 0;
+    margin: 8px 4px;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -141,13 +170,13 @@ setInterval(function(){
     }
 
     button[type=submit] {
-    width: 20%;
+    width: 10%;
     background-color: #3c7dce;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
     }
 
@@ -156,13 +185,16 @@ setInterval(function(){
     }
     </style>
 
-    <form id="post-form">
+    <form id="post-form" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="username" id="username" value="{{username}}"/>
         <input type="hidden" name="room_id" id="room_id" value="{{conversacion.id}}"/>
         <div class="row">
-        <input type="text" name="message" id="message" width="20px">
-        
+        <input type="text" name="message" id="message" width="20px" autocomplete="off">
+        <label for="imagen" class="custom-file-upload">
+          <i class="bi bi-image"></i>
+        </label>
+        <input type="file" id="imagen" name="imagen" accept=".jpg, .jpeg, .png">
         <button type="submit"><i class="bi bi-cursor"></i></button>
         </div>
     </form>
@@ -174,20 +206,30 @@ setInterval(function(){
   $(document).on('submit','#post-form',function(e){
     e.preventDefault();
 
+    var formData = new FormData();
+    
+    // Agregar los datos del formulario al FormData
+    formData.append('username', $('#username').val());
+    formData.append('room_id', $('#room_id').val());
+    formData.append('message', $('#message').val());
+    var imagen = $('#imagen')[0].files[0];
+    if (imagen) {
+      formData.append('imagen', imagen);
+    }
+    formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+
     $.ajax({
       type:'POST',
       url:'/conversaciones/enviar',
-      data:{
-          username:$('#username').val(),
-          room_id:$('#room_id').val(),
-          message:$('#message').val(),
-        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-      },
+      data:formData,
+      processData: false,
+      contentType: false,
       success: function(data){
          //alert(data)
       }
     });
     document.getElementById('message').value = ''
+    document.getElementById('imagen').value = ''
   });
 </script>
 {% endblock %}
