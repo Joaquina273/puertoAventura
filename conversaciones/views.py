@@ -1,5 +1,6 @@
+import os
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from db.models import Conversation, Message, User, Offer
 from django.utils import timezone
 from django.core.files import File
@@ -15,18 +16,27 @@ def conversacion(request, conversacion):
 
 def enviar(request):
     message = request.POST['message']
-    usuario = User.objects.get(email=request.session.get('usuario')[0])
-    conversacion = Conversation.objects.get(id=request.POST['room_id'])
-    conversacion.updated_at = timezone.now()
-    conversacion.save()
-    print('llegue')
     imagen = request.FILES.get('imagen')
-    if imagen:
-        new_message = Message.objects.create(content=message, sender=usuario, conversation=conversacion,image=imagen)
+    archivo = request.FILES.get('archivo')
+    if (message or imagen or archivo):
+        usuario = User.objects.get(email=request.session.get('usuario')[0])
+        conversacion = Conversation.objects.get(id=request.POST['room_id'])
+        conversacion.updated_at = timezone.now()
+        conversacion.save()
+        if imagen:
+            new_message = Message.objects.create(content=message, sender=usuario, conversation=conversacion)
+            new_message.save()
+            new_message.image = imagen
+        elif archivo:
+            new_message = Message.objects.create(content=message, sender=usuario, conversation=conversacion)
+            new_message.save()
+            new_message.file = archivo
+        else:
+            new_message = Message.objects.create(content=message, sender=usuario, conversation=conversacion)
+        new_message.save()
+        return HttpResponse('Message sent successfully')
     else:
-        new_message = Message.objects.create(content=message, sender=usuario, conversation=conversacion)
-    new_message.save()
-    return HttpResponse('Message sent successfully')
+        return HttpResponse('Empty message')
 
 def conseguir_mensajes(request, conversacion):
     conversacion = Conversation.objects.get(id=conversacion)
@@ -41,6 +51,8 @@ def conseguir_mensajes(request, conversacion):
         usuario = User.objects.get(email=mensaje['sender_id'])
         mensaje['sender'] = f'{usuario.name} {usuario.surname}'
         mensaje['avatar'] = usuario.avatar.url
+        if mensaje.get('file'):
+            mensaje['nombre_archivo'] = mensaje.get('file').split("/")[3]
     return JsonResponse({"messages":mensajes})
 
 def crear_conversacion(request, id_oferta):
@@ -48,3 +60,18 @@ def crear_conversacion(request, id_oferta):
     conversacion = Conversation(sender=oferta.post.user,recipient=oferta.user)
     conversacion.save()
     return redirect(f'/conversaciones/{conversacion.id}/')
+
+def descargar_archivo(request, id_mensaje):
+    message = Message.objects.get(id=id_mensaje)
+    
+    if message.file:
+        file_path = message.file.path
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/octet-stream')
+                response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
+                return response
+        else:
+            raise Http404("File does not exist")
+    else:
+        raise Http404("No file associated with this message")

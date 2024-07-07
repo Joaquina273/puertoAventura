@@ -3,7 +3,9 @@ from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 import os
-from django.core.validators import FileExtensionValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.files.move import file_move_safe
 
 # Create your models here.
 class User(models.Model):

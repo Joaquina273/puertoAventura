@@ -56,6 +56,12 @@
   margin-left: 100px;
 }
 
+.contenedor a{
+  max-width: 70%; 
+  max-height: 40vh; 
+  margin-left: 80px;
+}
+
 .time-right {
   float: right;
   color: #aaa;
@@ -116,6 +122,10 @@ setInterval(function(){
                   +"</b><div class'col-2''><p>"+response.messages[key].content
                     +"</p><img class='rounded-4 fit imagen' src='/media/"+response.messages[key].image+
                     "'; alt='Imagen perdida'></div><span class='time-right' id='notification-time-{{ forloop.counter0 }}' data-created-at='"+response.messages[key].sent_at+"'></span></div>";
+                }else if (response.messages[key].file) {
+                  var temp="<div class='container contenedor darker' id='mensaje"+response.messages[key].id+"'><img src='"+avatar+"';width='35' height='35' class='img-fluid rounded-circle avatar' alt='Icono usuario'><b>"+sender
+                  +"</b><p>"+response.messages[key].content
+                    +"</p><a href='/conversaciones/descargar/"+response.messages[key].id+"'><i class='bi bi-file-text'></i>"+response.messages[key].nombre_archivo+"</a><span class='time-right' id='notification-time-{{ forloop.counter0 }}' data-created-at='"+response.messages[key].sent_at+"'></span></div>";
                 }else{
                   var temp="<div class='container contenedor darker' id='mensaje"+response.messages[key].id+"'><img src='"+avatar+"';width='35' height='35' class='img-fluid rounded-circle avatar' alt='Icono usuario'><b>"+sender
                   +"</b><p>"+response.messages[key].content
@@ -149,27 +159,34 @@ setInterval(function(){
     }
 
     .custom-file-upload {
-    width: 10%;
-    background-color: #3c7dce;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 4px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
+      width: 7%;
+      background-color: #12c97d;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 4px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .custom-file-upload i {
-      margin-left: 10px;
+    .custom-file-upload:hover {
+      background-color: #12b370;
     }
 
     [id='preview-container']{
       display: none;
     }
 
+    [id='preview-container-file']{
+      display: none;
+    }
+
     .preview{
       max-width: 55%; 
-      max-height: 20%; 
+      max-height: 250px; 
       margin-left: 70px;
       border-radius: 20px;
     }
@@ -208,7 +225,7 @@ setInterval(function(){
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
-    border-radius: 20px;
+    border-radius: 25px;
     cursor: pointer;
     }
 
@@ -220,17 +237,26 @@ setInterval(function(){
       <img class="preview" id="preview" src="" alt="Vista previa de la imagen"/>
       <button class="cancelar-preview" id="cancelar-preview" onclick="borrarPreview()"><i class="bi bi-x" style="font-size:10px;"></i></button>
     </div>
+    <div id="preview-container-file">
+      <i class='bi bi-file-text'></i>
+      <p id="preview-file"></p>
+      <button class="cancelar-preview" id="cancelar-preview-file" onclick="borrarPreviewArchivo()"><i class="bi bi-x" style="font-size:10px;"></i></button>
+    </div>
     <form id="post-form" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="username" id="username" value="{{username}}"/>
         <input type="hidden" name="room_id" id="room_id" value="{{conversacion.id}}"/>
         <div class="row">
           <input type="text" name="message" id="message" width="20px" autocomplete="off">
+          <label for="archivo" class="custom-file-upload">
+            <i class="bi bi-file-text"></i>
+          </label>
+          <input type="file" id="archivo" name="archivo" accept=".pdf, .epub, .doc, .docx, .xlsx, .odt, .ods, .odp, .txt, .rtf, .pptx">
           <label for="imagen" class="custom-file-upload">
             <i class="bi bi-image"></i>
           </label>
-          <input type="file" id="imagen" name="imagen" accept=".jpg, .jpeg, .png">
-          <button type="submit" id="enviar"><i class="bi bi-cursor"></i></button>
+          <input type="file" id="imagen" name="imagen" accept=".jpg, .jpeg, .png, .gif">
+          <button type="submit" id="enviar"><i class="bi bi-send"></i></button>
         </div>
     </form>
 </div>
@@ -251,6 +277,10 @@ setInterval(function(){
     if (imagen) {
       formData.append('imagen', imagen);
     }
+    var archivo = $('#archivo')[0].files[0];
+    if (archivo) {
+      formData.append('archivo', archivo);
+    }
     formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
 
     $.ajax({
@@ -265,12 +295,15 @@ setInterval(function(){
     });
     document.getElementById('message').value = ''
     document.getElementById('imagen').value = ''
-    document.getElementById('preview').style.display = 'none';
-    document.getElementById('cancelar-preview').style.display = 'none';
+    document.getElementById('preview-container').style.display = 'none';
+    document.getElementById('preview-container-file').style.display = 'none';
+    document.getElementById('archivo').value = ''
   });
   document.getElementById('imagen').addEventListener('change', function() {
         var file = this.files[0];
         if (file) {
+            document.getElementById('preview-container-file').style.display = 'none';
+            document.getElementById('archivo').value = ''
             var reader = new FileReader();
             reader.onload = function(e) {
                 var preview = document.getElementById('preview');
@@ -279,13 +312,32 @@ setInterval(function(){
             }
             reader.readAsDataURL(file);
         } else {
-            document.getElementById('preview').style.display = 'none';
-            document.getElementById('cancelar-preview').style.display = 'none';
+          document.getElementById('preview-container').style.display = 'none';
+        }
+    });
+    document.getElementById('archivo').addEventListener('change', function() {
+        var file = this.files[0];
+        if (file) {
+            document.getElementById('preview-container').style.display = 'none';
+            document.getElementById('imagen').value = ''
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var preview = document.getElementById('preview-file');
+                preview.textContent = file.name;
+                document.getElementById('preview-container-file').style.display = 'inline-flex';
+            }
+            reader.readAsText(file);
+        } else {
+          document.getElementById('preview-container').style.display = 'none';
         }
     });
     function borrarPreview (){
       document.getElementById('preview-container').style.display = 'none';
-      document.getElementById('imagen').value = ''
+      document.getElementById('imagen').value = '';
+    };
+    function borrarPreviewArchivo (){
+      document.getElementById('preview-container-file').style.display = 'none';
+      document.getElementById('archivo').value = '';
     };
 </script>
 {% endblock %}
