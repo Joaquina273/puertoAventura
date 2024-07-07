@@ -423,5 +423,8 @@ def motivo_reporte(request):
             url = id_url
         )
         reporte.save()
+        admin = User.objects.filter(type_user=3).first()
+        noti = Notification(title='Nuevo reporte realizado',user=admin,content=f'El usuario {reported_user} ha sido reportado',link=f'/administracion/reportes')
+        noti.save()
         messages.success(request, "Reporte realizado exitosamente")
     return redirect("/")
