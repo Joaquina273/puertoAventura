@@ -19,6 +19,7 @@
         body, html {
             height: 100%;
             margin: 0;
+            background-color: #a7d7ef30;
         }
         .wrapper {
             display: flex;
@@ -45,29 +46,17 @@
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#bsbNavbar" aria-controls="bsbNavbar" aria-label="Toggle Navigation">
               <i class="bi bi-three-dots"></i>
             </button>
+            <form class="row" style="margin-left: 300px; display: flex; align-items: center; width: 600px;" method="GET" action="{% url 'publicaciones:search' %}" id="">
+              <div class="col-8">
+                <label class="visually-hidden" for="inputSearchNavbar">Buscar</label>
+                <input type="text" name="q" class="form-control" id="inputSearchNavbar">
+              </div>
+              <div class="col-4">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+              </div>
+            </form>
             <div class="collapse navbar-collapse" id="bsbNavbar">
               <ul class="navbar-nav bsb-dropdown-menu-responsive ms-auto align-items-center">
-                <!-- Escondo la barra de busqueda -->
-                
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="position-relative pt-1">
-                      <i class="bi bi-search"></i>
-                    </span>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
-                    <form class="row g-1 px-3 py-2 align-items-center" method="GET" action="{% url 'publicaciones:search' %}" id="">
-                      <div class="col-8">
-                        <label class="visually-hidden" for="inputSearchNavbar">Buscar</label>
-                        <input type="text" name="q" class="form-control" id="inputSearchNavbar">
-                      </div>
-                      <div class="col-4">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                      </div>
-                    </form>
-                  </div>
-                </li>
                 
                 {% if usuario != nil %}
                 <!-- Escondo los chats -->
@@ -84,7 +73,7 @@
                   </a>
                   <div class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
                     <div>
-                      <h6 class="dropdown-header fs-7 text-center">Mensajes</h6>
+                      <h6 class="dropdown-header fs-7 text-center">Conversaciones</h6>
                     </div>
                     <div>
                       <hr class="dropdown-divider mb-0">
@@ -125,32 +114,13 @@
                       <hr class="dropdown-divider mt-0">
                     </div>
                     <div>
-                      <a class="dropdown-item fs-7 text-center" href="#">Ver todos los mensajes</a>
+                      <a class="dropdown-item fs-7 text-center" href="/conversaciones/">Ver todas las conversaciones</a>
                     </div>
                     {% else %}
-                        <h6 class="dropdown-header fs-7 text-center">No tenés ningun chat.</h6>
+                        <h6 class="dropdown-header fs-7 text-center">No tenés ninguna conversación.</h6>
                     {% endif %}
                   </div>
                 </li>
-                
-                 {% if usuario.type_user  > 1 %}
-                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/usuarios/listado/publicaciones">Intercambios pendientes</a>
-                </li>
-                {% if usuario.type_user == 3 %}
-                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/usuarios/listado">Lista de usuarios</a>
-                 </li>
-                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/administracion/estadisticas">Listado de estadisticas</a>
-                 </li>
-                  <a class="nav-link active" aria-current="page" href="/usuarios/listado">Lista de usuarios</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/administracion/reportes">Lista de reportes</a>
-                </li>
-                {% endif %}
-                {% endif %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="position-relative pt-1">
@@ -200,10 +170,56 @@
                 <li class="nav-item">
                   <a class="nav-link" href="/publicaciones/registrarPublicacion" role="button">
                     <span class="position-relative pt-1">
-                      <i class="bi bi-plus" style="font-size: 30px;"></i>
+                      <i class="bi bi-plus" style="font-size: 25px;"></i>
                     </span>
                   </a>
                 </li>
+                {% if usuario.type_user  > 1 %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="position-relative pt-1">
+                      <i class="bi bi-person-fill-check"></i>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-md-end bsb-dropdown-animation bsb-fadeIn">
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/listado/publicaciones">
+                        <span>
+                          <i class="bi bi-check-square me-2"></i>
+                          <span class="fs-7">Intercambios pendientes</span>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    {% if usuario.type_user  > 2 %}
+                    <li>
+                      <a class="dropdown-item" href="/usuarios/listado">
+                        <span>
+                          <i class="bi bi-person-fill me-2"></i>
+                          <span class="fs-7">Lista de usuarios</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="/administracion/estadisticas">
+                        <span>
+                          <i class="bi bi-bar-chart-line me-2"></i>
+                          <span class="fs-7">Estadísticas</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="/administracion/reportes">
+                        <span>
+                          <i class="bi bi-shield-shaded me-2"></i>
+                          <span class="fs-7">Reportes</span>
+                        </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                  </ul>
+                </li>
+                {% endif %}
                 <li class="nav-item dropdown"> 
                   <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{{ usuario.avatar.url }}" width="35" height="35" class="img-fluid rounded-circle" alt="Icono usuario">
@@ -322,7 +338,7 @@
                 <div class="col-5">
                     <a href="/autenticacion/registro" class=" nav-link active">Registrarse</a>
                 </div>
-                <div class="col-6">
+                <div class="col-7">
                     <a href="/autenticacion/inicioSesion" class="nav-link active">Iniciar sesion</a>
                 </div>
                 {% endif %}

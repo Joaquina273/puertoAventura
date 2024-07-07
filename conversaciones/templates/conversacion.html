@@ -80,8 +80,10 @@
       <div class="row">
         {% if conversacion.recipient.email == username %}
           <h2 style="float: left;">Chat con {{ conversacion.sender }}</h2>
-        {% else %}
+        {% elif conversacion.sender.email == username %}
           <h2 style="float: left;">Chat con {{ conversacion.recipient }}</h2>
+        {% else %}
+          <h2 style="float: left;">Chat entre {{ conversacion.sender }} y {{ conversacion.recipient }}</h2>
         {% endif %}
         <form action="/usuarios/motivoReporte/" method="post">
           {% csrf_token %}
@@ -227,7 +229,7 @@ document.getElementById('id_url').value = window.location.href;
       background-color: #9da2a8c7;
     }
 
-    input[type=text], select {
+    input[type=text][id="message"], select {
     width: 70%;
     padding: 12px 20px;
     margin: 8px 4px;

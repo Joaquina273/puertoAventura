@@ -20,6 +20,7 @@ def navbar_variables (request):
                 chats[chat] = {'content': chats[chat], 'read' : False}
             else:
                 chats[chat] = {'content': chats[chat], 'read' : True}
+        chats = chats[0:3]
             
     else:
         notificaciones = None

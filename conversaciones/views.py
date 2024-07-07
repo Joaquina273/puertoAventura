@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, Http404
 from db.models import Conversation, Message, User, Offer
 from django.utils import timezone
-from django.core.files import File
+from django.db.models import Q
 
 def conversacion(request, conversacion):
     username = request.session.get('usuario')[0]
@@ -75,3 +75,14 @@ def descargar_archivo(request, id_mensaje):
             raise Http404("File does not exist")
     else:
         raise Http404("No file associated with this message")
+
+def ver_conversaciones(request):
+    chats = Conversation.objects.order_by("-updated_at").filter(Q(sender=request.session.get('usuario')[0]) | Q(recipient=request.session.get('usuario')[0]))
+    chats = list(chats)
+    for chat in range(len(chats)):
+        no_leido = Message.objects.filter(conversation=chats[chat]).exclude(sender=request.session.get('usuario')[0]).exclude(read=True).exists()
+        if (no_leido):
+            chats[chat] = {'content': chats[chat], 'read' : False}
+        else:
+            chats[chat] = {'content': chats[chat], 'read' : True}
+    return render(request, 'ver_conversaciones.html', {'todas_conversaciones' : chats})

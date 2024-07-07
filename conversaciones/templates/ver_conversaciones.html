@@ -1,0 +1,169 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap);
+
+body {
+    font-family: "Roboto", sans-serif;
+    background: #EFF1F3;
+    min-height: 100vh;
+    position: relative;
+}
+
+.section-50 {
+    padding: 50px 0;
+}
+
+.m-b-50 {
+    margin-bottom: 50px;
+}
+
+.dark-link {
+    color: #333;
+}
+
+.heading-line {
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.heading-line:after {
+    content: "";
+    height: 4px;
+    width: 75px;
+    background-color: #29B6F6;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.notification-ui_dd-content {
+    margin-bottom: 30px;
+}
+
+.notification-list {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 20px;
+    margin-bottom: 7px;
+    background: #fff;
+    -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.notification-list--unread {
+    border-left: 2px solid #29B6F6;
+}
+
+.notification-list .notification-list_content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.notification-list .notification-list_content .notification-list_img img {
+    height: 48px;
+    width: 48px;
+    border-radius: 50px;
+    margin-right: 20px;
+}
+
+.notification-list .notification-list_content .notification-list_detail p {
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.notification-list .notification-list_feature-img img {
+    height: 48px;
+    width: 48px;
+    border-radius: 5px;
+    margin-left: 20px;
+}
+</style>
+
+<section class="section-50">
+    <div class="container">
+        <h3 class="m-b-50 heading-line">Conversaciones <i class="fa fa-bell text-muted"></i></h3>
+
+        <div class="notification-ui_dd-content">
+            {% if todas_conversaciones %}
+            {% for chat in todas_conversaciones %}
+                {% if chat.read %}
+                    <a class="notification-list nav-link" href="/conversaciones/{{chat.content.id}}">
+                {% else %}
+                    <a class="notification-list notification-list--unread nav-link" href="/conversaciones/{{chat.content.id}}">
+                {% endif %}
+                    <div class="notification-list_content">
+                        <div class="notification-list_feature-img">
+                            {% if usuario.email == chat.content.sender.email %}
+                                <img src="{{chat.content.recipient.avatar.url}}" class="img-fluid rounded-circle" alt="Icono usuario">
+                            {% else %}
+                                <img src="{{chat.content.sender.avatar.url}}" class="img-fluid rounded-circle" alt="Icono usuario">
+                            {% endif %}
+                        </div>
+                        <div class="ps-3"></div>
+                        <div class="notification-list_detail">
+                            {% if usuario.email == chat.content.sender.email %}
+                                <p>{{chat.content.recipient.name}} {{chat.content.recipient.surname}}</p>
+                            {% else %}
+                                <p>{{chat.content.sender.name}} {{chat.content.sender.surname}}</p>
+                            {% endif %}
+                            <p class="text-muted"><small id="notification-time-{{ forloop.counter0 }}" data-created-at="{{ chat.content.updated_at|date:"Y-m-dTH:i:s" }}"></small></p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+            {% else %}
+                <div class="alert alert-danger">No tenés ningun chat.</div> 
+            {% endif %}
+        </div>
+        
+
+    </div>
+</section>
+<script>
+    function getElapsedTime(createdAt) {
+        const now = new Date();
+        const notificationTime = new Date(createdAt);
+        const elapsedTime = now - notificationTime;
+
+        const seconds = Math.floor(elapsedTime / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        let timeString = '';
+        if (days > 0) {
+            timeString = `${days} días`;
+        } else if (hours > 0) {
+            timeString = `${hours} horas`;
+        } else if (minutes > 0) {
+            timeString = `${minutes} minutos`;
+        } else {
+            timeString = `${seconds} segundos`;
+        }
+
+        return `Hace ${timeString}`;
+    }
+
+    function updateNotificationTimes() {
+        document.querySelectorAll('[id^="notification-time-"]').forEach(el => {
+            const createdAt = el.getAttribute('data-created-at');
+            el.textContent = getElapsedTime(createdAt);
+        });
+    }
+
+    // Actualizar el tiempo transcurrido cada segundo
+    setInterval(updateNotificationTimes, 1000);
+
+    // Inicializar el tiempo transcurrido
+    updateNotificationTimes();
+</script>
+{% endblock %}

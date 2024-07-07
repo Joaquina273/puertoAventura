@@ -83,7 +83,7 @@ class Post(models.Model):
     end_date = models.DateField(blank = True, null=True, verbose_name="Fecha de finalizacion")
     user = models.ForeignKey(User, on_delete= models.CASCADE, null = False, blank= False)
     port = models.ForeignKey(Port, on_delete= models.CASCADE, null = False, blank= False,verbose_name="Puerto")
-    saved_by = models.ManyToManyField(User, related_name='saved_posts')
+    saved_by = models.ManyToManyField(User, related_name='saved_posts', blank=True, null=True)
 
 
     class Meta:

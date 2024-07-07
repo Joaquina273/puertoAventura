@@ -3,54 +3,117 @@
 
 
 {% block content %}
-<div class="container-fluid d-flex justify-content-between">
-<h4 class="title text-dark">Publicaciones disponibles</h4>
-<a href="/publicaciones/?state=0">Ver todas las publicaciones</a>
-</div>
 {% if available_posts %}
-    <div class="container-fluid d-flex">
-        {% for post in available_posts %}
-            <div class="col-4">
-                <div class="card" style="width: 29rem">
-                    <a href="/publicaciones/{{ post.id }}">
-                        <img class="card-img-top" height="250" src="{{ post.image.url }}" alt="{{ post.title }}">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <hr>
-                        <h6 class="card-subtitle">Valor: ${{ post.value }}</h6>
-                        <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
-                        <p class="card-text">Puerto: {{ post.port.name }}</p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="alert alert-danger">No hay publicaciones disponibles</div> 
-{% endif %}
-{% if finalized_posts %}
 <div class="container-fluid d-flex justify-content-between">
-  <h4 class="title text-dark">Publicaciones finalizadas</h4>
-  <a href="/publicaciones/?state=2">Ver todas las publicaciones</a>
-  </div>
-      <div class="container-fluid d-flex">
-          {% for post in finalized_posts %}
-              <div class="col-4">
-                  <div class="card" style="width: 29rem">
-                      <a href="/publicaciones/{{ post.id }}">
-                          <img class="card-img-top" height="250" src="{{ post.image.url }}" alt="{{ post.title }}">
-                      </a>
-                      <div class="card-body">
-                          <h5 class="card-title">{{ post.title }}</h5>
-                          <hr>
-                          <h6 class="card-subtitle">Valor: ${{ post.value }}</h6>
-                          <p class="card-text">Tipo de embarcación: {{ post.ship_type }}</p>
-                          <p class="card-text">Puerto: {{ post.port.name }}</p>
-                      </div>
-                  </div>
-              </div>
-          {% endfor %}
+    <h4 class="title text-dark">Publicaciones recientes</h4>
+    <a href="/publicaciones/?state=0">Ver todas las publicaciones</a>
+    </div>
+<div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      {% if available_posts.1 %}
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      {% if available_posts.2 %}
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      {% endif %}
+      {% endif %}
+    </div>
+    <div class="carousel-inner">
+        {% for post in available_posts %}
+      <div class="carousel-item active">
+        <img class="bd-placeholder-img" width="100%" height="20%" src="{{ post.image.url }}" style="max-height: 500px; object-fit: cover;" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="20%" fill="var(--bs-secondary-color)"/></img>
+        <div class="container">
+          <div class="carousel-caption text-start">
+            <h1>{{ post.title }}</h1>
+            <p class="opacity-75">${{ post.value }}</p>
+            <p><a class="btn btn-lg btn-primary" href="/publicaciones/{{ post.id }}">Ver más</a></p>
+          </div>
+        </div>
       </div>
+      {% endfor %}
+    </div>
+    {% if available_posts.1 %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+    {% endif %}
+  </div>
+{% else %}
+<div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+    <div class="col-lg-6 px-0">
+      <h1 class="display-4 fst-italic">Ups...</h1>
+      <p class="lead my-3">Nuestras disculpas, no tenemos publicaciones disponibles por el momento.</p>
+    </div>
+  </div>
 {% endif %}
+  <div class="container marketing">
+    {% if finalized_posts.0 %}
+    <div class="container-fluid d-flex justify-content-between">
+        <h4 class="title text-dark">Embarcaciones intercambiadas en nuestra página</h4>
+        <a href="/publicaciones/?state=2">Ver todas las publicaciones</a>
+    </div>
+    <hr class="featurette-divider">
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading fw-normal lh-1">{{finalized_posts.0.title}}</h2>
+        <p class="lead">${{finalized_posts.0.value}}</p>
+        <p class="lead">Tipo: {{finalized_posts.0.ship_type}}</p>
+        <p class="lead">Modelo: {{finalized_posts.0.model}}</p>
+        <p><a class="btn btn-secondary" href="/publicaciones/{{ finalized_posts.0.id }}">Ver detalles &raquo;</a></p>
+      </div>
+      <div class="col-md-5">
+        <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ finalized_posts.0.image.url }}" width="500" height="500" xmlns="http://www.w3.org/2000/svg" style="border-radius: 15px;" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/></img>
+      </div>
+    </div>
+    {% if finalized_posts.1 %}
+    <hr class="featurette-divider">
+    <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+          <h2 class="featurette-heading fw-normal lh-1">{{finalized_posts.1.title}}</h2>
+          <p class="lead">${{finalized_posts.1.value}}</p>
+          <p class="lead">Tipo: {{finalized_posts.1.ship_type}}</p>
+          <p class="lead">Modelo: {{finalized_posts.1.model}}</p>
+          <p><a class="btn btn-secondary" href="/publicaciones/{{ finalized_posts.1.id }}">Ver detalles &raquo;</a></p>
+        </div>
+        <div class="col-md-5 order-md-1">
+          <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ finalized_posts.1.image.url }}" width="500" height="500" xmlns="http://www.w3.org/2000/svg" style="border-radius: 15px;" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/></img>
+        </div>
+      </div>
+    {% if finalized_posts.2 %}
+    <hr class="featurette-divider">
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading fw-normal lh-1">{{finalized_posts.2.title}}</h2>
+        <p class="lead">${{finalized_posts.2.value}}</p>
+        <p class="lead">Tipo: {{finalized_posts.2.ship_type}}</p>
+        <p class="lead">Modelo: {{finalized_posts.2.model}}</p>
+        <p><a class="btn btn-secondary" href="/publicaciones/{{ finalized_posts.0.id }}">Ver detalles &raquo;</a></p>
+      </div>
+      <div class="col-md-5">
+        <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ finalized_posts.2.image.url }}" width="500" height="500" xmlns="http://www.w3.org/2000/svg" style="border-radius: 15px;" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/></img>
+      </div>
+    </div>
+    <hr class="featurette-divider">
+    {% endif %}
+    {% endif %}
+    {% endif %}
+  </div>
+  <section class="py-5">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="text-center">
+					<span class="text-muted">Nuestro recorrido</span>
+					<h2 class="display-5 fw-bold">Sobre nosotros</h2>
+					<p class="lead">Con 50 años de experiencia en el rubro, Puerto Aventura es la empresa líder del mercado en puertos de la Provincia de Buenos Aires. Con esta nueva propuesta de intercambio de embarcaciones, buscamos brindarte un servicio nunca antes visto, que ayuda tanto a clientes antiguos a explorar nuevos caminos, como a nuevos aventureros que quieran formar parte de esta experiencia. Estás a un intercambio de encontrar tu nueva aventura.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 {% endblock %}
