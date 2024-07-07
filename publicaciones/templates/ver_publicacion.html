@@ -195,6 +195,15 @@
                             </form>
                           </div>
                           {%endif%}
+                          {% if post.user.email != usuario.email and post.state == 0 %}
+                          <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="url" id="id_url_comment">
+                            <input type="hidden" value="Comment" name="content_type">
+                            <input type="hidden" value="{{comment.answer.id}}" name="id">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
+                          </form>
+                          {%endif%}
                         {% endif %}
                         <br />
                       </div>
