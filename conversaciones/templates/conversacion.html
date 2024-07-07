@@ -60,6 +60,7 @@
   float: left;
   color: #999;
 }
+
 </style>
 
 <div class="bg-light py-3 py-md-5">
@@ -71,12 +72,13 @@
 <h2>Chat con {{ conversacion.recipient }}</h2>
 {% endif %}
 <div>
-  <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
+  <form action="/usuarios/motivoReporte/" method="POST" style="display:inline;">
     {% csrf_token %}
     <input type="hidden" name="url" id="id_url">
-    <input type="hidden" value="Offer" name="content_type">
-    <input type="hidden" value="{{offer.id}}" name="id">
-    <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
+    <input type="hidden" value='Conversation' name="content_type">
+    <input type="hidden" value="{{conversacion.id}}" name="id">
+    <input type="hidden"  value="" name="reportado" id="reportado">
+    <button type="submit" class="btn btn-outline-danger btn-sm my-custom-button">Reportar</button>
   </form>
   </div>
 <div class="scroll-bar" id="scroll-bar">
@@ -125,6 +127,23 @@ setInterval(function(){
     });
 },1000);
 })
+
+document.addEventListener('DOMContentLoaded', function() {
+  var recipientEmail = "{{ conversacion.recipient.email }}";
+  var username = "{{ username }}";
+  var senderValue = "{{ conversacion.sender }}";
+  var recipientValue = "{{ conversacion.recipient }}";
+
+  var reportedField = document.getElementById('reportado');
+  
+  if (recipientEmail === username) {
+    reportedField.value = 'sender';
+  } else {
+    reportedField.value = 'recipient';
+  }
+});
+
+document.getElementById('id_url').value = window.location.href;
 </script>
 
 
@@ -140,7 +159,7 @@ setInterval(function(){
     box-sizing: border-box;
     }
 
-    button[type=submit] {
+    .boton {
     width: 20%;
     background-color: #3c7dce;
     color: white;
@@ -151,7 +170,7 @@ setInterval(function(){
     cursor: pointer;
     }
 
-    button[type=submit]:hover {
+    .boton :hover {
     background-color: #45a049;
     }
     </style>
@@ -163,7 +182,7 @@ setInterval(function(){
         <div class="row">
         <input type="text" name="message" id="message" width="20px">
         
-        <button type="submit"><i class="bi bi-cursor"></i></button>
+        <button class="boton"type="submit"><i class="bi bi-cursor"></i></button>
         </div>
     </form>
 </div>

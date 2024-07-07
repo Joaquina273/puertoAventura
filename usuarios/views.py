@@ -7,7 +7,7 @@ from django.core.files.storage import default_storage
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from db.models import Post,User,Offer, Notification, Comment, Report
+from db.models import Post,User,Offer, Notification, Comment, Report, Conversation
 from publicaciones.forms import FormularioRegistrarPublicacion
 from ofertas.forms import FormularioRegistrarOferta
 
@@ -389,28 +389,37 @@ def crear_reporte(request):
         content_type = request.POST["content_type"]
         id = request.POST["id"]
         id_url = request.POST["url"]
-        print(id_url)
+        reportado = request.POST['reportado']
     else: 
         messages.error(request, "¡Debe iniciar sesión para poder reportar!")
         return redirect ('/autenticacion/inicioSesion')
-    return render(request, "usuarios/motivoReporte.html", {'id': id, 'content_type': content_type, 'id_url': id_url})
+    return render(request, "usuarios/motivoReporte.html", {'id': id, 'content_type': content_type, 'id_url': id_url, 'reportado': reportado})
 
 def motivo_reporte(request):
-    content_type = request.POST["content_type"]
-    id = request.POST["id"]
-    elemento = get_object_or_404(eval(content_type), id=id)
-    id_url = request.POST["id_url"]
-    reported_user = elemento.user
-    report_reason = request.POST["motivoReporte"]
-    reported_user.is_reported = True;
-    reported_user.save()
-    reporte = Report(
-        user=reported_user,
-        reason=report_reason,
-        content_type=ContentType.objects.get_for_model(elemento),
-        object_id=elemento.id,
-        url = id_url
-    )
-    reporte.save()
-    messages.success(request, "Reporte realizado exitosamente")
+    if request.method == 'POST':
+        content_type = request.POST["content_type"]
+        id = request.POST["id"]
+        elemento = get_object_or_404(eval(content_type), id=id)
+        id_url = request.POST["id_url"]
+        if(content_type == "Conversation"):
+            reportado = request.POST["reportado"]
+            if(reportado == 'sender'):
+                usuario = elemento.sender
+            else: 
+                usuario = elemento.recipient
+            reported_user = usuario
+        else:
+            reported_user = elemento.user
+        report_reason = request.POST["motivoReporte"]
+        reported_user.is_reported = True;
+        reported_user.save()
+        reporte = Report(
+            user=reported_user,
+            reason=report_reason,
+            content_type=ContentType.objects.get_for_model(elemento),
+            object_id=elemento.id,
+            url = id_url
+        )
+        reporte.save()
+        messages.success(request, "Reporte realizado exitosamente")
     return redirect("/")

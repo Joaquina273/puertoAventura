@@ -1,4 +1,4 @@
-from db.models import Notification, Conversation, User, Message, 
+from db.models import Notification, Conversation, User, Message 
 from django.db.models import Q
 
 def navbar_variables (request):
