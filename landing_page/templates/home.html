@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-fluid d-flex justify-content-between">
 <h4 class="title text-dark">Publicaciones disponibles</h4>
-<a href="/publicaciones/">Ver todas las publicaciones</a>
+<a href="/publicaciones/?state=0">Ver todas las publicaciones</a>
 </div>
 {% if available_posts %}
     <div class="container-fluid d-flex">
@@ -32,7 +32,7 @@
 {% if finalized_posts %}
 <div class="container-fluid d-flex justify-content-between">
   <h4 class="title text-dark">Publicaciones finalizadas</h4>
-  <a href="/publicaciones/finalizadas/">Ver todas las publicaciones</a>
+  <a href="/publicaciones/?state=2">Ver todas las publicaciones</a>
   </div>
       <div class="container-fluid d-flex">
           {% for post in finalized_posts %}

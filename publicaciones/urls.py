@@ -6,7 +6,7 @@ urlpatterns = [
     # ex: /publicaciones/
     path("", views.ver_publicaciones, name="ver_publicaciones"),
     # ex: /publicaciones/finalizadas/
-    path("finalizadas/", views.ver_publicaciones_finalizadas, name="ver publicaciones finalizadas"),
+    path("search/", views.search, name="search"),
     # ex: /publicaciones/registrarPublicacion
     path("registrarPublicacion/", views.registrar_publicacion, name="registrar_publicacion"),
     # ex: /publicaciones/4
