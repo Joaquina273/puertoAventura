@@ -240,7 +240,8 @@ def ver_estadisticas_intercambios(request):
     intercambios_aceptados = Post.objects.filter(state=2).count()
     intercambios_rechazados = Offer.objects.filter(answer=1).count()
 
-    if intercambios_aceptados != 0 and intercambios_rechazados != 0:
+    print(intercambios_aceptados)
+    if intercambios_aceptados > 0 or intercambios_rechazados > 0:
         # Crear los datos para el gráfico
         state_map = {1: 'Aceptado', 2: 'Rechazado'}
         state_counts = {'Aceptado': intercambios_aceptados, 'Rechazado': intercambios_rechazados}
@@ -388,11 +389,11 @@ def ver_estadisticas_intercambios(request):
         context = {
             'fig_bar_answers': fig_bar_answers,
             'fig_bar_answers_mes': fig_bar_answers_mes,
-            'has_data': intercambios_aceptados != 0 and intercambios_rechazados != 0,
+            'has_data': intercambios_aceptados > 0 or intercambios_rechazados > 0,
             }
     else:
         context = {
-            'has_data': intercambios_aceptados != 0 and intercambios_rechazados != 0,
+            'has_data': intercambios_aceptados > 0 or intercambios_rechazados > 0,
             }
 
     return render(request, 'administracion/estadisticas/estadisticas_intercambios.html', context)
