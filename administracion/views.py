@@ -236,46 +236,46 @@ def ver_estadisticas_usuarios(request):
 
 def ver_estadisticas_intercambios(request):
 
-    # Grafico de barra para las ofertas segun el estado
+    # Filtrar las ofertas aceptadas y rechazadas
+    intercambios_aceptados = Post.objects.filter(state=2).count()
+    intercambios_rechazados = Offer.objects.filter(answer=1).count()
 
-    ofertas = Offer.objects.filter(Q(answer=1) | Q(answer=2))
-
-    if ofertas.exists():
+    if intercambios_aceptados != 0 and intercambios_rechazados != 0:
+        # Crear los datos para el gráfico
         state_map = {1: 'Aceptado', 2: 'Rechazado'}
-        state_counts = Counter(state_map[oferta.answer] for oferta in ofertas)
-        colors = ['indianred', 'lightblue', 'lightgreen']
+        state_counts = {'Aceptado': intercambios_aceptados, 'Rechazado': intercambios_rechazados}
+        colors = ['lightgreen', 'indianred']
 
         fig_bar_answers = go.Figure([go.Bar(x=list(state_counts.keys()), y=list(state_counts.values()), marker_color=colors[:len(state_counts)], hovertemplate='Respuesta: %{x}, Cantidad: %{y}<extra></extra>')])
 
-
         fig_bar_answers.update_layout(
-        xaxis_title="Estado", 
-        yaxis_title="Cantidad",
-        title={
-            'text': "Cantidad de intercambios aceptados y rechazados",
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
+            xaxis_title="Estado", 
+            yaxis_title="Cantidad",
+            title={
+                'text': "Cantidad de intercambios aceptados y rechazados",
+                'x': 0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'
             },
-        yaxis=dict(
-            tickmode='linear',
-            dtick=5,  # Intervalo de 5 en 5
-            tick0=0,  # Valor inicial del tick
-            range=[0, max(state_counts.values()) + 5]
+            yaxis=dict(
+                tickmode='linear',
+                dtick=5,  # Intervalo de 5 en 5
+                tick0=0,  # Valor inicial del tick
+                range=[0, max(state_counts.values()) + 5]
             ),
-        xaxis=dict(
-            tickmode='array',
-            tickvals=list(range(len(state_counts.keys()))),
-            ticktext=list(state_counts.keys())
+            xaxis=dict(
+                tickmode='array',
+                tickvals=list(range(len(state_counts.keys()))),
+                ticktext=list(state_counts.keys())
             ),
         )
 
 
         # TODO: Grafico de barra para la cantidad de intercambios aceptados por mes
-        ofertas_aceptadas = Offer.objects.filter(answer = 2)
+        intercambios = Post.objects.filter(state = 2)
 
         # Contador para contar ofertas por mes
-        ofertas_por_mes = Counter()
+        intercambios_por_mes = Counter()
 
         # Diccionario para traducir nombres de meses de inglés a español
         meses_ingles_a_espanol = {
@@ -294,10 +294,10 @@ def ver_estadisticas_intercambios(request):
         }
 
         # Llenar el contador con las ofertas por mes
-        for oferta in ofertas_aceptadas:
-            mes_ingles = oferta.date.strftime('%B')
+        for intercambio in intercambios:
+            mes_ingles = intercambio.end_date.strftime('%B')
             mes_espanol = meses_ingles_a_espanol.get(mes_ingles, mes_ingles)
-            ofertas_por_mes[mes_espanol] += 1
+            intercambios_por_mes[mes_espanol] += 1
 
         # Lista de meses en orden
         meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
@@ -313,10 +313,10 @@ def ver_estadisticas_intercambios(request):
 
         # Añadir las barras al gráfico
         for mes, color in zip(meses, colores):
-            if mes in ofertas_por_mes.keys():
-                fig_bar_answers_mes.add_trace(go.Bar(x=[mes], y=[ofertas_por_mes[mes]], name=mes, marker_color=color, visible=False, hovertemplate=f'Mes: {mes}, Cantidad: {ofertas_por_mes[mes]}<extra></extra>'))
+            if mes in intercambios_por_mes.keys():
+                fig_bar_answers_mes.add_trace(go.Bar(x=[mes], y=[intercambios_por_mes[mes]], name=mes, marker_color=color, visible=False, hovertemplate=f'Mes: {mes}, Cantidad: {intercambios_por_mes[mes]}<extra></extra>'))
             else:
-                fig_bar_answers_mes.add_trace(go.Bar(x=[mes], y=[0], name=mes, marker_color=color, visible=False, hovertemplate=f'Mes: {mes}, Cantidad: {ofertas_por_mes[mes]}<extra></extra>'))
+                fig_bar_answers_mes.add_trace(go.Bar(x=[mes], y=[0], name=mes, marker_color=color, visible=False, hovertemplate=f'Mes: {mes}, Cantidad: {intercambios_por_mes[mes]}<extra></extra>'))
 
         # Hacer visible solo la primera barra (mes de Enero)
         fig_bar_answers_mes.data[0].visible = True
@@ -327,7 +327,7 @@ def ver_estadisticas_intercambios(request):
             visibility = [False] * len(meses)
             visibility[i] = True  # Hacer visible solo la barra correspondiente al mes
             annotation_text = ""
-            if ofertas_por_mes[mes] == 0:
+            if intercambios_por_mes[mes] == 0:
                 annotation_text = f"No hay intercambios aceptados en {mes}."
             buttons.append(dict(
                 label=mes,
@@ -355,7 +355,7 @@ def ver_estadisticas_intercambios(request):
 
         # Verificar si el mes inicial (enero) no tiene ofertas y agregar anotación
         initial_annotation = ""
-        if ofertas_por_mes["Enero"] == 0:
+        if intercambios_por_mes["Enero"] == 0:
             initial_annotation = "No hay intercambios aceptados en enero."
 
         fig_bar_answers_mes.update_layout(
@@ -372,7 +372,7 @@ def ver_estadisticas_intercambios(request):
                 title="Cantidad de Intercambios Aceptados",
                 tickmode='linear',
                 dtick=5,  # Establece el intervalo de los ticks del eje y en 5
-                range=[0, max(ofertas_por_mes.values(), default=0) + 5]  # Ajusta el rango del eje y según tus datos
+                range=[0, max(intercambios_por_mes.values(), default=0) + 5]  # Ajusta el rango del eje y según tus datos
             ),
             bargap=0.1,
             bargroupgap=0.1,
@@ -388,11 +388,11 @@ def ver_estadisticas_intercambios(request):
         context = {
             'fig_bar_answers': fig_bar_answers,
             'fig_bar_answers_mes': fig_bar_answers_mes,
-            'has_data': ofertas.exists(),
+            'has_data': intercambios_aceptados != 0 and intercambios_rechazados != 0,
             }
     else:
         context = {
-            'has_data': ofertas.exists(),
+            'has_data': intercambios_aceptados != 0 and intercambios_rechazados != 0,
             }
 
     return render(request, 'administracion/estadisticas/estadisticas_intercambios.html', context)

@@ -2,6 +2,7 @@ import datetime
 import os
 import shutil
 from datetime import datetime
+from django.utils import timezone
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib.contenttypes.models import ContentType
@@ -168,6 +169,7 @@ def ver_listado_publicaciones(request):
         post = get_object_or_404(Post, id = id)
         if action == 'aceptar':
             post.state = 2  
+            post.end_date = timezone.now().date()
             post.save()
             offers = Offer.objects.filter(post=post)
             for offer in offers:
