@@ -160,7 +160,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete= models.CASCADE, null= False, blank= False, related_name= "sent_messages")
     conversation = models.ForeignKey(Conversation, on_delete= models.CASCADE, null= False, blank= False,related_name="messages")
     read = models.BooleanField("Leída",default=False)
-    image = models.ImageField("Imagen", upload_to=os.path.join('mensajes','imagenes'), null=True, blank=True)
+    image = models.ImageField("Imagen", upload_to=get_image_upload_path, null=True, blank=True)
     file = models.FileField("Archivo",upload_to=get_file_upload_path, null=True, blank=True)
 
     class Meta:
