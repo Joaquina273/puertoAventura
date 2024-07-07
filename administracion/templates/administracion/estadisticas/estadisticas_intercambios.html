@@ -65,12 +65,12 @@
             </button>
           </h2>
         </div>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
           <div class="card-body chart-wrapper">
             {% if has_data %}
               <div id="pie_chart">{{ fig_bar_answers|safe }}</div>
             {% else %}
-              <p>No hay intercambios registrados en el sistema</p>
+              <p>No hay intercambios realizados en el sistema</p>
             {% endif %}
           </div>
         </div>
@@ -89,7 +89,7 @@
             {% if has_data %}
               <div id="bar_chart">{{ fig_bar_answers_mes|safe }}</div>
             {% else %}
-              <p>No hay intercambios registrados en el sistema</p>
+              <p>No hay intercambios realizados en el sistema</p>
             {% endif %}
           </div>
         </div>
