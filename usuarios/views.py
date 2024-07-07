@@ -391,7 +391,7 @@ def crear_reporte(request):
         content_type = request.POST["content_type"]
         id = request.POST["id"]
         id_url = request.POST["url"]
-        reportado = request.POST['reportado']
+        reportado = request.POST.get("reportado", None)
     else: 
         messages.error(request, "¡Debe iniciar sesión para poder reportar!")
         return redirect ('/autenticacion/inicioSesion')
@@ -404,7 +404,7 @@ def motivo_reporte(request):
         elemento = get_object_or_404(eval(content_type), id=id)
         id_url = request.POST["id_url"]
         if(content_type == "Conversation"):
-            reportado = request.POST["reportado"]
+            reportado = request.POST.get("reportado", None)
             if(reportado == 'sender'):
                 usuario = elemento.sender
             else: 
