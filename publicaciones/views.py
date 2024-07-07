@@ -34,7 +34,7 @@ def search(request):
         return render(request, "ver_publicaciones.html", {"posts": posts, "puertos": Port.objects.all(), "tipos": list(Post.types_ships.values()), 'palabra': palabra, 'state': estado})
 
 def ver_publicaciones(request):
-    estado = request.GET.get('state', 0)  # Por defecto, mostrar publicaciones disponibles (state=0)
+    estado = request.GET.get('state', None)  # Por defecto, mostrar publicaciones disponibles (state=0)
     print(estado)
     posts=Post.objects.all()
     if request.method == 'GET':
@@ -45,8 +45,8 @@ def ver_publicaciones(request):
         palabra = request.GET.get('palabra')
         estado = request.GET.get('state') 
             
-        if estado!="None":
-            print("pito")
+        if estado == 0 or estado == 2:
+            print("ACA ENTRÓ")
             posts = posts.filter(state=estado)
         if palabra:
              posts = posts.filter(title__icontains=palabra)
