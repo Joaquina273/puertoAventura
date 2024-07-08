@@ -3,10 +3,6 @@
 
 {% block content %}
 <style>
-    body {
-        background-color: #93d2f0; /* Fondo celeste */
-    }
-
     .offer-button {
         background-color: #EDC5AB;
         color: white;
@@ -68,7 +64,7 @@
         margin-bottom: 15px;
     }
 
-    .row {
+    .row{
         display: flex;
         flex-wrap: wrap;
         justify-content: center; /* Centrar las tarjetas */
@@ -76,7 +72,7 @@
         margin-right: -10px;
     }
 
-    .col-4 {
+    .col-4.busqueda {
         padding-left: 10px;
         padding-right: 10px;
         display: flex;
@@ -129,7 +125,7 @@
         {% elif state == "0" %}
             <h2>Publicaciones Disponibles</h2>
         {% elif state == "2" %}
-            <h2>Publicaciones Finalizadas</h2>
+            <h2>Embarcaciones intercambiadas</h2>
         {% endif %}
     </div>
     <div class="row content-container">
@@ -180,7 +176,7 @@
             {% if posts %}
     <div class="row">
         {% for post in posts %}
-            <div class="col-4">
+            <div class="col-4 busqueda">
                 <div class="card" style="width: 30rem">
                     <a href="{{ post.id }}">
                         <img class="card-img-top" height="250" src="{{ post.image.url }}" alt="{{ post.title }}">

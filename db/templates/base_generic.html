@@ -9,7 +9,6 @@
       <title>Puerto Aventura</title>
     {% endblock %}
   </head>
-  <body>
     {% block sidebar %}
     <head>
       <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -17,7 +16,6 @@
       <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/navbars/navbar-3/assets/css/navbar-3.css">
       <style>
         body, html {
-            height: 100%;
             margin: 0;
             background-color: #a7d7ef30;
         }
@@ -347,7 +345,6 @@
           </div>
         </nav>
       </header>
-      </body>
         {% if messages %}
           {% for m in messages %}
             {% if m.tags == "success" %}
