@@ -121,7 +121,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-center">
         {% if state == None %}
-            <h2>Todas las Publicaciones de la busqueda: {{ palabra }}</h2>
+            <h2>Todas las Publicaciones de la busqueda: {% if parabra != None %}{{ palabra }}{% endif %}</h2>
         {% elif state == "0" %}
             <h2>Publicaciones Disponibles</h2>
         {% elif state == "2" %}
