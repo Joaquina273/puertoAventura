@@ -86,11 +86,11 @@
           
           {% endif %}
             {% if post.user.email != usuario.email and post.state == 0 %}
-                <a href="registrarOferta" class="btn btn-warning shadow-0"> Ofertar </a>
+                <a href="registrarOferta" class="btn btn-warning shadow-0"> <i class="me-1 bi bi-stars"></i>Ofertar </a>
             {% endif %}
           {% else %}
             {% if post.state == 0 %}
-              <a href="registrarOferta" class="btn btn-warning shadow-0"> Ofertar </a>
+              <a href="registrarOferta" class="btn btn-warning shadow-0"> <i class="me-1 bi bi-stars"></i>Ofertar </a>
             {% endif %}
           {% endif %}
           {% if post.user.email != usuario.email and post.state == 0 and usuario.email != null%}
@@ -99,7 +99,7 @@
           <input type="hidden" name="url" id="id_url">
           <input type="hidden" value="Post" name="content_type">
           <input type="hidden" value="{{post.id}}" name="id">
-          <button type="submit" class="btn btn-danger" >Reportar</button>
+          <button type="submit" class="btn btn-danger" ><i class="me-1 bi bi-exclamation-triangle"></i>Reportar</button>
         </form>
         {%endif%}
         </div>
