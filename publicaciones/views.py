@@ -48,6 +48,8 @@ def ver_publicaciones(request):
         palabra = request.GET.get('palabra')
             
         if estado == '0' or estado == '2':
+            print(estado)
+            print("aca abajos")
             posts = posts.filter(state=estado)
         if palabra:
              posts = posts.filter(title__icontains=palabra)
