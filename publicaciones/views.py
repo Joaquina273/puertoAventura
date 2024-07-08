@@ -3,6 +3,8 @@ from .forms import FormularioRegistrarPublicacion, CommentForm
 from ofertas.forms import FormularioRegistrarOferta
 from django.contrib import messages
 from db.models import Post,User,Comment, Notification,Port
+from django.db.models import Q
+
 
 # Create your views here.
 
@@ -31,11 +33,13 @@ def search(request):
         palabra = request.GET.get('q')
         posts=Post.objects.all()
         posts = posts.filter(title__icontains=palabra).order_by("-post_date")
+        posts = posts.filter(~Q(state=1)).order_by("-post_date")
         return render(request, "ver_publicaciones.html", {"posts": posts, "puertos": Port.objects.all(), "tipos": list(Post.types_ships.values()), 'palabra': palabra, 'state': estado})
 
 def ver_publicaciones(request):
     estado = request.GET.get('state', None)  # Por defecto, mostrar publicaciones disponibles (state=0)
-    posts=Post.objects.all()
+    print(estado)
+    posts = Post.objects.filter(~Q(state=1)).order_by("-post_date")
     if request.method == 'GET':
         tipo = request.GET.get('tipo-embarcacion')
         valor = request.GET.get('valor')
