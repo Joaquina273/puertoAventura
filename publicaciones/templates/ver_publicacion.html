@@ -96,7 +96,7 @@
           {% if post.user.email != usuario.email and post.state == 0 and usuario.email != null%}
         <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
           {% csrf_token %}
-          <input type="hidden" name="url" id="id_url">
+          <input type="hidden" value="/publicaciones/{{post.id}}" name="url">
           <input type="hidden" value="Post" name="content_type">
           <input type="hidden" value="{{post.id}}" name="id">
           <button type="submit" class="btn btn-danger" ><i class="me-1 bi bi-exclamation-triangle"></i>Reportar</button>
@@ -134,7 +134,7 @@
                               {% if comment.user.email != usuario.email and post.state == 0 and usuario.email != null%}
                                 <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
                                   {% csrf_token %}
-                                  <input type="hidden" name="url" id="id_url_comment">
+                                  <input type="hidden" value="/publicaciones/{{post.id}}/#comentario{{comment.id}}" name="url">
                                   <input type="hidden" value="Comment" name="content_type">
                                   <input type="hidden" value="{{comment.id}}" name="id">
                                   <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
@@ -196,7 +196,7 @@
                           {% if post.user.email != usuario.email and post.state == 0 %}
                           <form action="/usuarios/motivoReporte/" method="post" style="display:inline;">
                             {% csrf_token %}
-                            <input type="hidden" name="url" id="id_url_comment">
+                            <input type="hidden" value="/publicaciones/{{post.id}}/#comentario{{comment.id}}" name="url">
                             <input type="hidden" value="Comment" name="content_type">
                             <input type="hidden" value="{{comment.answer.id}}" name="id">
                             <button type="submit" class="btn btn-outline-danger btn-sm">Reportar</button>
@@ -303,9 +303,6 @@
       content.style.display = 'none'
     }
   }
-
-  document.getElementById('id_url').value = window.location.href;
-  document.getElementById('id_url_comment').value = window.location.href;
 
 </script>
 {% endblock %}

@@ -35,7 +35,6 @@ def search(request):
 
 def ver_publicaciones(request):
     estado = request.GET.get('state', None)  # Por defecto, mostrar publicaciones disponibles (state=0)
-    print(estado)
     posts=Post.objects.all()
     if request.method == 'GET':
         tipo = request.GET.get('tipo-embarcacion')
@@ -43,10 +42,8 @@ def ver_publicaciones(request):
         puerto = request.GET.get('puerto')
         eslora = request.GET.get('tamano-eslora')
         palabra = request.GET.get('palabra')
-        estado = request.GET.get('state') 
             
-        if estado == 0 or estado == 2:
-            print("ACA ENTRÓ")
+        if estado == '0' or estado == '2':
             posts = posts.filter(state=estado)
         if palabra:
              posts = posts.filter(title__icontains=palabra)
